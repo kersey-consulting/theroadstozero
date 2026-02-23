@@ -1,0 +1,11 @@
+[
+  {
+    "path": "/",
+    "html": "index.html",
+    "title": "My Website",
+    "description": "",
+    "image": "",
+    "entry": "/src/pages/home.tsx",
+    "lang": "en"
+  }
+]

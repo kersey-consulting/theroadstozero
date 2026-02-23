@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Admin</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        :root {
+            --bg: #f9fafb;
+            --card: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+            --accent: #2563eb;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            max-width: 420px;
+            margin: 4rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--muted);
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 1rem;
+        }
+
+        button {
+            margin-top: 1.25rem;
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        ul {
+            padding-left: 1.25rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        a {
+            color: var(--accent);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        #error {
+            margin-top: 0.75rem;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+
+<div class="card" id="login">
+    <h1>Admin</h1>
+    <p>Sign in to access administrative tools.</p>
+
+    <form id="loginForm">
+        <label>
+            Username
+            <input id="username" type="text" autocomplete="username" required />
+        </label>
+
+        <label>
+            Password
+            <input id="password" type="password" autocomplete="current-password" required />
+        </label>
+
+        <button type="submit">Sign in</button>
+    </form>
+
+    <div id="error"></div>
+</div>
+
+<div class="card" id="tools" style="display:none;">
+    <h1>Admin Tools</h1>
+    <p>Select a tool to continue.</p>
+
+    <ul>
+        <li><a href="/admin/analytics.html">Analytics Dashboard</a></li>
+        <li><a href="/admin/form.html">Form Submissions</a></li>
+    </ul>
+
+    <button onclick="logout()" style="margin-top:1.5rem;background:#6b7280;">
+        Log out
+    </button>
+</div>
+
+<script>
+    const AUTH_KEY = 'admin_auth';
+
+    const loginCard = document.getElementById('login');
+    const toolsCard = document.getElementById('tools');
+    const errorDiv = document.getElementById('error');
+
+    // If already authenticated, skip login
+    if (sessionStorage.getItem(AUTH_KEY)) {
+        showTools();
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorDiv.textContent = '';
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+
+        const encoded = btoa(`${username}:${password}`);
+        const authHeader = 'Basic ' + encoded;
+
+        try {
+            // Use any protected endpoint to validate credentials
+            const res = await fetch('/admin/api/analytics', {
+                headers: {
+                    'Authorization': authHeader
+                }
+            });
+
+            if (res.status === 401) {
+                errorDiv.textContent = 'Invalid username or password.';
+                return;
+            }
+
+            if (!res.ok) {
+                errorDiv.textContent = 'Unable to verify credentials.';
+                return;
+            }
+
+            sessionStorage.setItem(AUTH_KEY, encoded);
+            showTools();
+
+        } catch {
+            errorDiv.textContent = 'Network error. Please try again.';
+        }
+    });
+
+    function showTools() {
+        loginCard.style.display = 'none';
+        toolsCard.style.display = 'block';
+    }
+
+    function logout() {
+        sessionStorage.removeItem(AUTH_KEY);
+        window.location.reload();
+    }
+</script>
+
+</body>
+</html>
