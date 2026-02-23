@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-const LIVE_DOMAIN = "";
+const LIVE_DOMAIN = "theroadstozero.com";
 
 const pages = JSON.parse(
     fs.readFileSync("pages.json", "utf-8")
