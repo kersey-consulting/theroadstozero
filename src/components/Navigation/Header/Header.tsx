@@ -25,7 +25,7 @@ export function Header() {
 
             <div className={styles.headerNavigation}>
                 <a className={styles.logo} href={'/'}>
-                    <img className={styles.logo} src="/icons/icon.svg" alt="The Roads to Zero Logo" />
+                    <img className={styles.logo} src="/icons/logo.png" alt="The Roads to Zero Logo" />
                 </a>
                 <div className={styles.headerContainer}>
                     <div className={styles.navlinkcontainer}>
