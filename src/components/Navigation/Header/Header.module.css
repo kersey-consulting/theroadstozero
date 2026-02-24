@@ -64,6 +64,10 @@
     max-height: 100px;
 }
 
+.logoAnchor {
+    margin-right: 46px;
+}
+
 .headerContainer {
     display: flex;
     flex-grow: 1;
