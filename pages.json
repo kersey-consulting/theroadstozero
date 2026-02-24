@@ -2,8 +2,8 @@
   {
     "path": "/",
     "html": "index.html",
-    "title": "My Website",
-    "description": "",
+    "title": "The Road to Zero",
+    "description": "At The Road to Zero, Botulinum treatment is about returning the face to its natural structure and symmetry, to enhance Structure and return to natural Beauty. Botulinum is used to restore what time, stress, and gravity have taken, and not to change identity. Our philosophy is facial balance, proportion, and natural restoration. ",
     "image": "",
     "entry": "/src/pages/home.tsx",
     "lang": "en"

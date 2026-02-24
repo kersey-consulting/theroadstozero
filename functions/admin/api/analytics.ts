@@ -28,6 +28,8 @@ interface GaReportResponse {
     rows?: GaRow[];
 }
 
+const DOMAIN = 'www.theroadstozero.com'
+
 const analyticsCache: Record<string, { data: string; expiresAt: number }> = {};
 
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
@@ -53,7 +55,7 @@ async function fetchSummaryMetrics(accessToken: string, propertyId: string, star
                         fieldName: 'hostName',
                         stringFilter: {
                             matchType: 'EXACT',
-                            value: 'www.cjforsenate.com',
+                            value: DOMAIN,
                         },
                     },
                 },
@@ -91,7 +93,7 @@ async function fetchTopPages(accessToken: string, propertyId: string, startDate:
                         fieldName: 'hostName',
                         stringFilter: {
                             matchType: 'EXACT',
-                            value: 'www.cjforsenate.com',
+                            value: DOMAIN,
                         },
                     },
                 },
@@ -129,7 +131,7 @@ async function fetchTrafficSources(accessToken: string, propertyId: string, star
                         fieldName: 'hostName',
                         stringFilter: {
                             matchType: 'EXACT',
-                            value: 'www.cjforsenate.com',
+                            value: DOMAIN,
                         },
                     },
                 },
@@ -165,7 +167,7 @@ async function fetchDeviceBreakdown(accessToken: string, propertyId: string, sta
                         fieldName: 'hostName',
                         stringFilter: {
                             matchType: 'EXACT',
-                            value: 'www.cjforsenate.com',
+                            value: DOMAIN,
                         },
                     },
                 },
@@ -202,7 +204,7 @@ async function fetchActiveUsersByCity(
                         fieldName: 'hostName',
                         stringFilter: {
                             matchType: 'EXACT',
-                            value: 'www.cjforsenate.com',
+                            value: DOMAIN,
                         },
                     },
                 },
@@ -242,7 +244,7 @@ async function fetchNewVsReturning(accessToken: string, propertyId: string, star
                         fieldName: 'hostName',
                         stringFilter: {
                             matchType: 'EXACT',
-                            value: 'www.cjforsenate.com',
+                            value: DOMAIN,
                         },
                     },
                 },
@@ -313,7 +315,7 @@ async function fetchPageViewsByDay(
                         fieldName: 'hostName',
                         stringFilter: {
                             matchType: 'EXACT',
-                            value: 'www.cjforsenate.com',
+                            value: DOMAIN,
                         },
                     },
                 },
