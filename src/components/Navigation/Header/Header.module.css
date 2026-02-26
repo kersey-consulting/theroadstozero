@@ -3,28 +3,13 @@
     box-shadow: 2px 2px 10px;
 }
 
-.header::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url(/public/assets/Sand.jpeg);
-    background-size: max(100vw, 2000px);
-    background-position-y: 800px;
-    background-position-x: 50%;
-    z-index: -1;
-    opacity: 0.8;
-}
-
 .headerNavigation {
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 1600px;
+    max-width: 1200px;
     margin: auto;
-    padding: 1rem 2rem;
+    padding: 0 2rem;
     gap: 2rem;
 }
 
@@ -41,8 +26,6 @@
 .skipLink {
     position: absolute;
     top: -80px;
-    left: 50%;
-    transform: translateX(-50%);
     background: var(--color-primary);
     color: var(--color-surface);
     padding: 0.5rem 1rem;
@@ -54,14 +37,8 @@
 
     transition: top 0.2s ease;
 }
-
-.logo {
-    width: 100%;
-    height: 100%;
-    min-width: 320px;
-    min-height: 100px;
-    max-width: 320px;
-    max-height: 100px;
+.skipLink:focus {
+    top: 0;
 }
 
 .logoAnchor {
@@ -81,7 +58,7 @@
         right: 0;
         padding: 2rem;
         background: var(--color-surface);
-        height: 100vh;
+        height: calc(100vh - 100%);
         align-items: end;
         flex-direction: column;
         box-shadow: 2px 2px 10px;
@@ -97,7 +74,8 @@
     flex-grow: 1;
     justify-content: center;
     @media (max-width: 975px) {
-        flex-grow: 0;
+        flex-wrap: nowrap;
+        overflow: hidden;
     }
 }
 .header:has(.openHamburger) .navlinkcontainer,
@@ -114,7 +92,74 @@
     gap: 1rem;
     list-style: none;
     padding: 0;
+}
+.pageLinks {
+    justify-content: end;
+}
+.socialLinks {
+    background: var(--color-surface);
+    padding: 0.5rem;
     justify-content: center;
+}
+
+.navItem {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.navButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    padding: 0;
+}
+
+.submenu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    min-width: 220px;
+    list-style: none;
+    padding: 0.5rem;
+    margin: 0;
+    background: var(--color-surface);
+    box-shadow: 2px 2px 10px;
+    border-radius: 8px;
+    z-index: 1200;
+}
+
+.submenuOpen {
+    display: block;
+}
+
+.submenuItem {
+    margin: 0;
+}
+
+.submenuLink {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+}
+
+.submenuLink:hover,
+.submenuLink:focus {
+    background: rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 975px) {
+    .submenu {
+        position: static;
+        min-width: auto;
+        box-shadow: none;
+        padding: 0.25rem 0 0.25rem 1rem;
+        border-radius: 0;
+    }
 }
 
 .navigationPages {
@@ -122,14 +167,25 @@
 }
 .header:has(.openHamburger) .navigationPages {
     order: 2;
+    overflow: scroll;
+    padding-right: 0.5rem;
 }
 
-.socialLink svg {
-    stroke: var(--color-primary);
+.socialLink {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
-
 .socialLink svg {
-    stroke: var(--color-primary);
+    fill: var(--color-primary);
+    width: 32px;
+    height: 32px;
+}
+.socialLink span {
+    @media (max-width: 975px) {
+        display: none;
+    }
 }
 
 .socialLink:hover rect,

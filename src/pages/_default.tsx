@@ -7,6 +7,9 @@ import {Footer} from "../components/Navigation/Footer/Footer";
 export function App() {
     return <div>
         <Header />
+        <main id={'main'}>
+
+        </main>
         <Footer />
     </div>
 }
