@@ -1,0 +1,15 @@
+.button {
+    background: var(--color-surface);
+    padding: 1rem;
+    border-radius: 15px;
+    margin: 1rem;
+    border: 2px solid;
+    display: inline-block;
+    color: var(--color-primary);
+}
+
+.button:hover,
+.button:focus {
+    text-decoration: none;
+    color: var(--color-primary-hover);
+}

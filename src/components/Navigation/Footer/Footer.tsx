@@ -50,9 +50,9 @@ export function Footer() {
                                 </li>
                             ))}
                         </ul>
-                        {SOCIAL_LINKS.map(({ id, text }) => (
+                        {SOCIAL_LINKS.filter((link) => !!link.text).map(({ id, text }) => (
                             <div key={id} className={styles.socialItem}>
-                                {text != null && <span className={styles.contactText}>{text}</span>}
+                                <span className={styles.contactText}>{text}</span>
                             </div>
                         ))}
                     </section>
