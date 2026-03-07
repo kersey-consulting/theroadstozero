@@ -4,6 +4,7 @@ import styles from './Hero.module.css';
 
 export function Hero({
   backgroundImage,
+  backgroundParallax = false,
   theme = 'primary',
   left,
   right,
@@ -15,6 +16,7 @@ export function Hero({
     backgroundSize: backgroundImage ? 'cover' : undefined,
     backgroundPosition: backgroundImage ? 'center' : undefined,
     backgroundRepeat: backgroundImage ? 'no-repeat' : undefined,
+    backgroundAttachment: backgroundParallax ? 'fixed' : 'scroll'
   };
 
   const themeClass =

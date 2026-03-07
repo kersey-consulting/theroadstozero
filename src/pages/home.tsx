@@ -10,7 +10,7 @@ import styles from './home.module.css';
 
 const products = [
     {
-        imagePath: '/assets/Sand.jpeg',
+        imagePath: '/assets/home/IV_Therapy.png',
         title: 'IV Therapy & Vitamin Infusions',
         subtext: (
             <>
@@ -34,7 +34,7 @@ const products = [
         },
     },
     {
-        imagePath: '/assets/Sand.jpeg',
+        imagePath: '/assets/home/GLP-1.png',
         title: 'Medical Weight Management',
         subtext: (
             <>
@@ -53,7 +53,7 @@ const products = [
         },
     },
     {
-        imagePath: '/assets/Sand.jpeg',
+        imagePath: '/assets/home/Aesthetic.png',
         title: 'Aesthetic Treatments',
         subtext: (
             <>
@@ -75,7 +75,7 @@ const products = [
         },
     },
     {
-        imagePath: '/assets/Sand.jpeg',
+        imagePath: '/assets/home/Hormone.png',
         title: 'Peptide & Hormone Support',
         subtext: (
             <>
@@ -102,6 +102,7 @@ export function App() {
             <Hero
                 backgroundImage={'/assets/Sand.jpeg'}
                 theme={'tertiary'}
+                backgroundParallax={true}
                 left={
                     <div className={styles.heroContent}>
                         <h1>The Road to Zero</h1>
@@ -226,6 +227,80 @@ export function App() {
                     />
                 }
             />
+            <section className={styles.section}>
+                <div className={styles.mobileServiceCard}>
+                    <div className={styles.mobileServiceContent}>
+                        <h2 className={styles.sectionHeader}>We Bring Wellness to You</h2>
+                        <p>
+                            Our concierge services allow you to receive treatments in the comfort of your home or at your business.
+                        </p>
+                        <p>We provide services at:</p>
+                        <ul className={styles.mobileServiceList}>
+                            <li>Private residences</li>
+                            <li>Corporate offices</li>
+                            <li>Spas and salons</li>
+                            <li>Fitness centers</li>
+                            <li>Yoga and wellness studios</li>
+                            <li>Special events and private parties</li>
+                        </ul>
+                        <p>
+                            Wellness should be convenient, comfortable, and personalized.
+                        </p>
+                        <div className={styles.mobileServiceAction}>
+                            <Button label={'Book Mobile Service'} href={'/mobile-services'} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <Hero
+                theme={'tertiary'}
+                left={
+                    <div>
+                        <h2>Referral Rewards Program</h2>
+                        <p>
+                            Share wellness with friends and earn complimentary services.
+                        </p>
+                        <p>Clients who refer others may receive rewards including:</p>
+                        <ul>
+                            <li>Botox treatments</li>
+                            <li>IV hydration sessions</li>
+                            <li>Vitamin injections</li>
+                            <li>Dermal fillers</li>
+                            <li>Peptide therapy</li>
+                        </ul>
+                        <p>
+                            Plus earn an ongoing 3% override bonus from referrals.
+                        </p>
+                        <div>
+                            <Button label={'Learn About the Referral Program'} href={'/referral-program'} />
+                        </div>
+                    </div>
+                }
+                right={
+                    <img
+                        src="/assets/home/savings.jpeg"
+                        alt="Rachel"
+                    />
+                }
+            />
+
+            <section className={styles.section}>
+                <div className={styles.finalCta}>
+                    <div className={styles.finalCtaContent}>
+                        <h2 className={styles.finalCtaHeading}>Begin Your Journey Back to Balance</h2>
+                        <p>
+                            You deserve to feel energized, confident, and aligned.
+                        </p>
+                        <p>
+                            Book your consultation today and take the first step toward restoring your health and vitality.
+                        </p>
+                        <div className={styles.finalCtaAction}>
+                            <Button label={'Book Appointment'} href={'https://booking.hydreight.com/widget-business/fk58k'} />
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
         <Footer/>
     </div>
