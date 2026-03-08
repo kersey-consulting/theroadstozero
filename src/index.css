@@ -9,8 +9,8 @@
     --color-secondary: #af9856;
     --color-secondary-hover: #9fa866;
     --color-tertiary: #c20e0e;
-    --color-background: #ffffff;
-    --color-surface: #efecec;
+    --color-background: #f7f5ed;
+    --color-surface: #faf4e3;
     --color-text: var(--color-primary);
     --color-text-light: var(--color-background);
     --color-border: #e2e8f0;

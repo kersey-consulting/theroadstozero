@@ -91,7 +91,7 @@ export function Header() {
             </nav>
             <div className={styles.headerNavigation}>
                 <a className={styles.logoAnchor} href={'/'}>
-                    <img className={styles.logo} src="/icons/The%20Road%20to%20Zero.png" alt="The Roads to Zero Logo" />
+
                 </a>
                 <div className={styles.headerContainer}>
                     <div className={styles.navlinkcontainer}>

@@ -10,6 +10,46 @@ import styles from './home.module.css';
 
 const products = [
     {
+        imagePath: '/assets/home/Aesthetic.png',
+        title: 'Aesthetic Treatments',
+        subtext: (
+            <>
+                <p>
+                    Subtle, natural-looking enhancements designed to refresh your appearance without looking overdone.
+                </p>
+                <p>Services include:</p>
+                <ul>
+                    <li>Botulinum</li>
+                    <li>Dermal Fillers</li>
+                    <li>PRP hair restoration</li>
+                </ul>
+            </>
+        ),
+        button: {
+            label: 'Learn More',
+            href: '/services/aesthetic-treatments',
+        },
+    },
+    {
+        imagePath: '/assets/home/GLP-1.png',
+        title: 'Medical Weight Management',
+        subtext: (
+            <>
+                <p>
+                    GLP-1 medications like Semaglutide and Tirzepatide help regulate appetite, support metabolic health,
+                    and assist in sustainable weight loss.
+                </p>
+                <p>
+                    Our programs are medically guided and personalized for your body and lifestyle.
+                </p>
+            </>
+        ),
+        button: {
+            label: 'Learn More',
+            href: '/services/medical-weight-management',
+        },
+    },
+    {
         imagePath: '/assets/home/IV_Therapy.png',
         title: 'IV Therapy & Vitamin Infusions',
         subtext: (
@@ -34,44 +74,22 @@ const products = [
         },
     },
     {
-        imagePath: '/assets/home/GLP-1.png',
-        title: 'Medical Weight Management',
+        imagePath: '/assets/home/Hormone.png',
+        title: 'Peptide & Hormone Support',
         subtext: (
             <>
                 <p>
-                    GLP-1 medications like Semaglutide and Tirzepatide help regulate appetite, support metabolic health,
-                    and assist in sustainable weight loss.
+                    Peptide therapy supports natural hormone function, improved recovery, better sleep, and enhanced
+                    vitality.
                 </p>
                 <p>
-                    Our programs are medically guided and personalized for your body and lifestyle.
+                    These treatments help optimize performance, energy levels, and overall wellness.
                 </p>
             </>
         ),
         button: {
             label: 'Learn More',
-            href: '/services/medical-weight-management',
-        },
-    },
-    {
-        imagePath: '/assets/home/Aesthetic.png',
-        title: 'Aesthetic Treatments',
-        subtext: (
-            <>
-                <p>
-                    Subtle, natural-looking enhancements designed to refresh your appearance without looking overdone.
-                </p>
-                <p>Services include:</p>
-                <ul>
-                    <li>Botox</li>
-                    <li>Dermal Fillers</li>
-                    <li>Skin rejuvenation treatments</li>
-                    <li>PRP hair restoration</li>
-                </ul>
-            </>
-        ),
-        button: {
-            label: 'Learn More',
-            href: '/services/aesthetic-treatments',
+            href: '/services/peptide-hormone-support',
         },
     },
     {
@@ -104,9 +122,11 @@ export function App() {
                 theme={'tertiary'}
                 backgroundParallax={true}
                 left={
+                <div style={{display: 'flex', maxWidth: '900px', gap: '2rem'}}>
+                    <img className={styles.logo} src="/icons/gold-logo.png" alt="The Roads to Zero Logo" />
                     <div className={styles.heroContent}>
                         <h1>The Road to Zero</h1>
-                        <h2>Medical Wellness, IV Therapy & Aesthetics</h2>
+                        <h2>Aesthetics & Medical Wellness</h2>
                         <p>
                             RN-led wellness and aesthetic treatments designed to restore balance, boost vitality, and
                             enhance natural confidence. Personalized, science-backed care in a calm and intentional
@@ -118,6 +138,7 @@ export function App() {
                         </div>
                         <p className={styles.heroEyebrow}>RN-Led • Licensed Medical Provider • Personalized Care</p>
                     </div>
+                </div>
                 }
             />
 
@@ -197,7 +218,7 @@ export function App() {
                 theme={'tertiary'}
                 left={
                     <div className={styles.profileText}>
-                        <h2>Meet Rachel</h2>
+                        <h2>About Us</h2>
                         <div className={styles.profileCopy}>
                             <p>RN, Midwife, Certified IV Therapy Provider Botox & Dermal Filler Clinician, Reiki Practitioner</p>
                             <p>
@@ -215,7 +236,7 @@ export function App() {
                                 Through personalized wellness therapies and aesthetic treatments, Rachel’s mission is to
                                 help every client feel their absolute best, mind, body, and spirit.
                             </p>
-                            <Button label={'Learn More About Rachel'}/>
+                            <Button label={'Learn More About The Raod to Zero'}/>
                         </div>
                     </div>
                 }

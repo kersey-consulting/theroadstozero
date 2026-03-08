@@ -50,6 +50,7 @@
     flex-grow: 1;
     align-items: center;
     gap: 2rem;
+    padding: 1rem;
 
     @media (max-width: 975px) {
         display: none;
@@ -91,7 +92,6 @@
     display: flex;
     gap: 1rem;
     list-style: none;
-    padding: 0;
 }
 .pageLinks {
     justify-content: end;
