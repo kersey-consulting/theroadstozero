@@ -125,7 +125,7 @@ export function App() {
                 <div style={{display: 'flex', maxWidth: '900px', gap: '2rem'}}>
                     <img className={styles.logo} src="/icons/gold-logo.png" alt="The Roads to Zero Logo" />
                     <div className={styles.heroContent}>
-                        <h1>The Road to Zero</h1>
+                        <h1>The Roads to Zero</h1>
                         <h2>Aesthetics & Medical Wellness</h2>
                         <p>
                             RN-led wellness and aesthetic treatments designed to restore balance, boost vitality, and
@@ -236,7 +236,7 @@ export function App() {
                                 Through personalized wellness therapies and aesthetic treatments, Rachel’s mission is to
                                 help every client feel their absolute best, mind, body, and spirit.
                             </p>
-                            <Button label={'Learn More About The Raod to Zero'}/>
+                            <Button label={'Learn More About The Raod to Zero'} href={'/about'}/>
                         </div>
                     </div>
                 }

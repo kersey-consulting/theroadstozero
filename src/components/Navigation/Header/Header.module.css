@@ -51,6 +51,7 @@
     align-items: center;
     gap: 2rem;
     padding: 1rem;
+    z-index: 1;
 
     @media (max-width: 975px) {
         display: none;
@@ -245,7 +246,8 @@
         display: block;
         position: absolute;
         right: 1rem;
-        top: 50%;
+        top: calc(100% + 1rem);
+        z-index: 2;
     }
 }
 
