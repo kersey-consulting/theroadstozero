@@ -118,7 +118,7 @@ export function App() {
         <Header/>
         <main id={'main'} className={styles.page}>
             <Hero
-                backgroundImage={'/assets/Sand.jpeg'}
+                backgroundImage={'/assets/Sand2.png'}
                 theme={'tertiary'}
                 backgroundParallax={true}
                 left={
@@ -133,8 +133,8 @@ export function App() {
                             environment.
                         </p>
                         <div className={styles.heroActions}>
-                            <Button label={'Book a Consultation'} theme={'primary'} size={'large'}/>
-                            <Button label={'Explore Our Services'} href={'/services'} theme={'secondary'} size={'large'}/>
+                            <Button label={'Book a Consultation'} href={'https://booking.hydreight.com/widget-business/fk58k'} theme={'primary'} size={'medium'}/>
+                            <Button label={'Explore Our Services'} href={'/services'} theme={'primary'} size={'medium'}/>
                         </div>
                         <p className={styles.heroEyebrow}>RN-Led • Licensed Medical Provider • Personalized Care</p>
                     </div>
@@ -300,7 +300,7 @@ export function App() {
                 }
                 right={
                     <img
-                        src="/assets/home/savings.jpeg"
+                        src="/assets/home/Referral.webp"
                         alt="Rachel"
                     />
                 }

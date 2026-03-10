@@ -32,13 +32,11 @@ export function App() {
                                 label={'Book a Consultation'}
                                 href={'https://booking.hydreight.com/widget-business/fk58k'}
                                 theme={'primary'}
-                                size={'large'}
                             />
                             <Button
                                 label={'Explore Services'}
                                 href={'/services'}
-                                theme={'secondary'}
-                                size={'large'}
+                                theme={'primary'}
                             />
                         </div>
                     </div>
@@ -173,13 +171,11 @@ export function App() {
                             label={'Book Appointment'}
                             href={'https://booking.hydreight.com/widget-business/fk58k'}
                             theme={'primary'}
-                            size={'large'}
                         />
                         <Button
                             label={'View Services'}
                             href={'/services'}
-                            theme={'secondary'}
-                            size={'large'}
+                            theme={'primary'}
                         />
                     </div>
                 </div>

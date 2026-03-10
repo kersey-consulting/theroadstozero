@@ -14,7 +14,7 @@ export function Hero({
   const style: React.CSSProperties = {
     backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
     backgroundSize: backgroundImage ? 'cover' : undefined,
-    backgroundPosition: backgroundImage ? 'center' : undefined,
+    backgroundPosition: backgroundImage ? 'top' : undefined,
     backgroundRepeat: backgroundImage ? 'no-repeat' : undefined,
     backgroundAttachment: backgroundParallax ? 'fixed' : 'scroll'
   };
