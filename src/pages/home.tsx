@@ -31,27 +31,26 @@ const products = [
         },
     },
     {
-        imagePath: '/assets/home/GLP-1.png',
-        title: 'Medical Weight Management',
+        imagePath: '/assets/home/Hormone.png',
+        title: 'Body Transformation',
         subtext: (
             <>
                 <p>
-                    GLP-1 medications like Semaglutide and Tirzepatide help regulate appetite, support metabolic health,
-                    and assist in sustainable weight loss.
+
                 </p>
                 <p>
-                    Our programs are medically guided and personalized for your body and lifestyle.
+
                 </p>
             </>
         ),
         button: {
             label: 'Learn More',
-            href: '/services/medical-weight-management',
+            href: '/services/peptide-hormone-support',
         },
     },
     {
-        imagePath: '/assets/home/IV_Therapy.png',
-        title: 'IV Therapy & Vitamin Infusions',
+        imagePath: '/assets/home/IV.png',
+        title: 'IV Therapy & Vitamin Injections',
         subtext: (
             <>
                 <p>
@@ -74,7 +73,26 @@ const products = [
         },
     },
     {
-        imagePath: '/assets/home/Hormone.png',
+        imagePath: '/assets/home/GLP-1.png',
+        title: 'Medical Weight Management',
+        subtext: (
+            <>
+                <p>
+                    GLP-1 medications like Semaglutide and Tirzepatide help regulate appetite, support metabolic health,
+                    and assist in sustainable weight loss.
+                </p>
+                <p>
+                    Our programs are medically guided and personalized for your body and lifestyle.
+                </p>
+            </>
+        ),
+        button: {
+            label: 'Learn More',
+            href: '/services/medical-weight-management',
+        },
+    },
+    {
+        imagePath: '/assets/home/peptide.png',
         title: 'Peptide & Hormone Support',
         subtext: (
             <>
@@ -93,16 +111,15 @@ const products = [
         },
     },
     {
-        imagePath: '/assets/home/Hormone.png',
-        title: 'Peptide & Hormone Support',
+        imagePath: '/assets/home/holistic.jpg',
+        title: 'Holistic Services',
         subtext: (
             <>
                 <p>
-                    Peptide therapy supports natural hormone function, improved recovery, better sleep, and enhanced
-                    vitality.
+
                 </p>
                 <p>
-                    These treatments help optimize performance, energy levels, and overall wellness.
+
                 </p>
             </>
         ),
@@ -122,21 +139,25 @@ export function App() {
                 theme={'tertiary'}
                 backgroundParallax={true}
                 left={
-                <div style={{display: 'flex', maxWidth: '900px', gap: '2rem'}}>
-                    <img className={styles.logo} src="/icons/gold-logo.png" alt="The Roads to Zero Logo" />
+                <div>
+                    <img className={styles.logo} src="/icons/gold-ring-logo.png" alt="The Roads to Zero Logo" />
+                    <div></div>
+                </div>
+                }
+                right={
+                <div style={{display: 'flex', gap: '2rem'}}>
                     <div className={styles.heroContent}>
-                        <h1>The Roads to Zero</h1>
-                        <h2>Aesthetics & Medical Wellness</h2>
                         <p>
-                            RN-led wellness and aesthetic treatments designed to restore balance, boost vitality, and
-                            enhance natural confidence. Personalized, science-backed care in a calm and intentional
-                            environment.
+                            Welcome to our sanctuary for Wellness, Beauty, and Transformative balance. Your journey toward confidence, vitality, and restoration begins here.
+                            We believe true Glow comes from within, nourishing the body, uplifting the spirit, and enhancing the natural beauty you already possess.
+                            <br/><br/>With science-backed treatments, a personalized approach, and holistic care, we’re here to help you reset, restore, and realign with your best self.
+                            From IV hydration and peptides to hormone support, GLP therapy, and aesthetic enhancements, every service is crafted to elevate your well-being.
+                            <br/><br/>Step into a space dedicated to renewal, and allow us to guide you toward total rejuvenation because you deserve to look, feel, and live your most vibrant, balanced, and radiant life.
                         </p>
                         <div className={styles.heroActions}>
                             <Button label={'Book a Consultation'} href={'https://booking.hydreight.com/widget-business/fk58k'} theme={'primary'} size={'medium'}/>
                             <Button label={'Explore Our Services'} href={'/services'} theme={'primary'} size={'medium'}/>
                         </div>
-                        <p className={styles.heroEyebrow}>RN-Led • Licensed Medical Provider • Personalized Care</p>
                     </div>
                 </div>
                 }
@@ -152,10 +173,10 @@ export function App() {
                     </p>
                     <p>We focus on:</p>
                     <ul className={styles.introList}>
-                        <li>Restoring hydration, nutrients, and cellular energy</li>
-                        <li>Supporting metabolism, hormones, and recovery</li>
                         <li>Enhancing natural aesthetics with a conservative approach</li>
-                        <li>Helping you feel aligned in mind, body, and spirit</li>
+                        <li>Supporting metabolism, hormones, and recovery</li>
+                        <li>Restoring hydration, nutrients, and cellular energy</li>
+                        <li>Guiding you feel aligned in mind, body, and spirit</li>
                     </ul>
                     <p>Book your consultation and begin your journey back to balance.</p>
                     <div className={styles.introAction}>
@@ -280,19 +301,16 @@ export function App() {
                     <div>
                         <h2>Referral Rewards Program</h2>
                         <p>
-                            Share wellness with friends and earn complimentary services.
+                            Share our aesthetic and wellness services with friends and earn income or complimentary services, Plus earn an ongoing 3% override bonus from referrals your referred clients generate.
                         </p>
                         <p>Clients who refer others may receive rewards including:</p>
                         <ul>
                             <li>Botox treatments</li>
+                            <li>Dermal fillers</li>
                             <li>IV hydration sessions</li>
                             <li>Vitamin injections</li>
-                            <li>Dermal fillers</li>
                             <li>Peptide therapy</li>
                         </ul>
-                        <p>
-                            Plus earn an ongoing 3% override bonus from referrals.
-                        </p>
                         <div>
                             <Button label={'Learn About the Referral Program'} href={'/referral-program'} />
                         </div>

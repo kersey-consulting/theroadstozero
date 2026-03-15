@@ -26,10 +26,7 @@ export function Footer() {
                     </section>
 
                     <section className={styles.columnCenter} aria-label="About The Road to Zero">
-                        <img className={styles.logo} src="/icons/The%20Road%20to%20Zero.png" alt="The Road to Zero Logo" />
-                        <p className={styles.description}>
-                            The Road to Zero represents a journey back to balance, a return to your body’s natural baseline where health, beauty, and vitality can thrive.In a world of constant stress, overload, inflammation, toxins, and burnout, our bodies drift away from equilibrium.
-                        </p>
+                        <img className={styles.logo} src="/icons/gold-ring-logo.png" alt="The Road to Zero Logo" />
                     </section>
 
                     <section className={styles.column} aria-label="Social media links">
@@ -56,6 +53,11 @@ export function Footer() {
                             </div>
                         ))}
                     </section>
+                </div>
+                <div>
+                    <p className={styles.description}>
+                        Disclaimer: These services are not intended to diagnose, treat, cure, or prevent any disease. The material on this brochure is provided for informational purposes only and is not medical advice or treatment. Always consult your physician before beginning any therapy program.
+                    </p>
                 </div>
 
                 <div className={styles.bottomBar}>

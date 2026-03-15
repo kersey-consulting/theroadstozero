@@ -4,12 +4,12 @@
 
 :root {
     /* Colors */
-    --color-primary: #7a4a33;
-    --color-primary-hover: #6a3a23;
-    --color-secondary: #af9856;
-    --color-secondary-hover: #9fa866;
+    --color-primary: #705e23;
+    --color-primary-hover: #64541f;
+    --color-secondary: #d29d00;
+    --color-secondary-hover: #694e00;
     --color-tertiary: #c20e0e;
-    --color-background: #f7f5ed;
+    --color-background: #fbfaf5;
     --color-surface: #faf4e3;
     --color-text: var(--color-primary);
     --color-text-light: var(--color-background);
@@ -142,4 +142,10 @@ h3 {
 :focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
+}
+
+@font-face {
+    font-family: "snell-roundhand";
+    font-style: normal;
+    src: url(/assets/fonts/Snell_Roundhand_Regular.ttf) format("truetype");
 }

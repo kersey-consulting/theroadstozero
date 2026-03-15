@@ -91,7 +91,8 @@ export function Header() {
             </nav>
             <div className={styles.headerNavigation}>
                 <a className={styles.logoAnchor} href={'/'}>
-
+                    <div className={styles.companyName}>The Roads to Zero</div>
+                    <div className={styles.companySub}>Aesthetics & Medical Wellness</div>
                 </a>
                 <div className={styles.headerContainer}>
                     <div className={styles.navlinkcontainer}>

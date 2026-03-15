@@ -17,11 +17,11 @@ export function App() {
                 backgroundParallax={true}
                 left={
                     <div className={styles.heroContent}>
-                        <p className={styles.eyebrow}>About Rachel</p>
+                        <p className={styles.eyebrow}>About the founder & owner</p>
                         <h1 className={styles.heroTitle}>Compassionate care for the whole person</h1>
                         <p className={styles.heroText}>
-                            Registered Nurse, Midwife, licensed healthcare Administrator, certified IV therapy provider,
-                            Botulinum and Dermal Filler clinician, and Reiki practitioner.
+                            RN, Midwife, licensed healthcare administrator,
+                            Botulinum and Dermal Filler clinician, certified IV therapy provider, and Reiki practitioner.
                         </p>
                         <p className={styles.heroText}>
                             Rachel’s mission is to help clients feel rejuvenated, confident, and aligned through
@@ -85,17 +85,17 @@ export function App() {
                             </ul>
                         </div>
                         <div className={styles.card}>
-                            <h3>Wellness Services</h3>
+                            <h3>Credentials</h3>
                             <ul className={styles.list}>
-                                <li>Certified IV therapy provider</li>
-                                <li>GLP-1 support</li>
-                                <li>Peptide and hormone wellness support</li>
+                                <li>AACM (American Academy of Cosmetic medicine)</li>
+                                <li>AMET (Aesthetic Medical Educators training)</li>
+                                <li>Empire Medical</li>
                             </ul>
                         </div>
                         <div className={styles.card}>
-                            <h3>Aesthetic & Holistic Care</h3>
+                            <h3>Specialties</h3>
                             <ul className={styles.list}>
-                                <li>Botulinum clinician</li>
+                                <li>Aesthetics Specialist</li>
                                 <li>Dermal Filler clinician</li>
                                 <li>Reiki practitioner</li>
                             </ul>

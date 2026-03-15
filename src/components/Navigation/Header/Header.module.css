@@ -40,9 +40,25 @@
 .skipLink:focus {
     top: 0;
 }
-
 .logoAnchor {
-    margin-right: 46px;
+    padding: 1.2rem 0;
+    @media (max-width: 1110px) {
+        padding-right: 30px;
+    }
+}
+.logoAnchor:hover {
+    text-decoration: none;
+}
+.companyName {
+    font-family: snell-roundhand, serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 2.2rem;
+    color: var(--color-secondary);
+}
+.companySub {
+    font-style: italic;
+    font-size: 0.9rem;
 }
 
 .headerContainer {
@@ -53,7 +69,7 @@
     padding: 1rem;
     z-index: 1;
 
-    @media (max-width: 975px) {
+    @media (max-width: 1110px) {
         display: none;
         position: absolute;
         top: 100%;
@@ -75,7 +91,7 @@
     flex-wrap: wrap;
     flex-grow: 1;
     justify-content: center;
-    @media (max-width: 975px) {
+    @media (max-width: 1110px) {
         flex-wrap: nowrap;
         overflow: hidden;
     }
@@ -84,7 +100,6 @@
 .header:has(.openHamburger) .pageLinks {
     flex-direction: column;
     align-items: end;
-    margin: 0 auto;
     gap: 1rem;
 }
 
@@ -95,6 +110,7 @@
     list-style: none;
 }
 .pageLinks {
+    padding: 0;
     justify-content: end;
 }
 .socialLinks {
@@ -207,7 +223,7 @@
     background: rgba(0, 0, 0, 0.06);
 }
 
-@media (max-width: 975px) {
+@media (max-width: 1110px) {
     .submenu {
         position: static;
         min-width: auto;
@@ -238,7 +254,7 @@
     height: 32px;
 }
 .socialLink span {
-    @media (max-width: 975px) {
+    @media (max-width: 1110px) {
         display: none;
     }
 }
@@ -268,11 +284,10 @@
     background: none;
     border: none;
     cursor: pointer;
-    @media (max-width: 975px) {
+    @media (max-width: 1110px) {
         display: block;
         position: absolute;
         right: 1rem;
-        top: calc(100% + 1rem);
         z-index: 2;
     }
 }
