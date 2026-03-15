@@ -10,7 +10,7 @@ import styles from './home.module.css';
 
 const products = [
     {
-        imagePath: '/assets/home/Aesthetic.png',
+        imagePath: '/assets/home/Aesthetics.png',
         title: 'Aesthetic Treatments',
         subtext: (
             <>
