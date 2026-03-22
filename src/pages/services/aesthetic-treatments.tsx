@@ -114,7 +114,7 @@ export function App() {
                                 proportion, and balance.
                             </p>
                             <p>
-                                Whether you\'re looking to soften fine lines, restore lost volume, or simply feel more
+                                Whether you're looking to soften fine lines, restore lost volume, or simply feel more
                                 refreshed — every treatment plan is personalized to your goals and your face.
                             </p>
                         </div>
@@ -199,7 +199,7 @@ export function App() {
                     <div className={styles.ctaCard}>
                         <h2>Ready to Begin Your Aesthetic Journey?</h2>
                         <p>
-                            Book a personalized consultation with Rachel and discover what\'s possible with a
+                            Book a personalized consultation with Rachel and discover what's possible with a
                             conservative, natural approach to aesthetic care.
                         </p>
                         <div className={styles.ctaActions}>

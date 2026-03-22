@@ -66,7 +66,7 @@ export function App() {
                             <p className={styles.eyebrow}>Services</p>
                             <h1 className={styles.heroTitle}>Holistic Services</h1>
                             <p className={styles.heroText}>
-                                Healing is not only physical. Rachel\'s holistic offerings address the mind, body, and
+                                Healing is not only physical. Rachel's holistic offerings address the mind, body, and
                                 spirit connection — providing a deeper layer of restoration, balance, and inner
                                 alignment alongside your wellness journey.
                             </p>
@@ -83,13 +83,6 @@ export function App() {
                                 />
                             </div>
                         </div>
-                    }
-                    right={
-                        <img
-                            className={styles.heroImage}
-                            src="/assets/home/holistic.jpg"
-                            alt="Holistic Services at The Road to Zero"
-                        />
                     }
                 />
 
@@ -155,13 +148,13 @@ export function App() {
                         <div className={styles.copy}>
                             <p>
                                 Rachel is a certified Reiki practitioner whose journey into holistic healing grew
-                                from her years supporting clients through some of life\'s most profound moments —
+                                from her years supporting clients through some of life's most profound moments —
                                 birth, illness, and the end of life.
                             </p>
                             <p>
                                 These experiences gave her a profound understanding of the human spirit and the
                                 deep need for care that goes beyond the physical. Her holistic sessions are offered
-                                with warmth, intention, and the utmost respect for each client\'s unique journey.
+                                with warmth, intention, and the utmost respect for each client's unique journey.
                             </p>
                         </div>
                         <div className={styles.tags}>

@@ -95,13 +95,6 @@ export function App() {
                             </div>
                         </div>
                     }
-                    right={
-                        <img
-                            className={styles.heroImage}
-                            src="/assets/home/peptide.png"
-                            alt="Peptide & Hormone Support at The Road to Zero"
-                        />
-                    }
                 />
 
                 <section className={styles.section}>

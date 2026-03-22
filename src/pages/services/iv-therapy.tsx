@@ -183,22 +183,6 @@ export function App() {
                             </div>
                         </div>
                     }
-                    right={
-                        <div className={styles.heroStats}>
-                            <div className={styles.statCard}>
-                                <span className={styles.statNumber}>11</span>
-                                <span className={styles.statLabel}>IV Infusions</span>
-                            </div>
-                            <div className={styles.statCard}>
-                                <span className={styles.statNumber}>3</span>
-                                <span className={styles.statLabel}>IM Injections</span>
-                            </div>
-                            <div className={styles.statCard}>
-                                <span className={styles.statNumber}>100%</span>
-                                <span className={styles.statLabel}>Provider Supervised</span>
-                            </div>
-                        </div>
-                    }
                 />
 
                 <section className={styles.introSection}>

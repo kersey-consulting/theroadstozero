@@ -85,13 +85,6 @@ export function App() {
                             </div>
                         </div>
                     }
-                    right={
-                        <img
-                            className={styles.heroImage}
-                            src="/assets/home/GLP-1.png"
-                            alt="Medical Weight Management at The Road to Zero"
-                        />
-                    }
                 />
 
                 <section className={styles.section}>
