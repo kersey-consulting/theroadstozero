@@ -166,28 +166,29 @@ export function App() {
                 </div>
                 }
             />
-
-            <section className={styles.narrowSection}>
-                <div className={styles.intro}>
-                    <h2 className={styles.sectionHeader}>Restore Balance. Reclaim Vitality. Renew Confidence.</h2>
-                    <p>
-                        At The Road to Zero, wellness and aesthetics come together through personalized, medically guided
-                        care. Our treatments support your body’s natural ability to restore balance, recover from stress,
-                        and enhance your natural beauty.
-                    </p>
-                    <p>We focus on:</p>
-                    <ul className={styles.introList}>
-                        <li>Enhancing natural aesthetics with a conservative approach</li>
-                        <li>Supporting metabolism, hormones, and recovery</li>
-                        <li>Restoring hydration, nutrients, and cellular energy</li>
-                        <li>Guiding you feel aligned in mind, body, and spirit</li>
-                    </ul>
-                    <p>Book your consultation and begin your journey back to balance.</p>
-                    <div className={styles.introAction}>
-                        <Button label={'Start Your Wellness Journey'} />
+            <div className={styles.surfaceContainer}>
+                <section className={styles.narrowSection}>
+                    <div className={styles.intro}>
+                        <h2 className={styles.sectionHeader}>Restore Balance. Reclaim Vitality. Renew Confidence.</h2>
+                        <p>
+                            At The Road to Zero, wellness and aesthetics come together through personalized, medically guided
+                            care. Our treatments support your body’s natural ability to restore balance, recover from stress,
+                            and enhance your natural beauty.
+                        </p>
+                        <p>We focus on:</p>
+                        <ul className={styles.introList}>
+                            <li>Enhancing natural aesthetics with a conservative approach</li>
+                            <li>Supporting metabolism, hormones, and recovery</li>
+                            <li>Restoring hydration, nutrients, and cellular energy</li>
+                            <li>Guiding you feel aligned in mind, body, and spirit</li>
+                        </ul>
+                        <p>Book your consultation and begin your journey back to balance.</p>
+                        <div className={styles.introAction}>
+                            <Button label={'Start Your Wellness Journey'} />
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
 
             <section className={styles.section}>
                 <h2 className={styles.sectionHeaderCentered}>Our Services</h2>

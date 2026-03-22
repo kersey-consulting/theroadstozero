@@ -50,8 +50,8 @@
 
 /* Themes */
 .primary {
-    --hero-bg: var(--color-primary);
-    --hero-fg: #ffffff;
+    --hero-bg: var(--color-surface);
+    --hero-fg: var(--color-primary);
 }
 
 .secondary {

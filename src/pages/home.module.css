@@ -39,6 +39,9 @@
     margin: 0 auto;
     padding: 4rem 0;
 }
+.surfaceContainer {
+    background-color: var(--color-surface);
+}
 
 .sectionHeader {
     margin-bottom: 1.5rem;
