@@ -157,6 +157,7 @@ export function App() {
             <Header />
             <main id="main" className={styles.page}>
                 <Hero
+                    id="hero"
                     backgroundImage="/assets/Sand.jpeg"
                     backgroundParallax={true}
                     theme="tertiary"
@@ -185,7 +186,7 @@ export function App() {
                     }
                 />
 
-                <section className={styles.introSection}>
+                <section id="overview" className={styles.introSection}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Why IV Therapy?</h2>
                         <div className={styles.introCopy}>
@@ -208,7 +209,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.servicesSection}>
+                <section id="iv-infusions" className={styles.servicesSection}>
                     <div className={styles.wide}>
                         <div className={styles.sectionHeader}>
                             <h2 className={styles.sectionTitle}>IV Infusions</h2>
@@ -222,7 +223,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.servicesSectionAlt}>
+                <section id="im-injections" className={styles.servicesSectionAlt}>
                     <div className={styles.wide}>
                         <div className={styles.sectionHeader}>
                             <h2 className={styles.sectionTitle}>IM Injections</h2>
@@ -236,7 +237,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.addOnsSection}>
+                <section id="add-ons" className={styles.addOnsSection}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitleCentered}>Customize Your Drip</h2>
                         <p className={styles.centeredText}>
@@ -261,7 +262,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.ctaSection}>
+                <section id="book" className={styles.ctaSection}>
                     <div className={styles.ctaCard}>
                         <h2>Ready to Restore Your Balance?</h2>
                         <p>Book your IV therapy session today. We come to you — home, office, event, or wellness studio.</p>

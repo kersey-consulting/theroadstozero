@@ -3,6 +3,7 @@ import type { HeroProps } from './Hero.types';
 import styles from './Hero.module.css';
 
 export function Hero({
+  id,
   backgroundImage,
   backgroundParallax = false,
   theme = 'primary',
@@ -31,7 +32,7 @@ export function Hero({
     rightVert === 'end' ? styles.vertEnd : styles.vertCenter;
 
   return (
-    <section className={`${styles.hero} ${themeClass}`} style={style}>
+    <section id={id} className={`${styles.hero} ${themeClass}`} style={style}>
       <div className={styles.inner}>
         {left ? (
           <div className={`${styles.col} ${styles.left} ${leftVertClass}`}>

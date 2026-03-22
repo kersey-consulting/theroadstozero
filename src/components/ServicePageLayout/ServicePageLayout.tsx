@@ -36,6 +36,7 @@ export function ServicePageLayout({ data }: Props) {
             <Header />
             <main id="main" className={styles.page}>
                 <Hero
+                    id="hero"
                     backgroundImage="/assets/Sand.jpeg"
                     backgroundParallax={true}
                     theme="tertiary"
@@ -64,7 +65,7 @@ export function ServicePageLayout({ data }: Props) {
                     }
                 />
 
-                <section className={styles.descriptionSection}>
+                <section id="about" className={styles.descriptionSection}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>About This Treatment</h2>
                         <div className={styles.copy}>
@@ -80,7 +81,7 @@ export function ServicePageLayout({ data }: Props) {
                     </div>
                 </section>
 
-                <section className={styles.benefitsSection}>
+                <section id="benefits" className={styles.benefitsSection}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Key Benefits</h2>
                         <div className={styles.benefitsGrid}>
@@ -95,7 +96,7 @@ export function ServicePageLayout({ data }: Props) {
                 </section>
 
                 {data.addOns && data.addOns.length > 0 && (
-                    <section className={styles.addOnsSection}>
+                    <section id="add-ons" className={styles.addOnsSection}>
                         <div className={styles.narrow}>
                             <h2 className={styles.sectionTitle}>Available Add-Ons</h2>
                             <p className={styles.addOnsIntro}>
@@ -114,7 +115,7 @@ export function ServicePageLayout({ data }: Props) {
                 )}
 
                 {data.pairWith && data.pairWith.length > 0 && (
-                    <section className={styles.pairSection}>
+                    <section id="pair-with" className={styles.pairSection}>
                         <div className={styles.narrow}>
                             <h2 className={styles.sectionTitleCentered}>Pairs Well With</h2>
                             <p className={styles.centeredText}>Enhance your results by combining this treatment with:</p>
@@ -127,7 +128,7 @@ export function ServicePageLayout({ data }: Props) {
                     </section>
                 )}
 
-                <section className={styles.ctaSection}>
+                <section id="book" className={styles.ctaSection}>
                     <div className={styles.ctaCard}>
                         <h2>Ready to Begin?</h2>
                         <p>Book your {data.name} session today. We come to you — home, office, or wellness studio.</p>

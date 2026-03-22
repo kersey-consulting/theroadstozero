@@ -140,6 +140,7 @@ export function App() {
         <Header/>
         <main id={'main'} className={styles.page}>
             <Hero
+                id="hero"
                 theme={'tertiary'}
                 backgroundParallax={true}
                 left={
@@ -167,7 +168,7 @@ export function App() {
                 }
             />
             <div className={styles.surfaceContainer}>
-                <section className={styles.narrowSection}>
+                <section id="overview" className={styles.narrowSection}>
                     <div className={styles.intro}>
                         <h2 className={styles.sectionHeader}>Restore Balance. Reclaim Vitality. Renew Confidence.</h2>
                         <p>
@@ -190,7 +191,7 @@ export function App() {
                 </section>
             </div>
 
-            <section className={styles.section}>
+            <section id="services" className={styles.section}>
                 <h2 className={styles.sectionHeaderCentered}>Our Services</h2>
                 <div className={styles.servicesGrid}>
                     {products.map((product) => (
@@ -205,7 +206,7 @@ export function App() {
                 </div>
             </section>
 
-            <section className={styles.section}>
+            <section id="why-us" className={styles.section}>
                 <h2 className={styles.sectionHeader}>Why The Road to Zero?</h2>
                 <div className={styles.whyIntro}>
                     <p>The Road to Zero represents a return to balance where health, beauty, and vitality naturally thrive.</p>
@@ -241,6 +242,7 @@ export function App() {
             </section>
 
             <Hero
+                id="about"
                 theme={'tertiary'}
                 left={
                     <div className={styles.profileText}>
@@ -274,33 +276,35 @@ export function App() {
                     />
                 }
             />
-            <section className={styles.section}>
-                <div className={styles.mobileServiceCard}>
-                    <div className={styles.mobileServiceContent}>
-                        <h2 className={styles.sectionHeader}>We Bring Wellness to You</h2>
-                        <p>
-                            Our concierge services allow you to receive treatments in the comfort of your home or at your business.
-                        </p>
-                        <p>We provide services at:</p>
-                        <ul className={styles.mobileServiceList}>
-                            <li>Private residences</li>
-                            <li>Corporate offices</li>
-                            <li>Spas and salons</li>
-                            <li>Fitness centers</li>
-                            <li>Yoga and wellness studios</li>
-                            <li>Special events and private parties</li>
-                        </ul>
-                        <p>
-                            Wellness should be convenient, comfortable, and personalized.
-                        </p>
-                        <div className={styles.mobileServiceAction}>
-                            <Button label={'Book Mobile Service'} href={'/mobile-services'} />
+            <div className={styles.surfaceContainer}>
+                <section id="mobile-services" className={styles.section}>
+                    <div className={styles.mobileServiceCard}>
+                        <div className={styles.mobileServiceContent}>
+                            <h2 className={styles.sectionHeader}>We Bring Wellness to You</h2>
+                            <p>
+                                Our concierge services allow you to receive treatments in the comfort of your home or at your business.
+                            </p>
+                            <p>We provide services at:</p>
+                            <ul className={styles.mobileServiceList}>
+                                <li>Private residences</li>
+                                <li>Corporate offices</li>
+                                <li>Spas and salons</li>
+                                <li>Fitness centers</li>
+                                <li>Yoga and wellness studios</li>
+                                <li>Special events and private parties</li>
+                            </ul>
+                            <p>
+                                Wellness should be convenient, comfortable, and personalized.
+                            </p>
+                            <div className={styles.mobileServiceAction}>
+                                <Button label={'Book Mobile Service'} href={'/mobile-services'} />
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-
+                </section>
+            </div>
             <Hero
+                id="referral"
                 theme={'tertiary'}
                 left={
                     <div>
@@ -329,7 +333,7 @@ export function App() {
                 }
             />
 
-            <section className={styles.section}>
+            <section id="book" className={styles.section}>
                 <div className={styles.finalCta}>
                     <div className={styles.finalCtaContent}>
                         <h2 className={styles.finalCtaHeading}>Begin Your Journey Back to Balance</h2>

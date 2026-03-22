@@ -70,6 +70,7 @@ export function App() {
             <Header />
             <main id="main" className={styles.page}>
                 <Hero
+                    id="hero"
                     backgroundImage="/assets/Sand.jpeg"
                     backgroundParallax={true}
                     theme="tertiary"
@@ -98,7 +99,7 @@ export function App() {
                     }
                 />
 
-                <section className={styles.section}>
+                <section id="philosophy" className={styles.section}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Our Philosophy on Aesthetics</h2>
                         <div className={styles.copy}>
@@ -121,7 +122,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.sectionAlt}>
+                <section id="treatments" className={styles.sectionAlt}>
                     <div className={styles.wide}>
                         <h2 className={styles.sectionTitle}>Treatments Offered</h2>
                         <p className={styles.sectionSubtitle}>
@@ -143,7 +144,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.section}>
+                <section id="approach" className={styles.section}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Our Approach</h2>
                         <div className={styles.highlightsGrid}>
@@ -157,7 +158,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.sectionAlt}>
+                <section id="credentials" className={styles.sectionAlt}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Credentials &amp; Training</h2>
                         <div className={styles.copy}>
@@ -195,7 +196,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.section}>
+                <section id="book" className={styles.section}>
                     <div className={styles.ctaCard}>
                         <h2>Ready to Begin Your Aesthetic Journey?</h2>
                         <p>

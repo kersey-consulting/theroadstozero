@@ -58,6 +58,7 @@ export function App() {
             <Header />
             <main id="main" className={styles.page}>
                 <Hero
+                    id="hero"
                     backgroundImage="/assets/Sand.jpeg"
                     backgroundParallax={true}
                     theme="tertiary"
@@ -86,7 +87,7 @@ export function App() {
                     }
                 />
 
-                <section className={styles.section}>
+                <section id="overview" className={styles.section}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>The Holistic Dimension of Wellness</h2>
                         <div className={styles.copy}>
@@ -110,7 +111,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.sectionAlt}>
+                <section id="offerings" className={styles.sectionAlt}>
                     <div className={styles.wide}>
                         <h2 className={styles.sectionTitle}>Holistic Offerings</h2>
                         <div className={styles.treatmentsGrid}>
@@ -128,7 +129,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.section}>
+                <section id="principles" className={styles.section}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Our Guiding Principles</h2>
                         <div className={styles.highlightsGrid}>
@@ -142,7 +143,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.sectionAlt}>
+                <section id="about" className={styles.sectionAlt}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>About Rachel&apos;s Holistic Practice</h2>
                         <div className={styles.copy}>
@@ -166,7 +167,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.section}>
+                <section id="complementary" className={styles.section}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Pair With Wellness Treatments</h2>
                         <div className={styles.copy}>
@@ -184,7 +185,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.section}>
+                <section id="book" className={styles.section}>
                     <div className={styles.ctaCard}>
                         <h2>Restore Balance. Reconnect Within.</h2>
                         <p>

@@ -59,6 +59,7 @@ export function App() {
             <Header />
             <main id="main" className={styles.page}>
                 <Hero
+                    id="hero"
                     backgroundImage="/assets/Sand.jpeg"
                     backgroundParallax={true}
                     theme="tertiary"
@@ -87,7 +88,7 @@ export function App() {
                     }
                 />
 
-                <section className={styles.section}>
+                <section id="overview" className={styles.section}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>A Medical Approach to Lasting Change</h2>
                         <div className={styles.copy}>
@@ -111,7 +112,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.sectionAlt}>
+                <section id="medications" className={styles.sectionAlt}>
                     <div className={styles.wide}>
                         <h2 className={styles.sectionTitle}>Medications We Offer</h2>
                         <p className={styles.sectionSubtitle}>
@@ -133,7 +134,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.section}>
+                <section id="program" className={styles.section}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>How the Program Works</h2>
                         <div className={styles.highlightsGrid}>
@@ -147,7 +148,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.sectionAlt}>
+                <section id="complementary" className={styles.sectionAlt}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Complement Your Program</h2>
                         <div className={styles.copy}>
@@ -166,7 +167,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.section}>
+                <section id="book" className={styles.section}>
                     <div className={styles.ctaCard}>
                         <h2>Start Your Weight Management Journey</h2>
                         <p>

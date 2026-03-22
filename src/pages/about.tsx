@@ -12,6 +12,7 @@ export function App() {
         <Header />
         <main id={'main'} className={styles.page}>
             <Hero
+                id="hero"
                 backgroundImage={'/assets/Sand.jpeg'}
                 theme={'tertiary'}
                 backgroundParallax={true}
@@ -50,7 +51,7 @@ export function App() {
                 }
             />
 
-            <section className={styles.section}>
+            <section id="story" className={styles.section}>
                 <div className={styles.narrow}>
                     <h2 className={styles.sectionTitle}>A life devoted to caring for others</h2>
                     <div className={styles.copy}>
@@ -72,7 +73,7 @@ export function App() {
                 </div>
             </section>
 
-            <section className={styles.sectionAlt}>
+            <section id="credentials" className={styles.sectionAlt}>
                 <div className={styles.narrow}>
                     <h2 className={styles.sectionTitleCentered}>Credentials & Specialties</h2>
                     <div className={styles.credentialsGrid}>
@@ -105,6 +106,7 @@ export function App() {
             </section>
 
             <Hero
+                id="approach"
                 theme={'tertiary'}
                 left={
                     <div className={styles.storyBlock}>
@@ -140,7 +142,7 @@ export function App() {
                 }
             />
 
-            <section className={styles.section}>
+            <section id="services" className={styles.section}>
                 <div className={styles.narrow}>
                     <h2 className={styles.sectionTitleCentered}>Services Rachel is honored to offer</h2>
                     <div className={styles.serviceTags}>
@@ -159,7 +161,7 @@ export function App() {
                 </div>
             </section>
 
-            <section className={styles.section}>
+            <section id="book" className={styles.section}>
                 <div className={styles.ctaCard}>
                     <h2 className={styles.sectionTitleCentered}>Thank you for trusting Rachel with your wellness journey</h2>
                     <p className={styles.centeredText}>

@@ -69,6 +69,7 @@ export function App() {
             <Header />
             <main id="main" className={styles.page}>
                 <Hero
+                    id="hero"
                     backgroundImage="/assets/Sand.jpeg"
                     backgroundParallax={true}
                     theme="tertiary"
@@ -97,7 +98,7 @@ export function App() {
                     }
                 />
 
-                <section className={styles.section}>
+                <section id="overview" className={styles.section}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>What Are Peptides?</h2>
                         <div className={styles.copy}>
@@ -121,7 +122,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.sectionAlt}>
+                <section id="therapies" className={styles.sectionAlt}>
                     <div className={styles.wide}>
                         <h2 className={styles.sectionTitle}>Peptide Therapies</h2>
                         <p className={styles.sectionSubtitle}>
@@ -144,7 +145,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.section}>
+                <section id="benefits" className={styles.section}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Benefits of Peptide Therapy</h2>
                         <div className={styles.highlightsGrid}>
@@ -158,7 +159,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.sectionAlt}>
+                <section id="complementary" className={styles.sectionAlt}>
                     <div className={styles.narrow}>
                         <h2 className={styles.sectionTitle}>Pair With Complementary Therapies</h2>
                         <div className={styles.copy}>
@@ -177,7 +178,7 @@ export function App() {
                     </div>
                 </section>
 
-                <section className={styles.section}>
+                <section id="book" className={styles.section}>
                     <div className={styles.ctaCard}>
                         <h2>Optimize Your Health from Within</h2>
                         <p>
