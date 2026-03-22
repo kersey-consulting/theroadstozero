@@ -7,7 +7,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: auto;
     padding: 0 2rem;
     gap: 2rem;
@@ -59,6 +59,7 @@
 .companySub {
     font-style: italic;
     font-size: 0.9rem;
+    padding-left: 0.75rem;
 }
 
 .headerContainer {

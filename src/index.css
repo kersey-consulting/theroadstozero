@@ -123,12 +123,14 @@ img {
     border-radius: 20px;
 }
 h1 {
+    font-family: snell-roundhand, serif;
     font-size: clamp(2rem, 5vw, 3rem);
     line-height: 1.2;
 }
 
 h2 {
-    font-size: 1.75rem;
+    font-family: snell-roundhand, serif;
+    font-size: 2rem;
 }
 
 h3 {

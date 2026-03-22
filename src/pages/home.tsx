@@ -14,14 +14,19 @@ const products = [
         title: 'Aesthetic Treatments',
         subtext: (
             <>
-                <p>
-                    Subtle, natural-looking enhancements designed to refresh your appearance without looking overdone.
-                </p>
-                <p>Services include:</p>
                 <ul>
                     <li>Botulinum</li>
                     <li>Dermal Fillers</li>
+                </ul>
+                <br/>
+                <p><b>Coming Soon:</b></p>
+                <ul>
                     <li>PRP hair restoration</li>
+                    <li>Dermaneedling</li>
+                    <li>Microdermabrasion</li>
+                    <li>Chemical Peels</li>
+                    <li>Facial PRP</li>
+                    <li>Hair restoration: PDO & PRP</li>
                 </ul>
             </>
         ),
@@ -31,20 +36,19 @@ const products = [
         },
     },
     {
-        imagePath: '/assets/home/Hormone.png',
+        imagePath: '/assets/home/Body.png',
         title: 'Body Transformation',
         subtext: (
             <>
-                <p>
-                    A comprehensive, medically guided approach combining GLP-1 medications, peptide support, and IV
-                    metabolism therapy to transform your body from the inside out.
-                </p>
-                <p>Programs include:</p>
+                <p><b>Coming Soon:</b></p>
                 <ul>
-                    <li>GLP-1 & GLP-1/GIP medications</li>
-                    <li>Peptide & hormone support</li>
-                    <li>Metabolism & fat burner IV</li>
-                    <li>Lipotropic injections</li>
+                    <li>Body Shaping and Contouring</li>
+                    <li>Skin Firmness and Tightening</li>
+                    <li>Fat and Cellulite Reduction</li>
+                    <li>Facial Toning and Rejuvenation</li>
+                    <li>Laser treatments</li>
+                    <li>Hair removal</li>
+                    <li>Tattoo, Birthmark, Age or sun spot removal</li>
                 </ul>
             </>
         ),
@@ -58,11 +62,6 @@ const products = [
         title: 'IV Therapy & Vitamin Injections',
         subtext: (
             <>
-                <p>
-                    Restore hydration, replenish nutrients, and support immune function with customized IV infusions and
-                    vitamin injections.
-                </p>
-                <p>Examples:</p>
                 <ul>
                     <li>Myers Cocktail</li>
                     <li>Immunity Boost</li>
@@ -82,13 +81,10 @@ const products = [
         title: 'Medical Weight Management',
         subtext: (
             <>
-                <p>
-                    GLP-1 medications like Semaglutide and Tirzepatide help regulate appetite, support metabolic health,
-                    and assist in sustainable weight loss.
-                </p>
-                <p>
-                    Our programs are medically guided and personalized for your body and lifestyle.
-                </p>
+                <ul>
+                    <li>Semaglutide</li>
+                    <li>Tirzepatide</li>
+                </ul>
             </>
         ),
         button: {
@@ -144,7 +140,6 @@ export function App() {
         <Header/>
         <main id={'main'} className={styles.page}>
             <Hero
-                backgroundImage={'/assets/Sand2.png'}
                 theme={'tertiary'}
                 backgroundParallax={true}
                 left={

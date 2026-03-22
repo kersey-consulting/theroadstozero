@@ -3,7 +3,6 @@ import { SOCIAL_LINKS } from '@/config/social';
 
 const EXTRA_LINKS = [
     { id: 'privacy', label: 'Privacy Policy', href: '/privacy' },
-    { id: 'terms', label: 'Terms of Service', href: '/terms' },
     { id: 'contact', label: 'Contact', href: '/contact' },
 ];
 
@@ -13,7 +12,7 @@ export function Footer() {
             <div className={styles.inner}>
                 <div className={styles.columns}>
                     <section className={styles.column} aria-label="Footer links">
-                        <h2 className={styles.heading}>Links</h2>
+                        <h3 className={styles.heading}>Links</h3>
                         <ul className={styles.list}>
                             {EXTRA_LINKS.map(link => (
                                 <li key={link.id} className={styles.listItem}>
@@ -30,7 +29,7 @@ export function Footer() {
                     </section>
 
                     <section className={styles.column} aria-label="Social media links">
-                        <h2 className={styles.heading}>Get in Touch</h2>
+                        <h3 className={styles.heading}>Get in Touch</h3>
                         <ul className={styles.socialList}>
                             {SOCIAL_LINKS.map(({ id, label, href, icon }) => (
                                 <li key={id} className={styles.socialItem}>

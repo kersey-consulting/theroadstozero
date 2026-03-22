@@ -96,13 +96,6 @@ export function App() {
                             </div>
                         </div>
                     }
-                    right={
-                        <img
-                            className={styles.heroImage}
-                            src="/assets/home/Aesthetics.png"
-                            alt="Aesthetic Treatments at The Road to Zero"
-                        />
-                    }
                 />
 
                 <section className={styles.section}>
