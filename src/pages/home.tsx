@@ -36,16 +36,21 @@ const products = [
         subtext: (
             <>
                 <p>
-
+                    A comprehensive, medically guided approach combining GLP-1 medications, peptide support, and IV
+                    metabolism therapy to transform your body from the inside out.
                 </p>
-                <p>
-
-                </p>
+                <p>Programs include:</p>
+                <ul>
+                    <li>GLP-1 & GLP-1/GIP medications</li>
+                    <li>Peptide & hormone support</li>
+                    <li>Metabolism & fat burner IV</li>
+                    <li>Lipotropic injections</li>
+                </ul>
             </>
         ),
         button: {
             label: 'Learn More',
-            href: '/services/peptide-hormone-support',
+            href: '/services/body-transformation',
         },
     },
     {
@@ -116,16 +121,20 @@ const products = [
         subtext: (
             <>
                 <p>
-
+                    Healing goes beyond the physical. Rachel's holistic services support mind, body, and spirit
+                    alignment through Reiki energy healing and integrative wellness sessions.
                 </p>
-                <p>
-
-                </p>
+                <p>Offerings include:</p>
+                <ul>
+                    <li>Reiki energy healing</li>
+                    <li>Integrative wellness sessions</li>
+                    <li>Mind-body-spirit alignment</li>
+                </ul>
             </>
         ),
         button: {
             label: 'Learn More',
-            href: '/services/peptide-hormone-support',
+            href: '/services/holistic-services',
         },
     },
 ];

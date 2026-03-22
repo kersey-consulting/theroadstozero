@@ -11,10 +11,12 @@ export const NAV_ITEMS: NavItem[] = [
     { id: 'whyus', href: '/why-us', labels: { en: 'Why Us', es: '' } },
     { id: 'location', href: '/locations', labels: { en: 'Locations', es: '' } },
     { id: 'services', href: '/services', labels: { en: 'Services', es: '' }, children: [
-        { id: 'service1', href: '/services/service1', labels: { en: 'Aesthetics Treatments', es: '' } },
-        { id: 'service2', href: '/services/service2', labels: { en: 'Medical Weight Management', es: '' } },
-        { id: 'service3', href: '/services/service3', labels: { en: 'IV Therapy', es: '' } },
-        { id: 'service4', href: '/services/service3', labels: { en: 'Peptide & Hormone Support', es: '' } },
+        { id: 'aesthetic-treatments', href: '/services/aesthetic-treatments', labels: { en: 'Aesthetic Treatments', es: '' } },
+        { id: 'body-transformation', href: '/services/body-transformation', labels: { en: 'Body Transformation', es: '' } },
+        { id: 'iv-therapy', href: '/services/iv-therapy', labels: { en: 'IV Therapy & Vitamin Injections', es: '' } },
+        { id: 'medical-weight-management', href: '/services/medical-weight-management', labels: { en: 'Medical Weight Management', es: '' } },
+        { id: 'peptide-hormone-support', href: '/services/peptide-hormone-support', labels: { en: 'Peptide & Hormone Support', es: '' } },
+        { id: 'holistic-services', href: '/services/holistic-services', labels: { en: 'Holistic Services', es: '' } },
         ]
     },
 ];

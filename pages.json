@@ -16,5 +16,185 @@
     "image": "",
     "entry": "/src/pages/about.tsx",
     "lang": "en"
+  },
+  {
+    "path": "/services/aesthetic-treatments",
+    "html": "services/aesthetic-treatments.html",
+    "title": "Aesthetic Treatments | The Road to Zero",
+    "description": "Natural-looking Botulinum, Dermal Fillers, and PRP Hair Restoration performed with a conservative, anatomy-first approach. Restore your natural beauty with The Road to Zero.",
+    "image": "",
+    "entry": "/src/pages/services/aesthetic-treatments.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/body-transformation",
+    "html": "services/body-transformation.html",
+    "title": "Body Transformation | The Road to Zero",
+    "description": "A medically guided approach to body transformation combining GLP-1 weight management, peptide support, IV metabolism therapy, and lipotropic injections. Personalized for your goals.",
+    "image": "",
+    "entry": "/src/pages/services/body-transformation.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy",
+    "html": "services/iv-therapy.html",
+    "title": "IV Therapy & Vitamin Injections | The Road to Zero",
+    "description": "Restore hydration, replenish nutrients, and support immune function with customized IV infusions and vitamin injections. 11 drips and 3 injections delivered directly to you in Utah.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/medical-weight-management",
+    "html": "services/medical-weight-management.html",
+    "title": "Medical Weight Management | The Road to Zero",
+    "description": "Medically supervised GLP-1 programs with Semaglutide and Tirzepatide. Personalized dosing, ongoing support, and holistic integration for sustainable weight loss in Utah.",
+    "image": "",
+    "entry": "/src/pages/services/medical-weight-management.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/peptide-hormone-support",
+    "html": "services/peptide-hormone-support.html",
+    "title": "Peptide & Hormone Support | The Road to Zero",
+    "description": "Targeted peptide therapy to support natural hormone function, improve recovery, optimize sleep, and enhance vitality. Personalized protocols by a licensed medical provider in Utah.",
+    "image": "",
+    "entry": "/src/pages/services/peptide-hormone-support.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/holistic-services",
+    "html": "services/holistic-services.html",
+    "title": "Holistic Services | The Road to Zero",
+    "description": "Reiki energy healing and integrative wellness sessions supporting mind, body, and spirit alignment. Offered by certified Reiki practitioner and RN Rachel at The Road to Zero.",
+    "image": "",
+    "entry": "/src/pages/services/holistic-services.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/plain-hydration",
+    "html": "services/iv-therapy/plain-hydration.html",
+    "title": "Plain Hydration IV | The Road to Zero",
+    "description": "Rapid rehydration with a pure Lactated Ringer solution. Replenish electrolytes, restore energy, and recover fast. Mobile IV therapy delivered to you in Utah.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/plain-hydration.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/athlete-recovery",
+    "html": "services/iv-therapy/athlete-recovery.html",
+    "title": "Athlete Recovery IV | The Road to Zero",
+    "description": "Accelerate recovery after intense workouts or competition. Rehydrate, replenish nutrients, reduce soreness, and perform at your best with our Athlete Recovery IV drip.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/athlete-recovery.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/beauty-youth",
+    "html": "services/iv-therapy/beauty-youth.html",
+    "title": "Beauty & Youth IV | The Road to Zero",
+    "description": "Glow from the inside out with our Beauty & Youth IV drip. Biotin, Glutathione, and B vitamins support radiant skin, stronger hair and nails, and anti-aging cellular health.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/beauty-youth.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/immune",
+    "html": "services/iv-therapy/immune.html",
+    "title": "Immune Boost IV | The Road to Zero",
+    "description": "Strengthen your immune system with our Immune Boost IV drip. High-dose Vitamin C, Zinc, and antioxidants to defend, recover, and stay at your best.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/immune.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/detox-hangover",
+    "html": "services/iv-therapy/detox-hangover.html",
+    "title": "Detox & Hangover Recovery IV | The Road to Zero",
+    "description": "Rehydrate, flush toxins, and recover fast with our Detox & Hangover Recovery IV drip. Reduce nausea, restore energy, and feel like yourself again.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/detox-hangover.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/energy",
+    "html": "services/iv-therapy/energy.html",
+    "title": "Energy IV | The Road to Zero",
+    "description": "Fast, clean energy with no crash. Our Energy IV drip combats fatigue, sharpens focus, and powers you through your day with vitamins, amino acids, and hydration.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/energy.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/fat-burner",
+    "html": "services/iv-therapy/fat-burner.html",
+    "title": "Metabolism & Fat Burner IV | The Road to Zero",
+    "description": "Boost metabolism, burn fat, and increase natural energy with our Fat Burner IV drip. MIC, lipotropics, and B vitamins to accelerate your transformation.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/fat-burner.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/myers-cocktail",
+    "html": "services/iv-therapy/myers-cocktail.html",
+    "title": "Myers Cocktail IV | The Road to Zero",
+    "description": "The gold standard IV drip. Myers Cocktail delivers Vitamin C, B-Complex, Magnesium, and Calcium for energy, immune support, migraine relief, and overall wellness.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/myers-cocktail.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/migraine",
+    "html": "services/iv-therapy/migraine.html",
+    "title": "Migraine Relief IV | The Road to Zero",
+    "description": "Fast migraine and headache relief with our Migraine IV drip. Magnesium, B-Complex, and hydration to calm pain, reduce nausea, and get you back to your day.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/migraine.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/prenatal",
+    "html": "services/iv-therapy/prenatal.html",
+    "title": "Prenatal Hydration IV | The Road to Zero",
+    "description": "Safe, gentle IV hydration for expecting moms. Supports nausea relief, electrolyte balance, and energy during pregnancy. Administered by RN and Midwife Rachel.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/prenatal.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/nr-infusion",
+    "html": "services/iv-therapy/nr-infusion.html",
+    "title": "NR IV Infusion | The Road to Zero",
+    "description": "Support cellular energy, metabolism, and DNA repair with Nicotinamide Riboside (NR) — a direct NAD+ precursor. Anti-aging IV therapy delivered to you in Utah.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/nr-infusion.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/b12-injection",
+    "html": "services/iv-therapy/b12-injection.html",
+    "title": "Vitamin B12 Injection | The Road to Zero",
+    "description": "Boost energy, support metabolism, lift mood, and sharpen focus with a Vitamin B12 IM injection. A quick, powerful weekly or biweekly wellness treatment.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/b12-injection.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/b-complex-injection",
+    "html": "services/iv-therapy/b-complex-injection.html",
+    "title": "Vitamin B-Complex Injection | The Road to Zero",
+    "description": "A comprehensive blend of B1–B12 vitamins to boost energy, metabolism, immunity, and mental clarity. One of the most foundational wellness injections available.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/b-complex-injection.tsx",
+    "lang": "en"
+  },
+  {
+    "path": "/services/iv-therapy/glutathione-injection",
+    "html": "services/iv-therapy/glutathione-injection.html",
+    "title": "Glutathione Injection | The Road to Zero",
+    "description": "The master antioxidant. Glutathione IM injection brightens skin, supports liver detox, boosts immunity, and amplifies every IV drip for deeper cellular results.",
+    "image": "",
+    "entry": "/src/pages/services/iv-therapy/glutathione-injection.tsx",
+    "lang": "en"
   }
 ]

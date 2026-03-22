@@ -1,0 +1,308 @@
+/* ================================================
+   SHARED SERVICE HUB PAGE STYLES
+   Used across all service category pages
+   ================================================ */
+
+.page {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---- Hero ---- */
+.heroContent {
+    max-width: 740px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.85rem;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+.heroTitle {
+    margin: 0;
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    line-height: 1.05;
+}
+
+.heroText {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-width: 64ch;
+}
+
+.heroActions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.heroImage {
+    width: min(100%, 400px);
+    border-radius: 24px;
+    object-fit: cover;
+    margin: 0 auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+}
+
+/* ---- Sections ---- */
+.section,
+.sectionAlt {
+    padding: 5rem 1.5rem;
+}
+
+.sectionAlt {
+    background: rgba(210, 185, 150, 0.10);
+}
+
+.narrow {
+    width: min(100%, 1000px);
+    margin: 0 auto;
+}
+
+.wide {
+    width: min(100%, 1200px);
+    margin: 0 auto;
+}
+
+/* ---- Headings ---- */
+.sectionTitle {
+    margin: 0 0 1.5rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+}
+
+.sectionTitleCentered {
+    margin: 0 0 1.5rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    text-align: center;
+}
+
+.sectionSubtitle {
+    margin: 0 0 2.5rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    opacity: 0.8;
+    max-width: 700px;
+}
+
+/* ---- Body copy ---- */
+.copy {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.copy p {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.85;
+}
+
+.centeredText {
+    text-align: center;
+    margin: 0 auto 2rem;
+    font-size: 1.05rem;
+    line-height: 1.85;
+    max-width: 760px;
+    opacity: 0.85;
+}
+
+/* ---- Treatment Cards ---- */
+.treatmentsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 1.5rem;
+}
+
+.treatmentCard {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    border-top: 4px solid var(--color-secondary);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.treatmentCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.12);
+}
+
+.treatmentCard h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--color-primary);
+    line-height: 1.2;
+}
+
+.treatmentCard p {
+    margin: 0;
+    font-size: 0.97rem;
+    line-height: 1.75;
+    flex: 1;
+}
+
+.treatmentCard ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    opacity: 0.85;
+}
+
+.cardTag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(210, 185, 150, 0.18);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    width: fit-content;
+}
+
+/* ---- Highlight Cards (why choose us, etc.) ---- */
+.highlightsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+.highlightCard {
+    background: white;
+    border-radius: 18px;
+    padding: 1.75rem;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+}
+
+.highlightCard h3 {
+    margin: 0 0 0.6rem;
+    font-size: 1.05rem;
+    color: var(--color-secondary);
+}
+
+.highlightCard p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    opacity: 0.85;
+}
+
+/* ---- Credentials / Info Cards ---- */
+.infoGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.infoCard {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
+}
+
+.infoCard h3 {
+    margin: 0 0 1rem;
+    font-size: 1.1rem;
+}
+
+.infoList {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.97rem;
+    line-height: 1.6;
+}
+
+/* ---- Tags ---- */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+    background: rgba(210, 185, 150, 0.18);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* ---- CTA ---- */
+.ctaCard {
+    width: min(100%, 900px);
+    margin: 0 auto;
+    text-align: center;
+    background: white;
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.09);
+}
+
+.ctaCard h2 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.ctaCard p {
+    margin: 0 auto 2rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    opacity: 0.8;
+    max-width: 580px;
+}
+
+.ctaActions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+    .infoGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .section,
+    .sectionAlt {
+        padding: 3.5rem 1.25rem;
+    }
+
+    .heroText {
+        font-size: 1rem;
+    }
+
+    .ctaCard {
+        padding: 2.5rem 1.5rem;
+    }
+}
