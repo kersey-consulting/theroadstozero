@@ -168,7 +168,7 @@ export function App() {
                 }
             />
             <div className={styles.surfaceContainer}>
-                <section id="overview" className={styles.narrowSection}>
+                <section id="overview" className={styles.section}>
                     <div className={styles.intro}>
                         <h2 className={styles.sectionHeader}>Restore Balance. Reclaim Vitality. Renew Confidence.</h2>
                         <p>
