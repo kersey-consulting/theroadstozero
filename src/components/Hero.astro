@@ -1,0 +1,86 @@
+---
+interface Props {
+  id?: string;
+  backgroundImage?: string;
+  backgroundParallax?: boolean;
+  theme?: 'primary' | 'secondary' | 'tertiary';
+}
+
+const {
+  id,
+  backgroundImage,
+  backgroundParallax = false,
+  theme = 'primary',
+} = Astro.props;
+
+const style = [
+  backgroundImage ? `background-image: url(${backgroundImage})` : '',
+  backgroundImage ? 'background-size: cover' : '',
+  backgroundImage ? 'background-position: top' : '',
+  backgroundImage ? 'background-repeat: no-repeat' : '',
+  backgroundParallax ? 'background-attachment: fixed' : '',
+].filter(Boolean).join('; ');
+---
+
+<section id={id} class:list={['hero', theme]} style={style}>
+  <div class="inner">
+    <div class="col left">
+      <slot name="left" />
+    </div>
+    <div class="col right">
+      <slot name="right" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: clamp(320px, 50vh, 520px);
+    padding: clamp(2rem, 5vw, 4rem);
+    display: flex;
+    background-color: var(--hero-bg, #0b1b34);
+    color: var(--hero-fg, #ffffff);
+  }
+  .inner {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: stretch;
+  }
+  .col {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+  }
+  .primary {
+    --hero-bg: var(--color-surface);
+    --hero-fg: var(--color-primary);
+  }
+  .secondary {
+    --hero-bg: var(--color-secondary);
+    --hero-fg: #ffffff;
+  }
+  .tertiary {
+    --hero-bg: var(--color-background);
+    --hero-fg: var(--color-primary);
+  }
+  .hero :global(h1),
+  .hero :global(h2),
+  .hero :global(h3),
+  .hero :global(p),
+  .hero :global(a),
+  .hero :global(li),
+  .hero :global(span) {
+    color: inherit;
+  }
+  @media (max-width: 768px) {
+    .inner {
+      flex-direction: column;
+    }
+  }
+</style>

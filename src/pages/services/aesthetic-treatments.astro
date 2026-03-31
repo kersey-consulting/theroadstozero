@@ -1,0 +1,99 @@
+---
+import ServiceHubLayout from '@/layouts/ServiceHubLayout.astro';
+import Hero from '@/components/Hero.astro';
+import Button from '@/components/Button.astro';
+
+const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+
+const treatments = [
+  { tag: 'Wrinkle Relaxing', name: 'Botulinum Toxin', description: "Botulinum is used to restore what time, stress, and gravity have taken — not to change identity. Rachel's philosophy centers on facial balance, proportion, and natural restoration.", highlights: ['Forehead lines & frown lines (11s)', "Crow's feet & brow lift", 'Lip flip & chin dimpling', 'Jaw slimming (masseter)', 'Hyperhidrosis (excessive sweating)'] },
+  { tag: 'Volume Restoration', name: 'Dermal Fillers', description: 'Hyaluronic acid fillers restore lost volume, smooth deeper lines, and enhance natural contours — all with a conservative hand and a focus on looking refreshed, never overdone.', highlights: ['Lip enhancement & definition', 'Cheek & mid-face volume', 'Nasolabial folds & marionette lines', 'Under-eye hollows (tear troughs)', 'Jawline & chin contouring'] },
+  { tag: 'Hair Restoration', name: 'PRP Hair Restoration', description: "Platelet-Rich Plasma (PRP) therapy uses your body's own growth factors to stimulate hair follicles, encourage regrowth, and restore thickness — a natural, non-surgical approach.", highlights: ['Thinning hair & early hair loss', 'Male & female pattern hair loss', 'Hairline restoration support', 'Scalp health & follicle stimulation'] },
+];
+
+const philosophy = [
+  { title: 'Natural First', description: "Every treatment begins with your natural structure. We enhance what's already there — never change who you are." },
+  { title: 'Conservative Touch', description: 'Results should be noticed as looking refreshed and rested — not as having had work done.' },
+  { title: 'Facial Balance', description: 'We assess proportion, symmetry, and overall facial harmony before recommending any treatment.' },
+  { title: 'Personalized Plans', description: 'Every consultation is unique. Your goals, anatomy, and timeline guide every decision.' },
+];
+---
+
+<ServiceHubLayout title="Aesthetic Treatments — The Road to Zero" description="Subtle, natural-looking enhancements designed to restore balance and refresh your appearance.">
+  <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+    <div slot="left" class="hub-heroContent">
+      <p class="hub-eyebrow">Services</p>
+      <h1 class="hub-heroTitle">Aesthetic Treatments</h1>
+      <p class="hub-heroText">Subtle, natural-looking enhancements designed to restore balance and refresh your appearance — without looking overdone. Because true beauty is a return to your most vibrant, natural self.</p>
+      <div class="hub-heroActions">
+        <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
+        <Button label="View All Services" href="/services" theme="primary" />
+      </div>
+    </div>
+  </Hero>
+
+  <section id="philosophy" class="hub-section">
+    <div class="hub-narrow">
+      <h2 class="hub-sectionTitle">Our Philosophy on Aesthetics</h2>
+      <div class="hub-copy">
+        <p>At The Road to Zero, aesthetic treatment is about returning the face to its natural structure and symmetry — to enhance what you have and restore what time has taken, not to change your identity.</p>
+        <p>Rachel brings a medically trained eye and a conservative hand to every treatment. Trained through the American Academy of Cosmetic Medicine (AACM), Aesthetic Medical Educators Training (AMET), and Empire Medical, her approach is rooted in anatomy, proportion, and balance.</p>
+        <p>Whether you're looking to soften fine lines, restore lost volume, or simply feel more refreshed — every treatment plan is personalized to your goals and your face.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="treatments" class="hub-sectionAlt">
+    <div class="hub-wide">
+      <h2 class="hub-sectionTitle">Treatments Offered</h2>
+      <p class="hub-sectionSubtitle">All treatments are performed by or under the supervision of a licensed medical provider. A consultation is required prior to treatment.</p>
+      <div class="hub-treatmentsGrid">
+        {treatments.map(t => (
+          <div class="hub-treatmentCard">
+            <span class="hub-cardTag">{t.tag}</span>
+            <h3>{t.name}</h3>
+            <p>{t.description}</p>
+            <ul>{t.highlights.map(h => <li>{h}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="approach" class="hub-section">
+    <div class="hub-narrow">
+      <h2 class="hub-sectionTitle">Our Approach</h2>
+      <div class="hub-highlightsGrid">
+        {philosophy.map(p => (
+          <div class="hub-highlightCard">
+            <h3>{p.title}</h3>
+            <p>{p.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="credentials" class="hub-sectionAlt">
+    <div class="hub-narrow">
+      <h2 class="hub-sectionTitle">Credentials &amp; Training</h2>
+      <div class="hub-copy"><p>Rachel holds certifications from the leading aesthetic medicine training institutions, ensuring every treatment is grounded in the highest standards of safety, skill, and care.</p></div>
+      <div class="hub-infoGrid">
+        <div class="hub-infoCard"><h3>Training &amp; Certifications</h3><ul class="hub-infoList"><li>American Academy of Cosmetic Medicine (AACM)</li><li>Aesthetic Medical Educators Training (AMET)</li><li>Empire Medical</li></ul></div>
+        <div class="hub-infoCard"><h3>Clinical Background</h3><ul class="hub-infoList"><li>Registered Nurse (RN)</li><li>Midwife</li><li>Licensed Healthcare Administrator</li></ul></div>
+        <div class="hub-infoCard"><h3>Specialties</h3><ul class="hub-infoList"><li>Botulinum &amp; Neuromodulators</li><li>Dermal Filler Clinician</li><li>PRP Therapy</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="book" class="hub-section">
+    <div class="hub-ctaCard">
+      <h2>Ready to Begin Your Aesthetic Journey?</h2>
+      <p>Book a personalized consultation with Rachel and discover what's possible with a conservative, natural approach to aesthetic care.</p>
+      <div class="hub-ctaActions">
+        <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
+        <Button label="Learn About Rachel" href="/about" theme="primary" />
+      </div>
+    </div>
+  </section>
+</ServiceHubLayout>

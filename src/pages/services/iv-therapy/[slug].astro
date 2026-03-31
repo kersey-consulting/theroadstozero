@@ -1,0 +1,15 @@
+---
+import ServicePageLayout from '@/layouts/ServicePageLayout.astro';
+import { ivServices } from '@/data/iv-services';
+
+export function getStaticPaths() {
+  return ivServices.map((service) => ({
+    params: { slug: service.slug },
+    props: { data: service },
+  }));
+}
+
+const { data } = Astro.props;
+---
+
+<ServicePageLayout data={data} />

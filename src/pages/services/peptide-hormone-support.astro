@@ -1,0 +1,104 @@
+---
+import ServiceHubLayout from '@/layouts/ServiceHubLayout.astro';
+import Hero from '@/components/Hero.astro';
+import Button from '@/components/Button.astro';
+
+const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+
+const therapies = [
+  { tag: 'Growth Hormone Support', name: 'Sermorelin & CJC-1295', description: "Growth hormone releasing peptides that stimulate the pituitary gland to naturally produce more growth hormone — supporting fat loss, muscle development, recovery, and deep sleep.", highlights: ['Stimulates natural growth hormone release', 'Supports lean muscle development', 'Improves sleep quality & recovery', 'Promotes fat metabolism'] },
+  { tag: 'Recovery & Repair', name: 'BPC-157', description: 'A body protective compound with powerful healing and regenerative properties. BPC-157 supports tissue repair, reduces inflammation, and accelerates recovery from injury or intense training.', highlights: ['Accelerates tissue & tendon healing', 'Reduces inflammation & pain', 'Supports gut health', 'Enhances workout recovery'] },
+  { tag: 'Fat Loss', name: 'AOD-9604', description: 'A modified fragment of human growth hormone specifically developed to stimulate fat breakdown without the blood sugar effects of full HGH — ideal for targeted body composition improvement.', highlights: ['Stimulates fat metabolism', 'Supports body composition goals', 'No impact on blood sugar', 'Often combined with GLP-1 programs'] },
+  { tag: 'Energy & Performance', name: 'Ipamorelin', description: 'A highly selective growth hormone secretagogue that stimulates GH release with minimal side effects. Ipamorelin is popular for energy, recovery, improved sleep, and anti-aging support.', highlights: ['Clean growth hormone pulse stimulation', 'Improved energy & vitality', 'Better sleep & recovery', 'Anti-aging cellular support'] },
+];
+
+const benefits = [
+  { title: 'Improved Recovery', description: 'Recover faster from workouts, illness, and the demands of daily life.' },
+  { title: 'Better Sleep', description: 'Deeper, more restorative sleep supporting cellular repair and energy.' },
+  { title: 'Enhanced Vitality', description: 'Feel more energized, motivated, and mentally clear throughout your day.' },
+  { title: 'Hormone Optimization', description: 'Support natural hormone function for balance, mood, and longevity.' },
+  { title: 'Body Composition', description: 'Build lean muscle, reduce stubborn fat, and transform your physique.' },
+  { title: 'Personalized Care', description: 'Every protocol is individualized based on your health history and goals.' },
+];
+---
+
+<ServiceHubLayout title="Peptide & Hormone Support — The Road to Zero" description="Targeted peptide therapies that support natural hormone function and recovery.">
+  <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+    <div slot="left" class="hub-heroContent">
+      <p class="hub-eyebrow">Services</p>
+      <h1 class="hub-heroTitle">Peptide &amp; Hormone Support</h1>
+      <p class="hub-heroText">Targeted peptide therapies that support natural hormone function, improve recovery, optimize sleep, and enhance vitality — helping your body perform and feel the way it was designed to.</p>
+      <div class="hub-heroActions">
+        <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
+        <Button label="View All Services" href="/services" theme="primary" />
+      </div>
+    </div>
+  </Hero>
+
+  <section id="overview" class="hub-section">
+    <div class="hub-narrow">
+      <h2 class="hub-sectionTitle">What Are Peptides?</h2>
+      <div class="hub-copy">
+        <p>Peptides are short chains of amino acids — the building blocks of proteins — that act as signaling molecules in the body. They communicate with cells, tissues, and organs to regulate and optimize biological functions including hormone production, tissue repair, metabolism, and immune response.</p>
+        <p>As we age, the levels of many of these naturally occurring peptides decline. Targeted peptide therapy works by supplementing or stimulating these pathways, helping the body restore its natural capacity for healing, energy, and hormonal balance.</p>
+        <p>At The Road to Zero, Rachel designs each peptide protocol around your specific health goals, labs, and lifestyle — ensuring a safe, personalized, and effective approach. A comprehensive consultation is required prior to beginning any peptide program.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="therapies" class="hub-sectionAlt">
+    <div class="hub-wide">
+      <h2 class="hub-sectionTitle">Peptide Therapies</h2>
+      <p class="hub-sectionSubtitle">All protocols are customized, medically supervised, and require a consultation prior to starting. The following are examples of therapies that may be appropriate depending on your health history and goals.</p>
+      <div class="hub-treatmentsGrid">
+        {therapies.map(t => (
+          <div class="hub-treatmentCard">
+            <span class="hub-cardTag">{t.tag}</span>
+            <h3>{t.name}</h3>
+            <p>{t.description}</p>
+            <ul>{t.highlights.map(h => <li>{h}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="benefits" class="hub-section">
+    <div class="hub-narrow">
+      <h2 class="hub-sectionTitle">Benefits of Peptide Therapy</h2>
+      <div class="hub-highlightsGrid">
+        {benefits.map(b => (
+          <div class="hub-highlightCard">
+            <h3>{b.title}</h3>
+            <p>{b.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="complementary" class="hub-sectionAlt">
+    <div class="hub-narrow">
+      <h2 class="hub-sectionTitle">Pair With Complementary Therapies</h2>
+      <div class="hub-copy"><p>Peptide therapy works beautifully alongside other Road to Zero services for amplified results:</p></div>
+      <div class="hub-tags">
+        <a href="/services/iv-therapy/athlete-recovery" class="hub-tag">Athlete Recovery IV</a>
+        <a href="/services/iv-therapy/energy" class="hub-tag">Energy IV</a>
+        <a href="/services/iv-therapy/fat-burner" class="hub-tag">Metabolism &amp; Fat Burner IV</a>
+        <a href="/services/medical-weight-management" class="hub-tag">Medical Weight Management</a>
+        <a href="/services/iv-therapy/b12-injection" class="hub-tag">B12 Injection</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="book" class="hub-section">
+    <div class="hub-ctaCard">
+      <h2>Optimize Your Health from Within</h2>
+      <p>Book a consultation with Rachel to explore whether peptide therapy is right for your goals and health history.</p>
+      <div class="hub-ctaActions">
+        <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
+        <Button label="Explore Body Transformation" href="/services/body-transformation" theme="primary" />
+      </div>
+    </div>
+  </section>
+</ServiceHubLayout>

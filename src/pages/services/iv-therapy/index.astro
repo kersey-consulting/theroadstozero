@@ -1,0 +1,188 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import Button from '@/components/Button.astro';
+import { ivDrips, imInjections } from '@/data/iv-services';
+
+const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+
+const addOns = [
+  { name: 'Glutathione', desc: 'Master antioxidant for detox, skin brightening & immune support' },
+  { name: 'B12 Boost', desc: 'Clean, sustained energy and immune resilience' },
+  { name: 'Extra Vitamin C', desc: 'Enhanced immune cell function, collagen & tissue repair' },
+  { name: 'Amino Blend', desc: 'Muscle recovery, endurance & protein synthesis support' },
+  { name: 'Mineral Blend', desc: 'Magnesium, zinc, copper & manganese for cellular function' },
+  { name: 'Taurine', desc: 'Cardiovascular and nervous system support' },
+];
+---
+
+<BaseLayout title="IV Therapy & Vitamin Injections — The Road to Zero" description="Restore hydration, replenish nutrients, and support immune function with customized IV infusions and vitamin injections.">
+  <div class="page">
+    <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+      <div slot="left" class="heroContent">
+        <p class="eyebrow">Services</p>
+        <h1 class="heroTitle">IV Therapy &amp; Vitamin Injections</h1>
+        <p class="heroText">
+          Restore hydration, replenish nutrients, and support immune function with customized IV
+          infusions and vitamin injections — administered by a licensed provider and delivered
+          directly to you.
+        </p>
+        <div class="heroActions">
+          <Button label="Book a Treatment" href={bookingUrl} theme="primary" />
+          <Button label="View All Services" href="/services" theme="primary" />
+        </div>
+      </div>
+    </Hero>
+
+    <section id="overview" class="introSection">
+      <div class="narrow">
+        <h2 class="sectionTitle">Why IV Therapy?</h2>
+        <div class="introCopy">
+          <p>Unlike oral supplements, IV therapy delivers nutrients directly into your bloodstream — bypassing the digestive system for immediate, 100% absorption. Clients often feel results within 20–40 minutes.</p>
+          <p>Whether you're recovering from a workout, battling fatigue, seeking a beauty boost, or looking to support your immune system, The Road to Zero offers a full menu of customized infusions and injections tailored to your wellness goals.</p>
+          <p>All treatments are administered by or under the supervision of a licensed medical provider in accordance with Utah state regulations. We come to you — at home, your office, a wellness studio, or special event.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="iv-infusions" class="servicesSection">
+      <div class="wide">
+        <div class="sectionHeader">
+          <h2 class="sectionTitle">IV Infusions</h2>
+          <p class="sectionSubtext">Customized drips for hydration, recovery, beauty, and wellness — delivered in 30–60 minutes.</p>
+        </div>
+        <div class="servicesGrid">
+          {ivDrips.map(card => (
+            <div class="serviceCard">
+              <span class="cardType">IV Drip</span>
+              <h3 class="cardTitle">{card.name}</h3>
+              <p class="cardTagline">{card.tagline}</p>
+              <p class="cardDescription">{card.shortDescription}</p>
+              <ul class="cardBenefits">
+                {card.keyBenefits.map(b => <li>{b}</li>)}
+              </ul>
+              <div class="cardActions">
+                <a class="cardButton" href={`/services/iv-therapy/${card.slug}`}>Learn More</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="im-injections" class="servicesSectionAlt">
+      <div class="wide">
+        <div class="sectionHeader">
+          <h2 class="sectionTitle">IM Injections</h2>
+          <p class="sectionSubtext">Quick, powerful intramuscular injections — perfect as stand-alone treatments or paired with any IV drip.</p>
+        </div>
+        <div class="injectionsGrid">
+          {imInjections.map(card => (
+            <div class="serviceCard">
+              <span class="cardType">IM Injection</span>
+              <h3 class="cardTitle">{card.name}</h3>
+              <p class="cardTagline">{card.tagline}</p>
+              <p class="cardDescription">{card.shortDescription}</p>
+              <ul class="cardBenefits">
+                {card.keyBenefits.map(b => <li>{b}</li>)}
+              </ul>
+              <div class="cardActions">
+                <a class="cardButton" href={`/services/iv-therapy/${card.slug}`}>Learn More</a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="add-ons" class="servicesSection">
+      <div class="narrow">
+        <h2 class="sectionTitleCentered">Customize Your Drip</h2>
+        <p class="centeredText">Every treatment can be personalized with add-ons to target your specific needs. Common add-ons include:</p>
+        <div class="addOnsGrid">
+          {addOns.map(addon => (
+            <div class="addOnCard">
+              <h4>{addon.name}</h4>
+              <p>{addon.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="book" class="ctaSection">
+      <div class="ctaCard">
+        <h2>Ready to Restore Your Balance?</h2>
+        <p>Book your IV therapy session today. We come to you — home, office, event, or wellness studio.</p>
+        <div class="ctaActions">
+          <Button label="Book a Treatment" href={bookingUrl} theme="primary" />
+          <Button label="Back to All Services" href="/services" theme="primary" />
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page { display: flex; flex-direction: column; }
+  .heroContent { max-width: 720px; display: flex; flex-direction: column; gap: 1rem; }
+  .eyebrow { margin: 0; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
+  .heroTitle { margin: 0; font-size: clamp(2.25rem, 5vw, 3.5rem); line-height: 1.05; }
+  .heroText { margin: 0; font-size: 1.1rem; line-height: 1.8; max-width: 62ch; }
+  .heroActions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
+  .introSection, .servicesSection, .servicesSectionAlt, .ctaSection { padding: 5rem 1.5rem; }
+  .servicesSectionAlt { background: rgba(210, 185, 150, 0.10); }
+  .narrow { width: min(100%, 1000px); margin: 0 auto; }
+  .wide { width: min(100%, 1000px); margin: 0 auto; }
+  .sectionHeader { margin-bottom: 2.5rem; }
+  .sectionTitle { margin: 0 0 0.75rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
+  .sectionTitleCentered { margin: 0 0 1rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; text-align: center; }
+  .sectionSubtext { margin: 0; font-size: 1.05rem; line-height: 1.75; opacity: 0.8; max-width: 640px; }
+  .introCopy { display: flex; flex-direction: column; gap: 1.1rem; }
+  .introCopy p { margin: 0; font-size: 1.05rem; line-height: 1.85; }
+  .servicesGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+  .injectionsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1000px; }
+  .serviceCard {
+    background: white; border-radius: 20px; padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+    display: flex; flex-direction: column; gap: 0.85rem;
+    border-top: 4px solid var(--color-secondary);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .serviceCard:hover { transform: translateY(-3px); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.12); }
+  .cardType {
+    display: inline-flex; align-items: center;
+    padding: 0.3rem 0.8rem; border-radius: 999px;
+    background: rgba(210, 185, 150, 0.18);
+    font-size: 0.75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.09em; width: fit-content;
+  }
+  .cardTitle { margin: 0; font-size: 1.3rem; color: var(--color-primary); line-height: 1.2; }
+  .cardTagline { margin: 0; font-size: 0.93rem; font-style: italic; opacity: 0.65; }
+  .cardDescription { margin: 0; font-size: 0.95rem; line-height: 1.75; flex: 1; }
+  .cardBenefits { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.88rem; opacity: 0.85; }
+  .cardActions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .cardButton {
+    display: block; width: 100%; text-align: center; padding: 1rem;
+    color: var(--color-primary); background: transparent;
+    border: 2px solid; border-radius: 15px;
+  }
+  .cardButton:hover, .cardButton:focus { background: var(--color-surface); box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); text-decoration: none; }
+  .centeredText { text-align: center; font-size: 1.05rem; line-height: 1.8; margin: 0 auto 2.5rem; max-width: 680px; opacity: 0.85; }
+  .addOnsGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.1rem; }
+  .addOnCard { background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); }
+  .addOnCard h4 { margin: 0 0 0.5rem; font-size: 1rem; color: var(--color-secondary); }
+  .addOnCard p { margin: 0; font-size: 0.9rem; line-height: 1.65; opacity: 0.8; }
+  .ctaCard {
+    width: min(100%, 900px); margin: 0 auto; text-align: center;
+    background: white; border-radius: 24px; padding: 3rem 2rem;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.09);
+  }
+  .ctaCard h2 { margin: 0 0 0.75rem; font-size: clamp(1.75rem, 3vw, 2.5rem); }
+  .ctaCard p { margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.75; opacity: 0.8; max-width: 560px; }
+  .ctaActions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; }
+  @media (max-width: 768px) {
+    .introSection, .servicesSection, .servicesSectionAlt, .ctaSection { padding: 3.5rem 1.25rem; }
+    .heroText { font-size: 1rem; }
+  }
+</style>
