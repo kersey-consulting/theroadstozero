@@ -5,7 +5,7 @@ import { schemaTypes } from './schemas';
 export default defineConfig({
   name: 'the-road-to-zero',
   title: 'The Road to Zero',
-  projectId: '<your-project-id>', // Replace after `npx sanity init`
+  projectId: 'dm3m4n0d',
   dataset: 'production',
   plugins: [structureTool()],
   schema: {

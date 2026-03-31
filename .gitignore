@@ -4,3 +4,10 @@ dist/
 .env
 .env.local
 .DS_Store
+.idea/
+
+# Sanity
+sanity/dist/
+sanity/node_modules/
+sanity/the-road-to-zero/
+sanity/.sanity/
