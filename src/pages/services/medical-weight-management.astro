@@ -2,8 +2,11 @@
 import ServiceHubLayout from '@/layouts/ServiceHubLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
+import { sanityClient, queries } from '@/lib/sanity';
 
-const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+
+const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 
 const medications = [
   { tag: 'GLP-1', name: 'Semaglutide', description: 'A GLP-1 receptor agonist that works by mimicking a natural hormone to reduce appetite, slow gastric emptying, and improve blood sugar regulation — supporting sustainable, meaningful weight loss.', highlights: ['Reduces appetite and food cravings', 'Slows digestion for longer satiety', 'Supports blood sugar balance', 'Weekly subcutaneous injection', 'Personalized dosing titration'] },

@@ -2,6 +2,9 @@
 import BaseLayout from './BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
+import { sanityClient, queries } from '@/lib/sanity';
+
+const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
 
 export interface Benefit {
   title: string;
@@ -30,7 +33,7 @@ interface Props {
 }
 
 const { data } = Astro.props;
-const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 ---
 
 <BaseLayout title={`${data.name} — The Road to Zero`} description={data.heroText}>

@@ -2,9 +2,28 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
-import { ivDrips, imInjections } from '@/data/iv-services';
+import { sanityClient } from '@/lib/sanity';
+import { ivDrips as localDrips, imInjections as localInjections } from '@/data/iv-services';
 
 const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+
+// Try Sanity, fall back to local data
+let ivDrips = localDrips;
+let imInjections = localInjections;
+
+try {
+  const sanityServices = await sanityClient.fetch(
+    `*[_type == "service" && category->slug.current == "iv-therapy"]{
+      name, "slug": slug.current, type, tagline, shortDescription, keyBenefits
+    } | order(order asc)`
+  );
+  if (sanityServices && sanityServices.length > 0) {
+    ivDrips = sanityServices.filter((s: any) => s.type === 'IV Drip');
+    imInjections = sanityServices.filter((s: any) => s.type === 'IM Injection');
+  }
+} catch (e) {
+  console.warn('Sanity fetch failed for IV listing, using local data');
+}
 
 const addOns = [
   { name: 'Glutathione', desc: 'Master antioxidant for detox, skin brightening & immune support' },

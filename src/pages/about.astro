@@ -2,8 +2,11 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
+import { sanityClient, queries } from '@/lib/sanity';
 
-const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+
+const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 ---
 
 <BaseLayout title="About — The Road to Zero" description="Compassionate care for the whole person.">

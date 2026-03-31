@@ -2,8 +2,11 @@
 import ServiceHubLayout from '@/layouts/ServiceHubLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
+import { sanityClient, queries } from '@/lib/sanity';
 
-const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+
+const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 
 const treatments = [
   { tag: 'Wrinkle Relaxing', name: 'Botulinum Toxin', description: "Botulinum is used to restore what time, stress, and gravity have taken — not to change identity. Rachel's philosophy centers on facial balance, proportion, and natural restoration.", highlights: ['Forehead lines & frown lines (11s)', "Crow's feet & brow lift", 'Lip flip & chin dimpling', 'Jaw slimming (masseter)', 'Hyperhidrosis (excessive sweating)'] },

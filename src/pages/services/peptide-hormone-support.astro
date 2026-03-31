@@ -2,8 +2,11 @@
 import ServiceHubLayout from '@/layouts/ServiceHubLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
+import { sanityClient, queries } from '@/lib/sanity';
 
-const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+
+const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 
 const therapies = [
   { tag: 'Growth Hormone Support', name: 'Sermorelin & CJC-1295', description: "Growth hormone releasing peptides that stimulate the pituitary gland to naturally produce more growth hormone — supporting fat loss, muscle development, recovery, and deep sleep.", highlights: ['Stimulates natural growth hormone release', 'Supports lean muscle development', 'Improves sleep quality & recovery', 'Promotes fat metabolism'] },

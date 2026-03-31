@@ -2,8 +2,11 @@
 import ServiceHubLayout from '@/layouts/ServiceHubLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
+import { sanityClient, queries } from '@/lib/sanity';
 
-const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
+const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+
+const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 
 const offerings = [
   { tag: 'Energy Healing', name: 'Reiki', description: "Reiki is a Japanese energy healing modality that works by channeling universal life force energy through the practitioner's hands to promote relaxation, reduce stress, and support the body's natural healing processes.", highlights: ['Deep relaxation & stress relief', 'Emotional balance & clarity', "Supports the body's natural healing", 'Reduces anxiety & tension', 'Promotes overall sense of well-being'] },
