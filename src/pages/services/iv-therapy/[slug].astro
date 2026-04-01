@@ -19,7 +19,8 @@ export async function getStaticPaths() {
         requiresConsultation,
         benefits[]{ "title": title, "description": description },
         addOns[]{ "name": name, "detail": detail },
-        "pairsWith": pairsWith[]->name
+        "pairsWith": pairsWith[]->name,
+        "heroImage": heroImage.asset->url
       } | order(order asc)`
     );
 
@@ -37,6 +38,7 @@ export async function getStaticPaths() {
             addOns: service.addOns,
             pairWith: service.pairsWith,
             requiresConsultation: service.requiresConsultation || false,
+            heroImage: service.heroImage,
           },
         },
       }));

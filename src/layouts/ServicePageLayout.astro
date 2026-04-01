@@ -26,6 +26,7 @@ export interface ServicePageData {
   addOns?: AddOn[];
   pairWith?: string[];
   requiresConsultation?: boolean;
+  heroImage?: string;
 }
 
 interface Props {
@@ -38,7 +39,7 @@ const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget
 
 <BaseLayout title={`${data.name} — The Road to Zero`} description={data.heroText}>
   <div class="page">
-    <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+    <Hero id="hero" backgroundImage={data.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
       <div slot="left" class="heroContent">
         <div class="breadcrumb">
           <a href="/services/iv-therapy">← IV Therapy & Vitamin Injections</a>

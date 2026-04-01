@@ -6,39 +6,53 @@ import { sanityClient, queries } from '@/lib/sanity';
 
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
 
+// Fetch category images from Sanity
+const sanityCategories = await sanityClient.fetch(queries.serviceCategories).catch(() => []);
+const catImageMap: Record<string, string> = {};
+for (const cat of sanityCategories ?? []) {
+  if (cat.slug?.current && cat.image) {
+    catImageMap[cat.slug.current] = cat.image;
+  }
+}
+
+const staffMembers = await sanityClient.fetch(queries.staffMembers).catch(() => []);
+const rachel = staffMembers?.find((s: any) => s.name === 'Rachel');
+const rachelPhoto = rachel?.photo ?? '/assets/MyPicture_356x475.jpeg';
+const goldLogo = settings?.goldLogo ?? '/icons/gold-ring-logo.png';
+
 const products = [
   {
-    imagePath: '/assets/home/Aesthetics.png',
+    imagePath: catImageMap['aesthetic-treatments'] ?? '/assets/home/Aesthetics.png',
     title: 'Aesthetic Treatments',
     subtext: '<ul><li>Botulinum</li><li>Dermal Fillers</li></ul><br/><p><b>Coming Soon:</b></p><ul><li>PRP hair restoration</li><li>Dermaneedling</li><li>Microdermabrasion</li><li>Chemical Peels</li><li>Facial PRP</li><li>Hair restoration: PDO & PRP</li></ul>',
     href: '/services/aesthetic-treatments',
   },
   {
-    imagePath: '/assets/home/Body.png',
+    imagePath: catImageMap['body-transformation'] ?? '/assets/home/Body.png',
     title: 'Body Transformation',
     subtext: '<p><b>Coming Soon:</b></p><ul><li>Body Shaping and Contouring</li><li>Skin Firmness and Tightening</li><li>Fat and Cellulite Reduction</li><li>Facial Toning and Rejuvenation</li><li>Laser treatments</li><li>Hair removal</li><li>Tattoo, Birthmark, Age or sun spot removal</li></ul>',
     href: '/services/body-transformation',
   },
   {
-    imagePath: '/assets/home/IV.png',
+    imagePath: catImageMap['iv-therapy'] ?? '/assets/home/IV.png',
     title: 'IV Therapy & Vitamin Injections',
     subtext: '<ul><li>Myers Cocktail</li><li>Immunity Boost</li><li>Beauty & Anti-Aging</li><li>Detox & Hangover Recovery</li><li>Athletic Recovery</li></ul>',
     href: '/services/iv-therapy',
   },
   {
-    imagePath: '/assets/home/GLP-1.png',
+    imagePath: catImageMap['medical-weight-management'] ?? '/assets/home/GLP-1.png',
     title: 'Medical Weight Management',
     subtext: '<ul><li>Semaglutide</li><li>Tirzepatide</li></ul>',
     href: '/services/medical-weight-management',
   },
   {
-    imagePath: '/assets/home/peptide.png',
+    imagePath: catImageMap['peptide-hormone-support'] ?? '/assets/home/peptide.png',
     title: 'Peptide & Hormone Support',
     subtext: '<p>Peptide therapy supports natural hormone function, improved recovery, better sleep, and enhanced vitality.</p><p>These treatments help optimize performance, energy levels, and overall wellness.</p>',
     href: '/services/peptide-hormone-support',
   },
   {
-    imagePath: '/assets/home/holistic.jpg',
+    imagePath: catImageMap['holistic-services'] ?? '/assets/home/holistic.jpg',
     title: 'Holistic Services',
     subtext: '<p>Healing goes beyond the physical. Rachel\'s holistic services support mind, body, and spirit alignment through Reiki energy healing and integrative wellness sessions.</p><p>Offerings include:</p><ul><li>Reiki energy healing</li><li>Integrative wellness sessions</li><li>Mind-body-spirit alignment</li></ul>',
     href: '/services/holistic-services',
@@ -52,7 +66,7 @@ const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget
   <div class="page">
     <Hero id="hero" theme="tertiary" backgroundParallax={true}>
       <div slot="left">
-        <img class="logo" src="/icons/gold-ring-logo.png" alt="The Roads to Zero Logo" />
+        <img class="logo" src={goldLogo} alt="The Roads to Zero Logo" />
       </div>
       <div slot="right" style="display: flex; gap: 2rem;">
         <div class="heroContent">
@@ -143,7 +157,7 @@ const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget
           <Button label="Learn More About The Road to Zero" href="/about" />
         </div>
       </div>
-      <img slot="right" class="profileImage" src="/assets/MyPicture_356x475.jpeg" alt="Rachel" />
+      <img slot="right" class="profileImage" src={rachelPhoto} alt="Rachel" />
     </Hero>
 
     <div class="surfaceContainer">
