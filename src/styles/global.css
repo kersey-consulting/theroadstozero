@@ -121,6 +121,7 @@ button:disabled {
 
 img {
     border-radius: 20px;
+    height: auto;
 }
 
 h1 {
