@@ -54,10 +54,22 @@ export const queries = {
   serviceCategoryBySlug: `*[_type == "serviceCategory" && slug.current == $slug][0]{
     _id, title, slug, description, heroText, seo,
     "image": image.asset->url,
+    "heroImage": heroImage.asset->url,
     "services": *[_type == "service" && references(^._id)] | order(order asc){
       _id, name, slug, type, tagline, shortDescription,
       "image": image.asset->url, keyBenefits
     }
+  }`,
+
+  servicesByCategorySlug: `*[_type == "service" && category->slug.current == $slug] | order(order asc){
+    _id,
+    name,
+    slug,
+    type,
+    tagline,
+    shortDescription,
+    keyBenefits,
+    "image": image.asset->url
   }`,
 
   serviceBySlug: `*[_type == "service" && slug.current == $slug][0]{

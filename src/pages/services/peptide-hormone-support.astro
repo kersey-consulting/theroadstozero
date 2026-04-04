@@ -5,14 +5,14 @@ import Button from '@/components/Button.astro';
 import { sanityClient, queries } from '@/lib/sanity';
 
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
-
+const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug: 'peptide-hormone-support' }).catch(() => null);
 const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 
-const therapies = [
-  { tag: 'Growth Hormone Support', name: 'Sermorelin & CJC-1295', description: "Growth hormone releasing peptides that stimulate the pituitary gland to naturally produce more growth hormone — supporting fat loss, muscle development, recovery, and deep sleep.", highlights: ['Stimulates natural growth hormone release', 'Supports lean muscle development', 'Improves sleep quality & recovery', 'Promotes fat metabolism'] },
-  { tag: 'Recovery & Repair', name: 'BPC-157', description: 'A body protective compound with powerful healing and regenerative properties. BPC-157 supports tissue repair, reduces inflammation, and accelerates recovery from injury or intense training.', highlights: ['Accelerates tissue & tendon healing', 'Reduces inflammation & pain', 'Supports gut health', 'Enhances workout recovery'] },
-  { tag: 'Fat Loss', name: 'AOD-9604', description: 'A modified fragment of human growth hormone specifically developed to stimulate fat breakdown without the blood sugar effects of full HGH — ideal for targeted body composition improvement.', highlights: ['Stimulates fat metabolism', 'Supports body composition goals', 'No impact on blood sugar', 'Often combined with GLP-1 programs'] },
-  { tag: 'Energy & Performance', name: 'Ipamorelin', description: 'A highly selective growth hormone secretagogue that stimulates GH release with minimal side effects. Ipamorelin is popular for energy, recovery, improved sleep, and anti-aging support.', highlights: ['Clean growth hormone pulse stimulation', 'Improved energy & vitality', 'Better sleep & recovery', 'Anti-aging cellular support'] },
+const therapies = category?.services ?? [
+  { tagline: 'Growth Hormone Support', name: 'Sermorelin & CJC-1295', shortDescription: 'Growth hormone releasing peptides that stimulate the pituitary gland to naturally produce more growth hormone — supporting fat loss, muscle development, recovery, and deep sleep.', keyBenefits: ['Stimulates natural growth hormone release', 'Supports lean muscle development', 'Improves sleep quality & recovery', 'Promotes fat metabolism'] },
+  { tagline: 'Recovery & Repair', name: 'BPC-157', shortDescription: 'A body protective compound with powerful healing and regenerative properties. BPC-157 supports tissue repair, reduces inflammation, and accelerates recovery from injury or intense training.', keyBenefits: ['Accelerates tissue & tendon healing', 'Reduces inflammation & pain', 'Supports gut health', 'Enhances workout recovery'] },
+  { tagline: 'Fat Loss', name: 'AOD-9604', shortDescription: 'A modified fragment of human growth hormone specifically developed to stimulate fat breakdown without the blood sugar effects of full HGH — ideal for targeted body composition improvement.', keyBenefits: ['Stimulates fat metabolism', 'Supports body composition goals', 'No impact on blood sugar', 'Often combined with GLP-1 programs'] },
+  { tagline: 'Energy & Performance', name: 'Ipamorelin', shortDescription: 'A highly selective growth hormone secretagogue that stimulates GH release with minimal side effects. Ipamorelin is popular for energy, recovery, improved sleep, and anti-aging support.', keyBenefits: ['Clean growth hormone pulse stimulation', 'Improved energy & vitality', 'Better sleep & recovery', 'Anti-aging cellular support'] },
 ];
 
 const benefits = [
@@ -26,7 +26,7 @@ const benefits = [
 ---
 
 <ServiceHubLayout title="Peptide & Hormone Support — The Road to Zero" description="Targeted peptide therapies that support natural hormone function and recovery.">
-  <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+  <Hero id="hero" backgroundImage={category?.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
     <div slot="left" class="hub-heroContent">
       <p class="hub-eyebrow">Services</p>
       <h1 class="hub-heroTitle">Peptide &amp; Hormone Support</h1>
@@ -54,12 +54,12 @@ const benefits = [
       <h2 class="hub-sectionTitle">Peptide Therapies</h2>
       <p class="hub-sectionSubtitle">All protocols are customized, medically supervised, and require a consultation prior to starting. The following are examples of therapies that may be appropriate depending on your health history and goals.</p>
       <div class="hub-treatmentsGrid">
-        {therapies.map(t => (
+        {therapies.map((t: any) => (
           <div class="hub-treatmentCard">
-            <span class="hub-cardTag">{t.tag}</span>
+            <span class="hub-cardTag">{t.tagline ?? t.type}</span>
             <h3>{t.name}</h3>
-            <p>{t.description}</p>
-            <ul>{t.highlights.map(h => <li>{h}</li>)}</ul>
+            <p>{t.shortDescription}</p>
+            <ul>{(t.keyBenefits ?? []).map((h: string) => <li>{h}</li>)}</ul>
           </div>
         ))}
       </div>

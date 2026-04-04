@@ -5,13 +5,13 @@ import Button from '@/components/Button.astro';
 import { sanityClient, queries } from '@/lib/sanity';
 
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
-
+const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug: 'aesthetic-treatments' }).catch(() => null);
 const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 
-const treatments = [
-  { tag: 'Wrinkle Relaxing', name: 'Botulinum Toxin', description: "Botulinum is used to restore what time, stress, and gravity have taken — not to change identity. Rachel's philosophy centers on facial balance, proportion, and natural restoration.", highlights: ['Forehead lines & frown lines (11s)', "Crow's feet & brow lift", 'Lip flip & chin dimpling', 'Jaw slimming (masseter)', 'Hyperhidrosis (excessive sweating)'] },
-  { tag: 'Volume Restoration', name: 'Dermal Fillers', description: 'Hyaluronic acid fillers restore lost volume, smooth deeper lines, and enhance natural contours — all with a conservative hand and a focus on looking refreshed, never overdone.', highlights: ['Lip enhancement & definition', 'Cheek & mid-face volume', 'Nasolabial folds & marionette lines', 'Under-eye hollows (tear troughs)', 'Jawline & chin contouring'] },
-  { tag: 'Hair Restoration', name: 'PRP Hair Restoration', description: "Platelet-Rich Plasma (PRP) therapy uses your body's own growth factors to stimulate hair follicles, encourage regrowth, and restore thickness — a natural, non-surgical approach.", highlights: ['Thinning hair & early hair loss', 'Male & female pattern hair loss', 'Hairline restoration support', 'Scalp health & follicle stimulation'] },
+const treatments = category?.services ?? [
+  { type: 'Wrinkle Relaxing', name: 'Botulinum Toxin', shortDescription: "Botulinum is used to restore what time, stress, and gravity have taken — not to change identity. Rachel's philosophy centers on facial balance, proportion, and natural restoration.", keyBenefits: ['Forehead lines & frown lines (11s)', "Crow's feet & brow lift", 'Lip flip & chin dimpling', 'Jaw slimming (masseter)', 'Hyperhidrosis (excessive sweating)'] },
+  { type: 'Volume Restoration', name: 'Dermal Fillers', shortDescription: 'Hyaluronic acid fillers restore lost volume, smooth deeper lines, and enhance natural contours — all with a conservative hand and a focus on looking refreshed, never overdone.', keyBenefits: ['Lip enhancement & definition', 'Cheek & mid-face volume', 'Nasolabial folds & marionette lines', 'Under-eye hollows (tear troughs)', 'Jawline & chin contouring'] },
+  { type: 'Hair Restoration', name: 'PRP Hair Restoration', shortDescription: "Platelet-Rich Plasma (PRP) therapy uses your body's own growth factors to stimulate hair follicles, encourage regrowth, and restore thickness — a natural, non-surgical approach.", keyBenefits: ['Thinning hair & early hair loss', 'Male & female pattern hair loss', 'Hairline restoration support', 'Scalp health & follicle stimulation'] },
 ];
 
 const philosophy = [
@@ -23,7 +23,7 @@ const philosophy = [
 ---
 
 <ServiceHubLayout title="Aesthetic Treatments — The Road to Zero" description="Subtle, natural-looking enhancements designed to restore balance and refresh your appearance.">
-  <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+  <Hero id="hero" backgroundImage={category?.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
     <div slot="left" class="hub-heroContent">
       <p class="hub-eyebrow">Services</p>
       <h1 class="hub-heroTitle">Aesthetic Treatments</h1>
@@ -51,12 +51,12 @@ const philosophy = [
       <h2 class="hub-sectionTitle">Treatments Offered</h2>
       <p class="hub-sectionSubtitle">All treatments are performed by or under the supervision of a licensed medical provider. A consultation is required prior to treatment.</p>
       <div class="hub-treatmentsGrid">
-        {treatments.map(t => (
+        {treatments.map((t: any) => (
           <div class="hub-treatmentCard">
-            <span class="hub-cardTag">{t.tag}</span>
+            <span class="hub-cardTag">{t.tagline ?? t.type}</span>
             <h3>{t.name}</h3>
-            <p>{t.description}</p>
-            <ul>{t.highlights.map(h => <li>{h}</li>)}</ul>
+            <p>{t.shortDescription}</p>
+            <ul>{(t.keyBenefits ?? []).map((h: string) => <li>{h}</li>)}</ul>
           </div>
         ))}
       </div>

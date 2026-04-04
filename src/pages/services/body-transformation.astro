@@ -5,14 +5,14 @@ import Button from '@/components/Button.astro';
 import { sanityClient, queries } from '@/lib/sanity';
 
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
-
+const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug: 'body-transformation' }).catch(() => null);
 const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 
-const pillars = [
-  { tag: 'Weight Management', name: 'GLP-1 Medications', description: 'Medically supervised GLP-1 and GLP-1/GIP receptor agonists (Semaglutide, Tirzepatide) regulate appetite, support metabolic health, and assist in sustainable fat loss.', highlights: ['Reduces appetite and cravings', 'Supports blood sugar regulation', 'Promotes sustainable fat loss', 'Personalized dosing plans'] },
-  { tag: 'Hormone & Recovery', name: 'Peptide & Hormone Support', description: 'Targeted peptide therapies support natural hormone function, improve recovery, optimize sleep quality, and enhance overall energy — helping your body perform at its best.', highlights: ['Growth hormone optimization', 'Improved recovery & sleep', 'Increased energy & vitality', 'Body composition support'] },
-  { tag: 'Cellular Nutrition', name: 'IV Metabolism Support', description: 'Our Metabolism & Fat Burner IV delivers amino acids, B vitamins, and lipotropic compounds directly to the bloodstream — accelerating fat metabolism and boosting energy at the cellular level.', highlights: ['Boosts metabolism & fat burning', 'Increases natural energy', 'Supports liver health', 'Enhances workout performance'] },
-  { tag: 'Injections', name: 'Lipotropic Injections', description: 'MIC (Methionine, Inositol, Choline) and B12 injections assist with fat mobilization, liver detox, and metabolic support — a popular weekly or biweekly add-on to any transformation program.', highlights: ['Fat mobilization support', 'Liver detox assistance', 'Energy & mood improvement', 'Appetite and craving support'] },
+const pillars = category?.services ?? [
+  { tagline: 'Weight Management', name: 'GLP-1 Medications', shortDescription: 'Medically supervised GLP-1 and GLP-1/GIP receptor agonists (Semaglutide, Tirzepatide) regulate appetite, support metabolic health, and assist in sustainable fat loss.', keyBenefits: ['Reduces appetite and cravings', 'Supports blood sugar regulation', 'Promotes sustainable fat loss', 'Personalized dosing plans'] },
+  { tagline: 'Hormone & Recovery', name: 'Peptide & Hormone Support', shortDescription: 'Targeted peptide therapies support natural hormone function, improve recovery, optimize sleep quality, and enhance overall energy — helping your body perform at its best.', keyBenefits: ['Growth hormone optimization', 'Improved recovery & sleep', 'Increased energy & vitality', 'Body composition support'] },
+  { tagline: 'Cellular Nutrition', name: 'IV Metabolism Support', shortDescription: 'Our Metabolism & Fat Burner IV delivers amino acids, B vitamins, and lipotropic compounds directly to the bloodstream — accelerating fat metabolism and boosting energy at the cellular level.', keyBenefits: ['Boosts metabolism & fat burning', 'Increases natural energy', 'Supports liver health', 'Enhances workout performance'] },
+  { tagline: 'Injections', name: 'Lipotropic Injections', shortDescription: 'MIC (Methionine, Inositol, Choline) and B12 injections assist with fat mobilization, liver detox, and metabolic support — a popular weekly or biweekly add-on to any transformation program.', keyBenefits: ['Fat mobilization support', 'Liver detox assistance', 'Energy & mood improvement', 'Appetite and craving support'] },
 ];
 
 const outcomes = [
@@ -24,7 +24,7 @@ const outcomes = [
 ---
 
 <ServiceHubLayout title="Body Transformation — The Road to Zero" description="A comprehensive, medically guided approach to transforming your body.">
-  <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+  <Hero id="hero" backgroundImage={category?.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
     <div slot="left" class="hub-heroContent">
       <p class="hub-eyebrow">Services</p>
       <h1 class="hub-heroTitle">Body Transformation</h1>
@@ -52,12 +52,12 @@ const outcomes = [
       <h2 class="hub-sectionTitle">Transformation Pillars</h2>
       <p class="hub-sectionSubtitle">Our body transformation programs draw from multiple evidence-based approaches, personalized to your unique needs and goals.</p>
       <div class="hub-treatmentsGrid">
-        {pillars.map(p => (
+        {pillars.map((p: any) => (
           <div class="hub-treatmentCard">
-            <span class="hub-cardTag">{p.tag}</span>
+            <span class="hub-cardTag">{p.tagline ?? p.type}</span>
             <h3>{p.name}</h3>
-            <p>{p.description}</p>
-            <ul>{p.highlights.map(h => <li>{h}</li>)}</ul>
+            <p>{p.shortDescription}</p>
+            <ul>{(p.keyBenefits ?? []).map((h: string) => <li>{h}</li>)}</ul>
           </div>
         ))}
       </div>

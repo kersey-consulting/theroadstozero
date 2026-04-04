@@ -5,12 +5,12 @@ import Button from '@/components/Button.astro';
 import { sanityClient, queries } from '@/lib/sanity';
 
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
-
+const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug: 'medical-weight-management' }).catch(() => null);
 const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 
-const medications = [
-  { tag: 'GLP-1', name: 'Semaglutide', description: 'A GLP-1 receptor agonist that works by mimicking a natural hormone to reduce appetite, slow gastric emptying, and improve blood sugar regulation — supporting sustainable, meaningful weight loss.', highlights: ['Reduces appetite and food cravings', 'Slows digestion for longer satiety', 'Supports blood sugar balance', 'Weekly subcutaneous injection', 'Personalized dosing titration'] },
-  { tag: 'GLP-1 / GIP', name: 'Tirzepatide', description: 'A dual GLP-1 and GIP receptor agonist offering enhanced metabolic effects. Tirzepatide targets two hormone pathways simultaneously, delivering powerful appetite suppression and metabolic improvement.', highlights: ['Dual-action hormone pathway targeting', 'Greater average weight loss vs. GLP-1 alone', 'Improves insulin sensitivity', 'Weekly subcutaneous injection', 'Personalized dosing titration'] },
+const medications = category?.services ?? [
+  { tagline: 'GLP-1', name: 'Semaglutide', shortDescription: 'A GLP-1 receptor agonist that works by mimicking a natural hormone to reduce appetite, slow gastric emptying, and improve blood sugar regulation — supporting sustainable, meaningful weight loss.', keyBenefits: ['Reduces appetite and food cravings', 'Slows digestion for longer satiety', 'Supports blood sugar balance', 'Weekly subcutaneous injection', 'Personalized dosing titration'] },
+  { tagline: 'GLP-1 / GIP', name: 'Tirzepatide', shortDescription: 'A dual GLP-1 and GIP receptor agonist offering enhanced metabolic effects. Tirzepatide targets two hormone pathways simultaneously, delivering powerful appetite suppression and metabolic improvement.', keyBenefits: ['Dual-action hormone pathway targeting', 'Greater average weight loss vs. GLP-1 alone', 'Improves insulin sensitivity', 'Weekly subcutaneous injection', 'Personalized dosing titration'] },
 ];
 
 const programSteps = [
@@ -22,7 +22,7 @@ const programSteps = [
 ---
 
 <ServiceHubLayout title="Medical Weight Management — The Road to Zero" description="GLP-1 medications for sustainable, medically guided weight loss.">
-  <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+  <Hero id="hero" backgroundImage={category?.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
     <div slot="left" class="hub-heroContent">
       <p class="hub-eyebrow">Services</p>
       <h1 class="hub-heroTitle">Medical Weight Management</h1>
@@ -50,12 +50,12 @@ const programSteps = [
       <h2 class="hub-sectionTitle">Medications We Offer</h2>
       <p class="hub-sectionSubtitle">All medications are FDA-approved prescription therapies administered under the supervision of a licensed medical provider. A consultation is required.</p>
       <div class="hub-treatmentsGrid">
-        {medications.map(m => (
+        {medications.map((m: any) => (
           <div class="hub-treatmentCard">
-            <span class="hub-cardTag">{m.tag}</span>
+            <span class="hub-cardTag">{m.tagline ?? m.type}</span>
             <h3>{m.name}</h3>
-            <p>{m.description}</p>
-            <ul>{m.highlights.map(h => <li>{h}</li>)}</ul>
+            <p>{m.shortDescription}</p>
+            <ul>{(m.keyBenefits ?? []).map((h: string) => <li>{h}</li>)}</ul>
           </div>
         ))}
       </div>

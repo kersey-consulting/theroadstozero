@@ -5,12 +5,12 @@ import Button from '@/components/Button.astro';
 import { sanityClient, queries } from '@/lib/sanity';
 
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
-
+const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug: 'holistic-services' }).catch(() => null);
 const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
 
-const offerings = [
-  { tag: 'Energy Healing', name: 'Reiki', description: "Reiki is a Japanese energy healing modality that works by channeling universal life force energy through the practitioner's hands to promote relaxation, reduce stress, and support the body's natural healing processes.", highlights: ['Deep relaxation & stress relief', 'Emotional balance & clarity', "Supports the body's natural healing", 'Reduces anxiety & tension', 'Promotes overall sense of well-being'] },
-  { tag: 'Mind-Body Alignment', name: 'Integrative Wellness Sessions', description: 'Holistic wellness conversations that address the connection between mind, body, and spirit — exploring stress, lifestyle, and emotional factors that influence your overall health and vitality.', highlights: ['Whole-person health assessment', 'Stress and lifestyle guidance', 'Emotional and mental wellness support', 'Complement to medical treatments'] },
+const offerings = category?.services ?? [
+  { tagline: 'Energy Healing', name: 'Reiki', shortDescription: "Reiki is a Japanese energy healing modality that works by channeling universal life force energy through the practitioner's hands to promote relaxation, reduce stress, and support the body's natural healing processes.", keyBenefits: ['Deep relaxation & stress relief', 'Emotional balance & clarity', "Supports the body's natural healing", 'Reduces anxiety & tension', 'Promotes overall sense of well-being'] },
+  { tagline: 'Mind-Body Alignment', name: 'Integrative Wellness Sessions', shortDescription: 'Holistic wellness conversations that address the connection between mind, body, and spirit — exploring stress, lifestyle, and emotional factors that influence your overall health and vitality.', keyBenefits: ['Whole-person health assessment', 'Stress and lifestyle guidance', 'Emotional and mental wellness support', 'Complement to medical treatments'] },
 ];
 
 const principles = [
@@ -22,7 +22,7 @@ const principles = [
 ---
 
 <ServiceHubLayout title="Holistic Services — The Road to Zero" description="Reiki energy healing and integrative wellness sessions for mind, body, and spirit.">
-  <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+  <Hero id="hero" backgroundImage={category?.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
     <div slot="left" class="hub-heroContent">
       <p class="hub-eyebrow">Services</p>
       <h1 class="hub-heroTitle">Holistic Services</h1>
@@ -49,12 +49,12 @@ const principles = [
     <div class="hub-wide">
       <h2 class="hub-sectionTitle">Holistic Offerings</h2>
       <div class="hub-treatmentsGrid">
-        {offerings.map(o => (
+        {offerings.map((o: any) => (
           <div class="hub-treatmentCard">
-            <span class="hub-cardTag">{o.tag}</span>
+            <span class="hub-cardTag">{o.tagline ?? o.type}</span>
             <h3>{o.name}</h3>
-            <p>{o.description}</p>
-            <ul>{o.highlights.map(h => <li>{h}</li>)}</ul>
+            <p>{o.shortDescription}</p>
+            <ul>{(o.keyBenefits ?? []).map((h: string) => <li>{h}</li>)}</ul>
           </div>
         ))}
       </div>
