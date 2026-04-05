@@ -52,7 +52,15 @@ export const queries = {
   }`,
 
   serviceCategoryBySlug: `*[_type == "serviceCategory" && slug.current == $slug][0]{
-    _id, title, slug, description, heroText, seo,
+    _id, title, slug, description, eyebrow, heroTitle, heroText,
+    introTitle, introBody,
+    cardSectionTitle, cardSectionSubtitle,
+    supportingSectionTitle, supportingItems,
+    secondarySectionTitle, secondaryItems,
+    infoCards,
+    tagSectionTitle, tagSectionIntro, tagLinks,
+    ctaTitle, ctaText, ctaPrimaryLabel, ctaPrimaryHref, ctaSecondaryLabel, ctaSecondaryHref,
+    seo,
     "image": image.asset->url,
     "heroImage": heroImage.asset->url,
     "services": *[_type == "service" && references(^._id)] | order(order asc){

@@ -7,26 +7,19 @@ import { sanityClient, queries } from '@/lib/sanity';
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
 const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug: 'medical-weight-management' }).catch(() => null);
 const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
-
-const medications = category?.services ?? [
-  { tagline: 'GLP-1', name: 'Semaglutide', shortDescription: 'A GLP-1 receptor agonist that works by mimicking a natural hormone to reduce appetite, slow gastric emptying, and improve blood sugar regulation — supporting sustainable, meaningful weight loss.', keyBenefits: ['Reduces appetite and food cravings', 'Slows digestion for longer satiety', 'Supports blood sugar balance', 'Weekly subcutaneous injection', 'Personalized dosing titration'] },
-  { tagline: 'GLP-1 / GIP', name: 'Tirzepatide', shortDescription: 'A dual GLP-1 and GIP receptor agonist offering enhanced metabolic effects. Tirzepatide targets two hormone pathways simultaneously, delivering powerful appetite suppression and metabolic improvement.', keyBenefits: ['Dual-action hormone pathway targeting', 'Greater average weight loss vs. GLP-1 alone', 'Improves insulin sensitivity', 'Weekly subcutaneous injection', 'Personalized dosing titration'] },
-];
-
-const programSteps = [
-  { title: 'Consultation', description: 'A comprehensive intake with Rachel to review your health history, goals, and determine if GLP-1 therapy is appropriate for you.' },
-  { title: 'Personalized Plan', description: 'A custom dosing schedule and program timeline tailored to your body, metabolism, and weight loss goals.' },
-  { title: 'Ongoing Support', description: 'Regular check-ins to monitor progress, adjust dosing as needed, and support your journey with complementary wellness services.' },
-  { title: 'Holistic Integration', description: 'Optional integration of IV therapy, peptides, or nutritional support to amplify your results and overall wellness.' },
-];
+const cards = category?.services ?? [];
+const introBody = category?.introBody?.map((b) => b.children?.map((c) => c.text).join('')).filter(Boolean) ?? [];
+const supportItems = category?.supportingItems ?? [];
+const secondaryItems = category?.secondaryItems ?? [];
+const tagLinks = category?.tagLinks ?? [];
 ---
 
-<ServiceHubLayout title="Medical Weight Management — The Road to Zero" description="GLP-1 medications for sustainable, medically guided weight loss.">
+<ServiceHubLayout title="Medical Weight Management — The Road to Zero" description={category?.description ?? ''}>
   <Hero id="hero" backgroundImage={category?.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
     <div slot="left" class="hub-heroContent">
-      <p class="hub-eyebrow">Services</p>
-      <h1 class="hub-heroTitle">Medical Weight Management</h1>
-      <p class="hub-heroText">GLP-1 medications like Semaglutide and Tirzepatide help regulate appetite, support metabolic health, and assist in sustainable weight loss — all within a medically guided, personalized program.</p>
+      <p class="hub-eyebrow">{category?.eyebrow ?? 'Services'}</p>
+      <h1 class="hub-heroTitle">{category?.heroTitle ?? 'Medical Weight Management'}</h1>
+      <p class="hub-heroText">{category?.heroText ?? category?.description ?? ''}</p>
       <div class="hub-heroActions">
         <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
         <Button label="View All Services" href="/services" theme="primary" />
@@ -34,69 +27,65 @@ const programSteps = [
     </div>
   </Hero>
 
-  <section id="overview" class="hub-section">
+  <section class="hub-section">
     <div class="hub-narrow">
-      <h2 class="hub-sectionTitle">A Medical Approach to Lasting Change</h2>
-      <div class="hub-copy">
-        <p>Weight management is not a willpower problem — it is a metabolic and hormonal one. GLP-1 and GLP-1/GIP medications work by directly addressing the biological drivers of appetite, blood sugar regulation, and fat storage.</p>
-        <p>At The Road to Zero, our medical weight management programs are personalized, medically supervised, and designed to complement your lifestyle — not disrupt it. Rachel works closely with each client to create a dosing plan that is both effective and well-tolerated, with ongoing monitoring and support throughout your journey.</p>
-        <p>These programs are best paired with healthy nutrition, movement, and complementary wellness therapies such as IV hydration, peptide support, and metabolic injections for optimal results.</p>
-      </div>
+      <h2 class="hub-sectionTitle">{category?.introTitle ?? 'Overview'}</h2>
+      <div class="hub-copy">{introBody.map((p) => <p>{p}</p>)}</div>
     </div>
   </section>
 
-  <section id="medications" class="hub-sectionAlt">
+  <section class="hub-sectionAlt">
     <div class="hub-wide">
-      <h2 class="hub-sectionTitle">Medications We Offer</h2>
-      <p class="hub-sectionSubtitle">All medications are FDA-approved prescription therapies administered under the supervision of a licensed medical provider. A consultation is required.</p>
+      <h2 class="hub-sectionTitle">{category?.cardSectionTitle ?? 'Services'}</h2>
+      {category?.cardSectionSubtitle && <p class="hub-sectionSubtitle">{category.cardSectionSubtitle}</p>}
       <div class="hub-treatmentsGrid">
-        {medications.map((m: any) => (
+        {cards.map((item) => (
           <div class="hub-treatmentCard">
-            <span class="hub-cardTag">{m.tagline ?? m.type}</span>
-            <h3>{m.name}</h3>
-            <p>{m.shortDescription}</p>
-            <ul>{(m.keyBenefits ?? []).map((h: string) => <li>{h}</li>)}</ul>
+            <span class="hub-cardTag">{item.tagline ?? item.type}</span>
+            <h3>{item.name}</h3>
+            <p>{item.shortDescription}</p>
+            <ul>{(item.keyBenefits ?? []).map((h) => <li>{h}</li>)}</ul>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <section id="program" class="hub-section">
-    <div class="hub-narrow">
-      <h2 class="hub-sectionTitle">How the Program Works</h2>
-      <div class="hub-highlightsGrid">
-        {programSteps.map((step, i) => (
-          <div class="hub-highlightCard">
-            <h3>{`${i + 1}. ${step.title}`}</h3>
-            <p>{step.description}</p>
-          </div>
-        ))}
+  {supportItems.length > 0 && (
+    <section class="hub-section">
+      <div class="hub-narrow">
+        <h2 class="hub-sectionTitle">{category?.supportingSectionTitle ?? 'Highlights'}</h2>
+        <div class="hub-highlightsGrid">{supportItems.map((item) => <div class="hub-highlightCard"><h3>{item.title}</h3><p>{item.description}</p></div>)}</div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  <section id="complementary" class="hub-sectionAlt">
-    <div class="hub-narrow">
-      <h2 class="hub-sectionTitle">Complement Your Program</h2>
-      <div class="hub-copy"><p>Maximize your weight management results by combining GLP-1 therapy with these complementary services:</p></div>
-      <div class="hub-tags">
-        <a href="/services/iv-therapy/fat-burner" class="hub-tag">Metabolism &amp; Fat Burner IV</a>
-        <a href="/services/iv-therapy/b12-injection" class="hub-tag">B12 Injection</a>
-        <a href="/services/iv-therapy/b-complex-injection" class="hub-tag">B-Complex Injection</a>
-        <a href="/services/iv-therapy/energy" class="hub-tag">Energy IV</a>
-        <a href="/services/peptide-hormone-support" class="hub-tag">Peptide &amp; Hormone Support</a>
+  {secondaryItems.length > 0 && (
+    <section class="hub-sectionAlt">
+      <div class="hub-narrow">
+        <h2 class="hub-sectionTitle">{category?.secondarySectionTitle ?? 'More'}</h2>
+        <div class="hub-copy">{secondaryItems.map((item) => <><p><strong>{item.title}</strong></p><p>{item.description}</p></>)}</div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
-  <section id="book" class="hub-section">
+  {tagLinks.length > 0 && (
+    <section class="hub-sectionAlt">
+      <div class="hub-narrow">
+        <h2 class="hub-sectionTitle">{category?.tagSectionTitle ?? 'Related Links'}</h2>
+        {category?.tagSectionIntro && <div class="hub-copy"><p>{category.tagSectionIntro}</p></div>}
+        <div class="hub-tags">{tagLinks.map((link) => <a href={link.href} class="hub-tag">{link.label}</a>)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="hub-section">
     <div class="hub-ctaCard">
-      <h2>Start Your Weight Management Journey</h2>
-      <p>Book a consultation with Rachel to discuss your goals, review your health history, and find the right program for your body.</p>
+      <h2>{category?.ctaTitle ?? 'Ready to Begin?'}</h2>
+      <p>{category?.ctaText ?? ''}</p>
       <div class="hub-ctaActions">
-        <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
-        <Button label="View Body Transformation" href="/services/body-transformation" theme="primary" />
+        <Button label={category?.ctaPrimaryLabel ?? 'Book a Consultation'} href={category?.ctaPrimaryHref ?? bookingUrl} theme="primary" />
+        {category?.ctaSecondaryLabel && <Button label={category.ctaSecondaryLabel} href={category?.ctaSecondaryHref ?? '/services'} theme="primary" />}
       </div>
     </div>
   </section>
