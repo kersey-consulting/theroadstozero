@@ -48,7 +48,12 @@ export const queries = {
 
   serviceCategories: `*[_type == "serviceCategory"] | order(order asc){
     _id, title, slug, description,
-    "image": image.asset->url
+    homeCardTitle,
+    homeCardDescription,
+    homeCardOrder,
+    homeCardEnabled,
+    "image": image.asset->url,
+    "homeCardImage": homeCardImage.asset->url
   }`,
 
   serviceCategoryBySlug: `*[_type == "serviceCategory" && slug.current == $slug][0]{

@@ -113,6 +113,17 @@ export default defineType({
       of: [tagLink],
     }),
 
+    defineField({ name: 'homeCardTitle', title: 'Homepage Card Title Override', type: 'string' }),
+    defineField({ name: 'homeCardDescription', title: 'Homepage Card Description (HTML)', type: 'text', rows: 8 }),
+    defineField({
+      name: 'homeCardImage',
+      title: 'Homepage Card Image Override',
+      type: 'image',
+      options: { hotspot: true },
+    }),
+    defineField({ name: 'homeCardOrder', title: 'Homepage Card Order', type: 'number' }),
+    defineField({ name: 'homeCardEnabled', title: 'Show on Homepage', type: 'boolean', initialValue: true }),
+
     defineField({ name: 'ctaTitle', title: 'CTA Title', type: 'string' }),
     defineField({ name: 'ctaText', title: 'CTA Text', type: 'text', rows: 4 }),
     defineField({ name: 'ctaPrimaryLabel', title: 'CTA Primary Label', type: 'string' }),
