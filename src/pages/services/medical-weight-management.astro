@@ -15,10 +15,10 @@ const tagLinks = category?.tagLinks ?? [];
 ---
 
 <ServiceHubLayout title="Medical Weight Management — The Road to Zero" description={category?.description ?? ''}>
-  <Hero id="hero" backgroundImage={category?.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
+  <Hero id="hero" backgroundImage={category?.heroImage} backgroundParallax={true} theme="tertiary">
     <div slot="left" class="hub-heroContent">
-      <p class="hub-eyebrow">{category?.eyebrow ?? 'Services'}</p>
-      <h1 class="hub-heroTitle">{category?.heroTitle ?? 'Medical Weight Management'}</h1>
+      <p class="hub-eyebrow">{category?.eyebrow}</p>
+      <h1 class="hub-heroTitle">{category?.heroTitle}</h1>
       <p class="hub-heroText">{category?.heroText ?? category?.description ?? ''}</p>
       <div class="hub-heroActions">
         <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
@@ -29,14 +29,14 @@ const tagLinks = category?.tagLinks ?? [];
 
   <section class="hub-section">
     <div class="hub-narrow">
-      <h2 class="hub-sectionTitle">{category?.introTitle ?? 'Overview'}</h2>
+      <h2 class="hub-sectionTitle">{category?.introTitle}</h2>
       <div class="hub-copy">{introBody.map((p) => <p>{p}</p>)}</div>
     </div>
   </section>
 
   <section class="hub-sectionAlt">
     <div class="hub-wide">
-      <h2 class="hub-sectionTitle">{category?.cardSectionTitle ?? 'Services'}</h2>
+      <h2 class="hub-sectionTitle">{category?.cardSectionTitle}</h2>
       {category?.cardSectionSubtitle && <p class="hub-sectionSubtitle">{category.cardSectionSubtitle}</p>}
       <div class="hub-treatmentsGrid">
         {cards.map((item) => (
@@ -54,7 +54,7 @@ const tagLinks = category?.tagLinks ?? [];
   {supportItems.length > 0 && (
     <section class="hub-section">
       <div class="hub-narrow">
-        <h2 class="hub-sectionTitle">{category?.supportingSectionTitle ?? 'Highlights'}</h2>
+        <h2 class="hub-sectionTitle">{category?.supportingSectionTitle}</h2>
         <div class="hub-highlightsGrid">{supportItems.map((item) => <div class="hub-highlightCard"><h3>{item.title}</h3><p>{item.description}</p></div>)}</div>
       </div>
     </section>
@@ -63,7 +63,7 @@ const tagLinks = category?.tagLinks ?? [];
   {secondaryItems.length > 0 && (
     <section class="hub-sectionAlt">
       <div class="hub-narrow">
-        <h2 class="hub-sectionTitle">{category?.secondarySectionTitle ?? 'More'}</h2>
+        <h2 class="hub-sectionTitle">{category?.secondarySectionTitle}</h2>
         <div class="hub-copy">{secondaryItems.map((item) => <><p><strong>{item.title}</strong></p><p>{item.description}</p></>)}</div>
       </div>
     </section>
@@ -72,7 +72,7 @@ const tagLinks = category?.tagLinks ?? [];
   {tagLinks.length > 0 && (
     <section class="hub-sectionAlt">
       <div class="hub-narrow">
-        <h2 class="hub-sectionTitle">{category?.tagSectionTitle ?? 'Related Links'}</h2>
+        <h2 class="hub-sectionTitle">{category?.tagSectionTitle}</h2>
         {category?.tagSectionIntro && <div class="hub-copy"><p>{category.tagSectionIntro}</p></div>}
         <div class="hub-tags">{tagLinks.map((link) => <a href={link.href} class="hub-tag">{link.label}</a>)}</div>
       </div>
@@ -81,10 +81,10 @@ const tagLinks = category?.tagLinks ?? [];
 
   <section class="hub-section">
     <div class="hub-ctaCard">
-      <h2>{category?.ctaTitle ?? 'Ready to Begin?'}</h2>
-      <p>{category?.ctaText ?? ''}</p>
+      <h2>{category?.ctaTitle}</h2>
+      <p>{category?.ctaText}</p>
       <div class="hub-ctaActions">
-        <Button label={category?.ctaPrimaryLabel ?? 'Book a Consultation'} href={category?.ctaPrimaryHref ?? bookingUrl} theme="primary" />
+        <Button label={category?.ctaPrimaryLabel} href={category?.ctaPrimaryHref ?? bookingUrl} theme="primary" />
         {category?.ctaSecondaryLabel && <Button label={category.ctaSecondaryLabel} href={category?.ctaSecondaryHref ?? '/services'} theme="primary" />}
       </div>
     </div>

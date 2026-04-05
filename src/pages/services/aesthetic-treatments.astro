@@ -14,12 +14,12 @@ const supportItems = category?.supportingItems ?? [];
 const infoCards = category?.infoCards ?? [];
 ---
 
-<ServiceHubLayout title="Aesthetic Treatments — The Road to Zero" description={category?.description ?? 'Subtle, natural-looking enhancements designed to restore balance and refresh your appearance.'}>
-  <Hero id="hero" backgroundImage={category?.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
+<ServiceHubLayout title="Aesthetic Treatments — The Road to Zero" description={category?.description ?? ''}>
+  <Hero id="hero" backgroundImage={category?.heroImage} backgroundParallax={true} theme="tertiary">
     <div slot="left" class="hub-heroContent">
-      <p class="hub-eyebrow">{category?.eyebrow ?? 'Services'}</p>
-      <h1 class="hub-heroTitle">{category?.heroTitle ?? 'Aesthetic Treatments'}</h1>
-      <p class="hub-heroText">{category?.heroText ?? 'Subtle, natural-looking enhancements designed to restore balance and refresh your appearance — without looking overdone. Because true beauty is a return to your most vibrant, natural self.'}</p>
+      <p class="hub-eyebrow">{category?.eyebrow}</p>
+      <h1 class="hub-heroTitle">{category?.heroTitle}</h1>
+      <p class="hub-heroText">{category?.heroText}</p>
       <div class="hub-heroActions">
         <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
         <Button label="View All Services" href="/services" theme="primary" />
@@ -29,15 +29,15 @@ const infoCards = category?.infoCards ?? [];
 
   <section class="hub-section">
     <div class="hub-narrow">
-      <h2 class="hub-sectionTitle">{category?.introTitle ?? 'Our Philosophy on Aesthetics'}</h2>
+      <h2 class="hub-sectionTitle">{category?.introTitle}</h2>
       <div class="hub-copy">{introBody.map((p: string) => <p>{p}</p>)}</div>
     </div>
   </section>
 
   <section class="hub-sectionAlt">
     <div class="hub-wide">
-      <h2 class="hub-sectionTitle">{category?.cardSectionTitle ?? 'Treatments Offered'}</h2>
-      <p class="hub-sectionSubtitle">{category?.cardSectionSubtitle ?? 'All treatments are performed by or under the supervision of a licensed medical provider. A consultation is required prior to treatment.'}</p>
+      <h2 class="hub-sectionTitle">{category?.cardSectionTitle}</h2>
+      <p class="hub-sectionSubtitle">{category?.cardSectionSubtitle}</p>
       <div class="hub-treatmentsGrid">
         {treatments.map((t: any) => (
           <div class="hub-treatmentCard">
@@ -53,7 +53,7 @@ const infoCards = category?.infoCards ?? [];
 
   <section class="hub-section">
     <div class="hub-narrow">
-      <h2 class="hub-sectionTitle">{category?.supportingSectionTitle ?? 'Our Approach'}</h2>
+      <h2 class="hub-sectionTitle">{category?.supportingSectionTitle}</h2>
       <div class="hub-highlightsGrid">
         {supportItems.map((p: any) => (
           <div class="hub-highlightCard"><h3>{p.title}</h3><p>{p.description}</p></div>
@@ -64,7 +64,7 @@ const infoCards = category?.infoCards ?? [];
 
   <section class="hub-sectionAlt">
     <div class="hub-narrow">
-      <h2 class="hub-sectionTitle">{category?.secondarySectionTitle ?? 'Credentials & Training'}</h2>
+      <h2 class="hub-sectionTitle">{category?.secondarySectionTitle}</h2>
       <div class="hub-copy">{category?.tagSectionIntro && <p>{category.tagSectionIntro}</p>}</div>
       <div class="hub-infoGrid">
         {infoCards.map((card: any) => (
@@ -76,10 +76,10 @@ const infoCards = category?.infoCards ?? [];
 
   <section class="hub-section">
     <div class="hub-ctaCard">
-      <h2>{category?.ctaTitle ?? 'Ready to Begin Your Aesthetic Journey?'}</h2>
-      <p>{category?.ctaText ?? 'Book a personalized consultation with Rachel and discover what\'s possible with a conservative, natural approach to aesthetic care.'}</p>
+      <h2>{category?.ctaTitle}</h2>
+      <p>{category?.ctaText}</p>
       <div class="hub-ctaActions">
-        <Button label={category?.ctaPrimaryLabel ?? 'Book a Consultation'} href={category?.ctaPrimaryHref ?? bookingUrl} theme="primary" />
+        <Button label={category?.ctaPrimaryLabel} href={category?.ctaPrimaryHref ?? bookingUrl} theme="primary" />
         <Button label={category?.ctaSecondaryLabel ?? 'Learn About Rachel'} href={category?.ctaSecondaryHref ?? '/about'} theme="primary" />
       </div>
     </div>

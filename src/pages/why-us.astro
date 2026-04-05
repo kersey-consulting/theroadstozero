@@ -8,8 +8,8 @@ const staffMembers = await sanityClient.fetch(queries.staffMembers).catch(() => 
 ---
 
 <BaseLayout
-  title={page?.seo?.title ?? 'Why Us — The Road to Zero'}
-  description={page?.seo?.description ?? 'Learn the philosophy behind The Road to Zero and our RN-led, personalized approach to wellness and aesthetics.'}
+  title={page?.seo?.title ?? page?.title ?? 'Why Us'}
+  description={page?.seo?.description ?? ''}
 >
   <PageSections sections={page?.sections ?? []} staffMembers={staffMembers} />
 </BaseLayout>
