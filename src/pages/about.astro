@@ -5,105 +5,123 @@ import Button from '@/components/Button.astro';
 import { sanityClient, queries } from '@/lib/sanity';
 
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+const page = await sanityClient.fetch(queries.pageBySlug, { slug: 'about' }).catch(() => null);
 const staffMembers = await sanityClient.fetch(queries.staffMembers).catch(() => []);
-const rachel = staffMembers?.find((s: any) => s.name === 'Rachel');
-const rachelPhoto = rachel?.photo ?? '/assets/MyPicture_356x475.jpeg';
-
 const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
+
+const sections = page?.sections ?? [];
+const hero = sections.find((s: any) => s._type === 'heroSection');
+const story = sections.find((s: any) => s._type === 'richTextSection' && s._key === 'story');
+const staffSection = sections.find((s: any) => s._type === 'staffSection');
+const credentials = sections.find((s: any) => s._type === 'cardsSection');
+const approach = sections.find((s: any) => s._type === 'richTextSection' && s._key === 'approach');
+const approachTags = sections.find((s: any) => s._type === 'tagListSection' && s._key === 'approach-tags');
+const services = sections.find((s: any) => s._type === 'tagListSection' && s._key === 'services');
+const cta = sections.find((s: any) => s._type === 'ctaSection');
+
+const featuredStaff = (staffSection?.staffMembers ?? []).map((ref: any) =>
+  staffMembers.find((s: any) => s._id === ref._ref)
+).filter(Boolean);
+const featured = featuredStaff[0] ?? staffMembers.find((s: any) => s.name === 'Rachel');
+
+const blockText = (blocks: any[] = []) =>
+  blocks.map((b) => b.children?.map((c: any) => c.text).join('')).filter(Boolean);
 ---
 
-<BaseLayout title="About — The Road to Zero" description="Compassionate care for the whole person.">
+<BaseLayout title={page?.seo?.title ?? 'About — The Road to Zero'} description={page?.seo?.description ?? 'Compassionate care for the whole person.'}>
   <div class="page">
     <Hero id="hero" backgroundImage="/assets/Sand.jpeg" theme="tertiary" backgroundParallax={true}>
       <div slot="left" class="heroContent">
-        <p class="eyebrow">About the founder & owner</p>
-        <h1 class="heroTitle">Compassionate care for the whole person</h1>
-        <p class="heroText">RN, Midwife, licensed healthcare administrator, Botulinum and Dermal Filler clinician, certified IV therapy provider, and Reiki practitioner.</p>
-        <p class="heroText">Rachel's mission is to help clients feel rejuvenated, confident, and aligned through personalized care that supports mind, body, and spirit.</p>
+        <p class="eyebrow">{hero?.eyebrow ?? 'About the founder & owner'}</p>
+        <h1 class="heroTitle">{hero?.title ?? 'Compassionate care for the whole person'}</h1>
+        <p class="heroText">{hero?.text ?? 'RN, Midwife, licensed healthcare administrator, Botulinum and Dermal Filler clinician, certified IV therapy provider, and Reiki practitioner.'}</p>
         <div class="heroActions">
-          <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
-          <Button label="Explore Services" href="/services" theme="primary" />
+          {(hero?.actions ?? [
+            { label: 'Book a Consultation', href: bookingUrl },
+            { label: 'Explore Services', href: '/services' },
+          ]).map((action: any) => (
+            <Button label={action.label} href={action.href} theme="primary" />
+          ))}
         </div>
       </div>
-      <img slot="right" class="heroImage" src={rachelPhoto} alt="Rachel" />
+      {featured?.photo && <img slot="right" class="heroImage" src={featured.photo} alt={featured.name} />}
     </Hero>
 
     <section id="story" class="section">
       <div class="narrow">
-        <h2 class="sectionTitle">A life devoted to caring for others</h2>
+        <h2 class="sectionTitle">{story?.title ?? 'A life devoted to caring for others'}</h2>
         <div class="copy">
-          <p>Rachel has had the blessing of supporting life at both its beginning and its end. Welcoming new life into the world as a midwife and walking alongside individuals and families during the end-of-life journey in hospice care.</p>
-          <p>These experiences gave her a deep appreciation for the full spectrum of life and a compassionate understanding of what it means to truly care for others.</p>
-          <p>Her personal journey began with a search for balance, self-discovery, self-love, and healing. Over time, that journey evolved into a professional mission: creating a safe, nurturing, and holistic space where wellness begins from within.</p>
+          {blockText(story?.content).map((p: string) => <p>{p}</p>)}
         </div>
       </div>
     </section>
 
-    <section id="credentials" class="sectionAlt">
+    <section id="featured-staff" class="sectionAlt">
       <div class="narrow">
-        <h2 class="sectionTitleCentered">Credentials & Specialties</h2>
+        <h2 class="sectionTitleCentered">{staffSection?.title ?? 'Featured Clinician'}</h2>
+        {staffSection?.intro && <p class="centeredText">{staffSection.intro}</p>}
+        {featured && (
+          <div class="featuredCard">
+            {featured.photo && <img class="featuredImage" src={featured.photo} alt={featured.name} />}
+            <div class="featuredBody">
+              <h3>{featured.name}</h3>
+              {featured.role && <p class="featuredRole">{featured.role}</p>}
+              {featured.credentials && <p class="featuredCredentials">{featured.credentials}</p>}
+              <div class="copy">
+                {blockText(featured.bio).map((p: string) => <p>{p}</p>)}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <section id="credentials" class="section">
+      <div class="narrow">
+        <h2 class="sectionTitleCentered">{credentials?.title ?? 'Credentials & Specialties'}</h2>
         <div class="credentialsGrid">
-          <div class="card">
-            <h3>Clinical Background</h3>
-            <ul class="list"><li>Registered Nurse</li><li>Midwife</li><li>Licensed healthcare Administrator</li></ul>
-          </div>
-          <div class="card">
-            <h3>Credentials</h3>
-            <ul class="list"><li>AACM (American Academy of Cosmetic medicine)</li><li>AMET (Aesthetic Medical Educators training)</li><li>Empire Medical</li></ul>
-          </div>
-          <div class="card">
-            <h3>Specialties</h3>
-            <ul class="list"><li>Aesthetics Specialist</li><li>Dermal Filler clinician</li><li>Reiki practitioner</li></ul>
-          </div>
+          {(credentials?.cards ?? []).map((card: any) => (
+            <div class="card">
+              <h3>{card.title}</h3>
+              <ul class="list">{String(card.description || '').split('\n').filter(Boolean).map((line: string) => <li>{line}</li>)}</ul>
+            </div>
+          ))}
         </div>
       </div>
     </section>
 
     <Hero id="approach" theme="tertiary">
       <div slot="left" class="storyBlock">
-        <h2 class="sectionTitle">A holistic approach to wellness and confidence</h2>
+        <h2 class="sectionTitle">{approach?.title ?? 'A holistic approach to wellness and confidence'}</h2>
         <div class="copy">
-          <p>Whether you are seeking stress relief, emotional or physical balance, increased energy, hormone support, weight management, or cosmetic rejuvenation, Rachel's goal is to guide you toward feeling your absolute best.</p>
-          <p>Her approach blends medical knowledge, aesthetic expertise, and holistic care to support lasting wellness from the inside out.</p>
-          <p>Every experience is designed to feel personal, supportive, and grounded in compassion.</p>
+          {blockText(approach?.content).map((p: string) => <p>{p}</p>)}
         </div>
       </div>
       <div slot="right" class="valuesCard">
-        <h3 class="valuesTitle">What clients may be looking for</h3>
-        <ul class="list">
-          <li>Stress relief and renewed balance</li>
-          <li>Improved energy and recovery</li>
-          <li>Hormone and wellness support</li>
-          <li>Weight management guidance</li>
-          <li>Natural-looking cosmetic rejuvenation</li>
-          <li>Mind, body, and spirit alignment</li>
-        </ul>
+        <h3 class="valuesTitle">{approachTags?.title ?? 'What clients may be looking for'}</h3>
+        <ul class="list">{(approachTags?.tags ?? []).map((tag: string) => <li>{tag}</li>)}</ul>
       </div>
     </Hero>
 
     <section id="services" class="section">
       <div class="narrow">
-        <h2 class="sectionTitleCentered">Services Rachel is honored to offer</h2>
-        <div class="serviceTags">
-          <span class="tag">IV Therapy</span>
-          <span class="tag">GLP-1 Medications</span>
-          <span class="tag">Peptides</span>
-          <span class="tag">Aesthetic Treatments</span>
-          <span class="tag">Botulinum</span>
-          <span class="tag">Dermal Fillers</span>
-          <span class="tag">Reiki</span>
-        </div>
-        <p class="centeredText">Rachel looks forward to sharing the restorative and empowering benefits of these services in a way that feels thoughtful, personalized, and aligned with each client's goals.</p>
+        <h2 class="sectionTitleCentered">{services?.title ?? 'Services Rachel is honored to offer'}</h2>
+        <div class="serviceTags">{(services?.tags ?? []).map((tag: string) => <span class="tag">{tag}</span>)}</div>
+        {services?.intro && <p class="centeredText">{services.intro}</p>}
       </div>
     </section>
 
     <section id="book" class="section">
       <div class="ctaCard">
-        <h2 class="sectionTitleCentered">Thank you for trusting Rachel with your wellness journey</h2>
-        <p class="centeredText">If you are ready to feel more rejuvenated, confident, and supported, Rachel would be honored to walk alongside you.</p>
+        <h2 class="sectionTitleCentered">{cta?.title ?? 'Thank you for trusting Rachel with your wellness journey'}</h2>
+        <p class="centeredText">{cta?.text ?? 'If you are ready to feel more rejuvenated, confident, and supported, Rachel would be honored to walk alongside you.'}</p>
         <div class="ctaActions">
-          <Button label="Book Appointment" href={bookingUrl} theme="primary" />
-          <Button label="View Services" href="/services" theme="primary" />
+          {(cta?.actions ?? [
+            { label: 'Book Appointment', href: bookingUrl },
+            { label: 'View Services', href: '/services' },
+          ]).map((action: any) => (
+            <Button label={action.label} href={action.href} theme="primary" />
+          ))}
         </div>
       </div>
     </section>
@@ -127,7 +145,7 @@ const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget
   .copy p, .centeredText { margin: 0; font-size: 1.05rem; line-height: 1.85; }
   .centeredText { text-align: center; max-width: 760px; margin-left: auto; margin-right: auto; }
   .credentialsGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-  .card, .valuesCard, .ctaCard { background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08); }
+  .card, .valuesCard, .ctaCard, .featuredCard { background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08); }
   .card h3, .valuesTitle { margin: 0 0 1rem; font-size: 1.25rem; }
   .list { margin: 0; padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; line-height: 1.7; }
   .storyBlock { max-width: 720px; }
@@ -135,8 +153,13 @@ const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget
   .tag { display: inline-flex; align-items: center; padding: 0.8rem 1.1rem; border-radius: 999px; background: rgba(210, 185, 150, 0.18); font-weight: 600; }
   .ctaCard { width: min(100%, 960px); margin: 0 auto; text-align: center; }
   .ctaActions { display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+  .featuredCard { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start; }
+  .featuredImage { width: 100%; border-radius: 20px; object-fit: cover; }
+  .featuredBody h3 { margin: 0 0 0.5rem; }
+  .featuredRole, .featuredCredentials { margin: 0 0 0.75rem; opacity: 0.85; }
   @media (max-width: 900px) {
     .credentialsGrid { grid-template-columns: 1fr; }
+    .featuredCard { grid-template-columns: 1fr; }
     .section, .sectionAlt { padding: 4rem 1.25rem; }
     .heroText { font-size: 1rem; }
   }
