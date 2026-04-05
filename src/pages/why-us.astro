@@ -1,0 +1,15 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageSections from '@/components/sections/PageSections.astro';
+import { sanityClient, queries } from '@/lib/sanity';
+
+const page = await sanityClient.fetch(queries.pageBySlug, { slug: 'why-us' }).catch(() => null);
+const staffMembers = await sanityClient.fetch(queries.staffMembers).catch(() => []);
+---
+
+<BaseLayout
+  title={page?.seo?.title ?? 'Why Us — The Road to Zero'}
+  description={page?.seo?.description ?? 'Learn the philosophy behind The Road to Zero and our RN-led, personalized approach to wellness and aesthetics.'}
+>
+  <PageSections sections={page?.sections ?? []} staffMembers={staffMembers} />
+</BaseLayout>
