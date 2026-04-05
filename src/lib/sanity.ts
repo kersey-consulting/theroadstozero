@@ -25,7 +25,16 @@ export const queries = {
     bookingUrl,
     "logo": logo.asset->url,
     "goldLogo": goldLogo.asset->url,
-    socialLinks[]{ platform, url }
+    socialLinks[]{ platform, url },
+    "homeServiceCategories": homeServiceCategories[]->{
+      _id,
+      title,
+      slug,
+      homeCardTitle,
+      homeCardDescription,
+      "image": image.asset->url,
+      "homeCardImage": homeCardImage.asset->url
+    }
   }`,
 
   navigation: `*[_type == "navigation"][0]{

@@ -11,9 +11,8 @@ const rachel = staffMembers?.find((s: any) => s.name === 'Rachel');
 const rachelPhoto = rachel?.photo ?? '/assets/MyPicture_356x475.jpeg';
 const goldLogo = settings?.goldLogo ?? '/icons/gold-ring-logo.png';
 
-const products = (sanityCategories ?? [])
+const products = (settings?.homeServiceCategories?.length ? settings.homeServiceCategories : sanityCategories ?? [])
   .filter((cat: any) => cat.homeCardEnabled !== false)
-  .sort((a: any, b: any) => (a.homeCardOrder ?? 999) - (b.homeCardOrder ?? 999))
   .map((cat: any) => ({
     imagePath: cat.homeCardImage ?? cat.image,
     title: cat.homeCardTitle ?? cat.title,
