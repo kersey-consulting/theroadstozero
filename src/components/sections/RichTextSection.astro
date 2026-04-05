@@ -1,0 +1,37 @@
+---
+interface Block {
+  children?: { text?: string }[];
+}
+
+interface Props {
+  section: {
+    title?: string;
+    content?: Block[];
+  };
+  variant?: 'default' | 'alt';
+}
+
+const { section, variant = 'default' } = Astro.props;
+const paragraphs = (section?.content ?? [])
+  .map((b) => b.children?.map((c) => c.text).join(''))
+  .filter(Boolean);
+---
+
+<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+  <div class="narrow">
+    {section?.title && <h2 class="sectionTitle">{section.title}</h2>}
+    <div class="copy">
+      {paragraphs.map((p) => <p>{p}</p>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section, .sectionAlt { padding: 5rem 1.5rem; }
+  .sectionAlt { background: rgba(210, 185, 150, 0.12); }
+  .narrow { width: min(100%, 1000px); margin: 0 auto; }
+  .sectionTitle { margin: 0 0 1.5rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
+  .copy { display: flex; flex-direction: column; gap: 1rem; }
+  .copy p { margin: 0; font-size: 1.05rem; line-height: 1.85; }
+  @media (max-width: 900px) { .section, .sectionAlt { padding: 4rem 1.25rem; } }
+</style>

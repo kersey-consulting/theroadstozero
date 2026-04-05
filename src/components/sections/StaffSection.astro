@@ -1,0 +1,53 @@
+---
+interface StaffRef { _ref?: string }
+interface Staff {
+  _id: string;
+  name: string;
+  role?: string;
+  credentials?: string;
+  bio?: any[];
+  photo?: string;
+}
+interface Props {
+  section: { title?: string; intro?: string; staffMembers?: StaffRef[] };
+  staffMembers?: Staff[];
+  variant?: 'default' | 'alt';
+}
+const { section, staffMembers = [], variant = 'default' } = Astro.props;
+const refs = section?.staffMembers ?? [];
+const featured = refs.map((r) => staffMembers.find((s) => s._id === r._ref)).filter(Boolean);
+const blockText = (blocks = []) => blocks.map((b: any) => b.children?.map((c: any) => c.text).join('')).filter(Boolean);
+---
+<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+  <div class="narrow">
+    {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
+    {section?.intro && <p class="centeredText">{section.intro}</p>}
+    <div class="staffGrid">
+      {featured.map((person: any) => (
+        <div class="featuredCard">
+          {person.photo && <img class="featuredImage" src={person.photo} alt={person.name} />}
+          <div class="featuredBody">
+            <h3>{person.name}</h3>
+            {person.role && <p class="featuredRole">{person.role}</p>}
+            {person.credentials && <p class="featuredCredentials">{person.credentials}</p>}
+            <div class="copy">{blockText(person.bio).map((p: string) => <p>{p}</p>)}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .section, .sectionAlt { padding: 5rem 1.5rem; }
+  .sectionAlt { background: rgba(210, 185, 150, 0.12); }
+  .narrow { width: min(100%, 1000px); margin: 0 auto; }
+  .sectionTitleCentered { margin: 0 0 1.5rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; text-align: center; }
+  .centeredText { text-align: center; max-width: 760px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.85; }
+  .featuredCard { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start; background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08); }
+  .featuredImage { width: 100%; border-radius: 20px; object-fit: cover; }
+  .featuredBody h3 { margin: 0 0 0.5rem; }
+  .featuredRole,.featuredCredentials { margin: 0 0 0.75rem; opacity: 0.85; }
+  .copy { display: flex; flex-direction: column; gap: 1rem; }
+  .copy p { margin: 0; line-height: 1.85; }
+  @media (max-width: 900px) { .featuredCard { grid-template-columns: 1fr; } }
+</style>

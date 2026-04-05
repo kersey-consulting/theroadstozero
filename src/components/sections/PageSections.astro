@@ -1,0 +1,40 @@
+---
+import HeroSection from './HeroSection.astro';
+import RichTextSection from './RichTextSection.astro';
+import CardsSection from './CardsSection.astro';
+import StaffSection from './StaffSection.astro';
+import TagListSection from './TagListSection.astro';
+import CtaSection from './CtaSection.astro';
+
+interface Props {
+  sections?: any[];
+  staffMembers?: any[];
+}
+
+const { sections = [], staffMembers = [] } = Astro.props;
+---
+
+{sections.map((section, index) => {
+  const variant = index % 2 === 1 ? 'alt' : 'default';
+
+  if (section._type === 'heroSection') {
+    return <HeroSection section={section} />;
+  }
+  if (section._type === 'richTextSection') {
+    return <RichTextSection section={section} variant={variant} />;
+  }
+  if (section._type === 'cardsSection') {
+    return <CardsSection section={section} variant={variant} />;
+  }
+  if (section._type === 'staffSection') {
+    return <StaffSection section={section} staffMembers={staffMembers} variant={variant} />;
+  }
+  if (section._type === 'tagListSection') {
+    return <TagListSection section={section} variant={variant} />;
+  }
+  if (section._type === 'ctaSection') {
+    return <CtaSection section={section} />;
+  }
+
+  return null;
+})}
