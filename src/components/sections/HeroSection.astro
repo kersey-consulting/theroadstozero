@@ -14,6 +14,7 @@ interface Props {
     title: string;
     text?: string;
     image?: any;
+    imagePosition?: 'left' | 'right';
     backgroundImage?: any;
     actions?: Action[];
   };
@@ -34,9 +35,11 @@ const resolveImageUrl = (img: any) => {
 const imageUrl = resolveImageUrl(section?.image);
 const backgroundImageUrl = resolveImageUrl(section?.backgroundImage);
 const actions = section?.actions ?? [];
+const hasImage = Boolean(imageUrl);
+const reverse = section?.imagePosition === 'left';
 ---
 
-<Hero id="hero" backgroundImage={backgroundImageUrl} theme="tertiary" backgroundParallax={true}>
+<Hero id="hero" backgroundImage={backgroundImageUrl} theme="tertiary" backgroundParallax={true} hasRightColumn={hasImage} reverse={reverse}>
   <div slot="left" class="heroContent">
     {section?.eyebrow && <p class="eyebrow">{section.eyebrow}</p>}
     <h1 class="heroTitle">{section?.title}</h1>

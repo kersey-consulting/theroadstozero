@@ -4,6 +4,8 @@ interface Props {
   backgroundImage?: string;
   backgroundParallax?: boolean;
   theme?: 'primary' | 'secondary' | 'tertiary';
+  hasRightColumn?: boolean;
+  reverse?: boolean;
 }
 
 const {
@@ -11,6 +13,8 @@ const {
   backgroundImage,
   backgroundParallax = false,
   theme = 'primary',
+  hasRightColumn = true,
+  reverse = false,
 } = Astro.props;
 
 const style = [
@@ -23,13 +27,15 @@ const style = [
 ---
 
 <section id={id} class:list={['hero', theme]} style={style}>
-  <div class="inner">
-    <div class="col left">
+  <div class:list={['inner', !hasRightColumn && 'singleColumn', reverse && hasRightColumn && 'reverse']}>
+    <div class:list={['col', 'left', !hasRightColumn && 'fullWidth']}>
       <slot name="left" />
     </div>
-    <div class="col right">
-      <slot name="right" />
-    </div>
+    {hasRightColumn && (
+      <div class="col right">
+        <slot name="right" />
+      </div>
+    )}
   </div>
 </section>
 
@@ -50,6 +56,8 @@ const style = [
     gap: clamp(1.25rem, 3vw, 2.5rem);
     align-items: stretch;
   }
+  .reverse { flex-direction: row-reverse; }
+  .singleColumn { display: block; }
   .col {
     flex: 1 1 0;
     min-width: 0;
@@ -57,6 +65,7 @@ const style = [
     flex-direction: column;
     align-self: center;
   }
+  .fullWidth { flex: 1 1 100%; max-width: 100%; }
   .primary {
     --hero-bg: var(--color-surface);
     --hero-fg: var(--color-primary);
@@ -79,7 +88,7 @@ const style = [
     color: inherit;
   }
   @media (max-width: 768px) {
-    .inner {
+    .inner, .reverse {
       flex-direction: column;
     }
   }

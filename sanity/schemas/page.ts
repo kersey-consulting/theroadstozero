@@ -67,6 +67,19 @@ export default defineType({
             defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
             defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
             defineField({ name: 'image', title: 'Foreground Image', type: 'image', options: { hotspot: true } }),
+            defineField({
+              name: 'imagePosition',
+              title: 'Image Position',
+              type: 'string',
+              initialValue: 'right',
+              options: {
+                list: [
+                  { title: 'Right', value: 'right' },
+                  { title: 'Left', value: 'left' },
+                ],
+                layout: 'radio',
+              },
+            }),
             defineField({ name: 'backgroundImage', title: 'Background Image', type: 'image', options: { hotspot: true } }),
             defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
           ],
