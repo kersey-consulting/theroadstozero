@@ -126,7 +126,6 @@ export default defineType({
       type: 'image',
       options: { hotspot: true },
     }),
-    defineField({ name: 'homeCardOrder', title: 'Homepage Card Order', type: 'number' }),
     defineField({ name: 'homeCardEnabled', title: 'Show on Homepage', type: 'boolean', initialValue: true }),
 
     defineField({ name: 'ctaTitle', title: 'CTA Title', type: 'string' }),
