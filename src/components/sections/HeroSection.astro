@@ -12,18 +12,19 @@ interface Props {
     eyebrow?: string;
     title: string;
     text?: string;
-    image?: string;
+    image?: any;
+    backgroundImage?: any;
     actions?: Action[];
   };
-  fallbackImage?: string;
 }
 
-const { section, fallbackImage } = Astro.props;
-const imageUrl = section?.image?.asset?.url || section?.image || fallbackImage;
+const { section } = Astro.props;
+const imageUrl = section?.image?.asset?.url || section?.image;
+const backgroundImageUrl = section?.backgroundImage?.asset?.url || section?.backgroundImage;
 const actions = section?.actions ?? [];
 ---
 
-<Hero id="hero" backgroundImage={fallbackImage} theme="tertiary" backgroundParallax={true}>
+<Hero id="hero" backgroundImage={backgroundImageUrl} theme="tertiary" backgroundParallax={true}>
   <div slot="left" class="heroContent">
     {section?.eyebrow && <p class="eyebrow">{section.eyebrow}</p>}
     <h1 class="heroTitle">{section?.title}</h1>
