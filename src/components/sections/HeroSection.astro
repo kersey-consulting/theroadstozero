@@ -40,7 +40,7 @@ const reverse = section?.imagePosition === 'left';
 ---
 
 <Hero id="hero" backgroundImage={backgroundImageUrl} theme="tertiary" backgroundParallax={true} hasRightColumn={hasImage} reverse={reverse}>
-  <div slot="left" class="heroContent">
+  <div slot="left" class:list={['heroContent', !hasImage && 'fullWidth']}>
     {section?.eyebrow && <p class="eyebrow">{section.eyebrow}</p>}
     <h1 class="heroTitle">{section?.title}</h1>
     {section?.text && <p class="heroText">{section.text}</p>}
@@ -55,6 +55,7 @@ const reverse = section?.imagePosition === 'left';
 
 <style>
   .heroContent { max-width: 720px; display: flex; flex-direction: column; gap: 1rem; }
+  .heroContent.fullWidth { max-width: 100%; }
   .eyebrow { margin: 0; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
   .heroTitle { margin: 0; font-size: clamp(2.5rem, 5vw, 3.5rem); line-height: 1.05; }
   .heroText { margin: 0; font-size: 1.1rem; line-height: 1.75; max-width: 62ch; }
