@@ -16,7 +16,7 @@ const products = (settings?.homeServiceCategories?.length ? settings.homeService
   .map((cat: any) => ({
     imagePath: cat.homeCardImage ?? cat.image,
     title: cat.homeCardTitle ?? cat.title,
-    subtext: cat.homeCardDescription ?? cat.description,
+    subtext: cat.homeCardDescription ?? [],
     href: `/services/${cat.slug.current}`,
   }));
 
@@ -83,7 +83,15 @@ const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget
             <img class="cardImage" src={product.imagePath} alt={product.title} />
             <div class="cardContent">
               <h3 class="cardTitle">{product.title}</h3>
-              <div class="cardSubtext" set:html={product.subtext} />
+              <div class="cardSubtext">
+                {product.subtext.map((block: any) => (
+                  block.listItem === 'bullet' ? (
+                    <li>{block.children?.map((c: any) => c.text).join('')}</li>
+                  ) : (
+                    <p>{block.children?.map((c: any) => c.text).join('')}</p>
+                  )
+                ))}
+              </div>
               <a class="cardButton" href={product.href}>Learn More</a>
             </div>
           </article>

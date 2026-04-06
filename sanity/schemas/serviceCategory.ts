@@ -114,7 +114,12 @@ export default defineType({
     }),
 
     defineField({ name: 'homeCardTitle', title: 'Homepage Card Title Override', type: 'string' }),
-    defineField({ name: 'homeCardDescription', title: 'Homepage Card Description (HTML)', type: 'text', rows: 8 }),
+    defineField({
+      name: 'homeCardDescription',
+      title: 'Homepage Card Description',
+      type: 'array',
+      of: [{ type: 'block' }],
+    }),
     defineField({
       name: 'homeCardImage',
       title: 'Homepage Card Image Override',
