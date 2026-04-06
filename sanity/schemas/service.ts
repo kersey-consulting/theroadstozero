@@ -1,4 +1,20 @@
-import { defineType, defineField } from 'sanity';
+import { defineType, defineField, defineArrayMember } from 'sanity';
+
+const sectionAction = {
+  type: 'object',
+  fields: [
+    defineField({ name: 'label', title: 'Label', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'href', title: 'Href', type: 'string', validation: (r) => r.required() }),
+  ],
+};
+
+const simpleCard = {
+  type: 'object',
+  fields: [
+    defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'description', title: 'Description', type: 'text', rows: 3 }),
+  ],
+};
 
 export default defineType({
   name: 'service',
@@ -66,6 +82,69 @@ export default defineType({
       description: 'Rich text body for the service detail page',
     }),
     defineField({
+      name: 'sections',
+      title: 'Detail Page Sections',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          name: 'heroSection',
+          title: 'Hero Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
+            defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
+            defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
+            defineField({ name: 'image', title: 'Foreground Image', type: 'image', options: { hotspot: true } }),
+            defineField({
+              name: 'imagePosition', title: 'Image Position', type: 'string', initialValue: 'right',
+              options: { list: [{ title: 'Right', value: 'right' }, { title: 'Left', value: 'left' }], layout: 'radio' },
+            }),
+            defineField({ name: 'backgroundImage', title: 'Background Image', type: 'image', options: { hotspot: true } }),
+            defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
+          ],
+        }),
+        defineArrayMember({
+          name: 'richTextSection',
+          title: 'Rich Text Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
+          ],
+        }),
+        defineArrayMember({
+          name: 'cardsSection',
+          title: 'Cards Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
+            defineField({ name: 'cards', title: 'Cards', type: 'array', of: [simpleCard] }),
+          ],
+        }),
+        defineArrayMember({
+          name: 'tagListSection',
+          title: 'Tag List Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
+            defineField({ name: 'tags', title: 'Tags', type: 'array', of: [{ type: 'string' }] }),
+          ],
+        }),
+        defineArrayMember({
+          name: 'ctaSection',
+          title: 'CTA Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
+            defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
+          ],
+        }),
+      ],
+    }),
+    defineField({
       name: 'image',
       title: 'Service Image',
       type: 'image',
@@ -92,18 +171,8 @@ export default defineType({
         {
           type: 'object',
           fields: [
-            defineField({
-              name: 'title',
-              title: 'Title',
-              type: 'string',
-              validation: (r) => r.required(),
-            }),
-            defineField({
-              name: 'description',
-              title: 'Description',
-              type: 'text',
-              rows: 3,
-            }),
+            defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
+            defineField({ name: 'description', title: 'Description', type: 'text', rows: 3 }),
           ],
         },
       ],
@@ -116,18 +185,8 @@ export default defineType({
         {
           type: 'object',
           fields: [
-            defineField({
-              name: 'name',
-              title: 'Name',
-              type: 'string',
-              validation: (r) => r.required(),
-            }),
-            defineField({
-              name: 'detail',
-              title: 'Detail',
-              type: 'text',
-              rows: 2,
-            }),
+            defineField({ name: 'name', title: 'Name', type: 'string', validation: (r) => r.required() }),
+            defineField({ name: 'detail', title: 'Detail', type: 'text', rows: 2 }),
           ],
         },
       ],
