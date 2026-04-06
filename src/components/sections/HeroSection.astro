@@ -18,7 +18,7 @@ interface Props {
   fallbackImage?: string;
 }
 
-const { section, fallbackImage = '/assets/Sand.jpeg' } = Astro.props;
+const { section, fallbackImage } = Astro.props;
 const imageUrl = section?.image?.asset?.url || section?.image || fallbackImage;
 const actions = section?.actions ?? [];
 ---
