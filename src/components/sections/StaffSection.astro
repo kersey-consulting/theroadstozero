@@ -17,7 +17,6 @@ const { section, staffMembers = [], variant = 'default' } = Astro.props;
 const refs = section?.staffMembers ?? [];
 const featured = refs.map((r) => staffMembers.find((s) => s._id === r._ref)).filter(Boolean);
 const blockText = (blocks = []) => blocks.map((b: any) => b.children?.map((c: any) => c.text).join('')).filter(Boolean);
-const credentialList = (credentials: any) => Array.isArray(credentials) ? credentials : (credentials ? [credentials] : []);
 ---
 <section class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="narrow">
@@ -30,9 +29,9 @@ const credentialList = (credentials: any) => Array.isArray(credentials) ? creden
           <div class="featuredBody">
             <h3>{person.name}</h3>
             {person.role && <p class="featuredRole">{person.role}</p>}
-            {credentialList(person.credentials).length > 0 && (
+            {person.credentials?.length > 0 && (
               <ul class="credentialsList">
-                {credentialList(person.credentials).map((cred: string) => <li>{cred}</li>)}
+                {person.credentials.map((cred: string) => <li>{cred}</li>)}
               </ul>
             )}
             <div class="copy">{blockText(person.bio).map((p: string) => <p>{p}</p>)}</div>
