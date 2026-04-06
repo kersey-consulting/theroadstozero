@@ -15,7 +15,7 @@ const tagLinks = category?.tagLinks ?? [];
 ---
 
 <ServiceHubLayout title="Body Transformation — The Road to Zero" description={category?.description ?? ''}>
-  <Hero id="hero" backgroundImage={category?.heroImage} backgroundParallax={true} theme="tertiary">
+  <Hero id="hero" backgroundImage={category?.heroImage} backgroundParallax={true} theme="tertiary" hasRightColumn={false}>
     <div slot="left" class="hub-heroContent">
       <p class="hub-eyebrow">{category?.eyebrow}</p>
       <h1 class="hub-heroTitle">{category?.heroTitle}</h1>
