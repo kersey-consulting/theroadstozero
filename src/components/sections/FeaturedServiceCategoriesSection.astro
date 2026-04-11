@@ -1,7 +1,12 @@
 ---
+interface PortableTextChild {
+  text?: string;
+  marks?: string[];
+}
+
 interface PortableTextBlock {
   listItem?: string;
-  children?: { text?: string }[];
+  children?: PortableTextChild[];
 }
 
 interface Category {
@@ -25,7 +30,17 @@ interface Props {
 
 const { section, variant = 'default' } = Astro.props;
 const categories = section?.categories ?? [];
-const blockText = (block: PortableTextBlock) => block.children?.map((c) => c.text).join('') ?? '';
+const escapeHtml = (value = '') => value
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#39;');
+const renderChildren = (children: PortableTextChild[] = []) =>
+  children.map((child) => {
+    const text = escapeHtml(child.text ?? '');
+    return child.marks?.includes('strong') ? `<strong>${text}</strong>` : text;
+  }).join('');
 ---
 
 <section class:list={['section', variant === 'alt' && 'sectionAlt']}>
@@ -41,9 +56,9 @@ const blockText = (block: PortableTextBlock) => block.children?.map((c) => c.tex
             <div class="cardSubtext">
               {(category.homeCardDescription ?? []).map((block) => (
                 block.listItem === 'bullet' ? (
-                  <li>{blockText(block)}</li>
+                  <li set:html={renderChildren(block.children)} />
                 ) : (
-                  <p>{blockText(block)}</p>
+                  <p set:html={renderChildren(block.children)} />
                 )
               ))}
             </div>
