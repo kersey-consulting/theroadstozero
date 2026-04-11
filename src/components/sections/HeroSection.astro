@@ -17,6 +17,7 @@ interface Props {
     image?: any;
     imageUrl?: string;
     imageShadow?: boolean;
+    imageMaxWidth?: string;
     imagePosition?: 'left' | 'right';
     backgroundImage?: any;
     backgroundImageUrl?: string;
@@ -38,6 +39,7 @@ const resolveImageUrl = (img: any) => {
 
 const imageUrl = section?.imageUrl ?? resolveImageUrl(section?.image);
 const backgroundImageUrl = section?.backgroundImageUrl ?? resolveImageUrl(section?.backgroundImage);
+const imageStyle = section?.imageMaxWidth ? `width: ${section.imageMaxWidth};` : undefined;
 const nodes = portableNodes(section?.content ?? []);
 const actions = section?.actions ?? [];
 const hasImage = Boolean(imageUrl);
@@ -62,7 +64,7 @@ const reverse = section?.imagePosition === 'left';
       </div>
     )}
   </div>
-  {imageUrl && <img slot="right" class:list={['heroImage', section?.imageShadow === false && 'heroImageFlat']} src={imageUrl} alt={section?.title ?? 'Hero image'} />}
+  {imageUrl && <img slot="right" class:list={['heroImage', section?.imageShadow === false && 'heroImageFlat']} style={imageStyle} src={imageUrl} alt={section?.title ?? 'Hero image'} />}
 </Hero>
 
 <style>

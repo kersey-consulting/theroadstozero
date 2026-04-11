@@ -69,6 +69,12 @@ export default defineType({
             defineField({ name: 'image', title: 'Foreground Image', type: 'image', options: { hotspot: true } }),
             defineField({ name: 'imageShadow', title: 'Image Shadow', type: 'boolean', initialValue: true }),
             defineField({
+              name: 'imageMaxWidth',
+              title: 'Image Max Width',
+              type: 'string',
+              description: 'Optional CSS width value like 380px, 520px, min(100%, 380px), or 100%.',
+            }),
+            defineField({
               name: 'imagePosition',
               title: 'Image Position',
               type: 'string',

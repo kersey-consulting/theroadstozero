@@ -41,6 +41,7 @@ async function main() {
         ]),
         image: { _type: 'image', asset: { _type: 'reference', _ref: 'image-523dd5b83f374960c9e0d7efa353f22f89399b33-1024x1024-png' } },
         imageShadow: false,
+        imageMaxWidth: '100%',
         imagePosition: 'left',
         actions: [
           { _key: 'book', label: 'Book a Consultation', href: 'https://booking.hydreight.com/widget-business/fk58k' },
