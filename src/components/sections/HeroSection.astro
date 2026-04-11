@@ -16,6 +16,7 @@ interface Props {
     content?: { style?: string; listItem?: string; children?: { text?: string }[] }[];
     image?: any;
     imageUrl?: string;
+    imageShadow?: boolean;
     imagePosition?: 'left' | 'right';
     backgroundImage?: any;
     backgroundImageUrl?: string;
@@ -61,7 +62,7 @@ const reverse = section?.imagePosition === 'left';
       </div>
     )}
   </div>
-  {imageUrl && <img slot="right" class="heroImage" src={imageUrl} alt={section?.title ?? 'Hero image'} />}
+  {imageUrl && <img slot="right" class:list={['heroImage', section?.imageShadow === false && 'heroImageFlat']} src={imageUrl} alt={section?.title ?? 'Hero image'} />}
 </Hero>
 
 <style>
@@ -74,6 +75,7 @@ const reverse = section?.imagePosition === 'left';
   .heroList { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; font-size: 1.1rem; line-height: 1.75; }
   .heroActions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.75rem; }
   .heroImage { width: min(100%, 380px); border-radius: 24px; object-fit: cover; margin: 0 auto; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18); }
+  .heroImageFlat { box-shadow: none; }
   @media (max-width: 900px) {
     .heroText { font-size: 1rem; }
   }

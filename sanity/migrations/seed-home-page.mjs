@@ -34,8 +34,13 @@ async function main() {
         _key: 'hero',
         _type: 'heroSection',
         title: 'The Road to Zero',
-        text: 'Welcome to our sanctuary for Wellness, Beauty, and Transformative balance. Your journey toward confidence, vitality, and restoration begins here. We believe true Glow comes from within, nourishing the body, uplifting the spirit, and enhancing the natural beauty you already possess.\n\nWith science-backed treatments, a personalized approach, and holistic care, we\'re here to help you reset, restore, and realign with your best self. From IV hydration and peptides to hormone support, GLP therapy, and aesthetic enhancements, every service is crafted to elevate your well-being.\n\nStep into a space dedicated to renewal, and allow us to guide you toward total rejuvenation because you deserve to look, feel, and live your most vibrant, balanced, and radiant life.',
+        content: pt([
+          'Welcome to our sanctuary for Wellness, Beauty, and Transformative balance. Your journey toward confidence, vitality, and restoration begins here. We believe true Glow comes from within, nourishing the body, uplifting the spirit, and enhancing the natural beauty you already possess.',
+          'With science-backed treatments, a personalized approach, and holistic care, we\'re here to help you reset, restore, and realign with your best self. From IV hydration and peptides to hormone support, GLP therapy, and aesthetic enhancements, every service is crafted to elevate your well-being.',
+          'Step into a space dedicated to renewal, and allow us to guide you toward total rejuvenation because you deserve to look, feel, and live your most vibrant, balanced, and radiant life.',
+        ]),
         image: { _type: 'image', asset: { _type: 'reference', _ref: 'image-523dd5b83f374960c9e0d7efa353f22f89399b33-1024x1024-png' } },
+        imageShadow: false,
         imagePosition: 'left',
         actions: [
           { _key: 'book', label: 'Book a Consultation', href: 'https://booking.hydreight.com/widget-business/fk58k' },

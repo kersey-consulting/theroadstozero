@@ -67,6 +67,7 @@ export default defineType({
             defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
             defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
             defineField({ name: 'image', title: 'Foreground Image', type: 'image', options: { hotspot: true } }),
+            defineField({ name: 'imageShadow', title: 'Image Shadow', type: 'boolean', initialValue: true }),
             defineField({
               name: 'imagePosition',
               title: 'Image Position',
