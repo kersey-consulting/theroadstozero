@@ -59,7 +59,16 @@ export const queries = {
         "image": image.asset->url,
         "homeCardImage": homeCardImage.asset->url
       },
-      "image": image.asset->url
+      "imageUrl": select(
+        defined(image.asset->url) => image.asset->url,
+        defined(image) && image match '/*' => image,
+        null
+      ),
+      "backgroundImageUrl": select(
+        defined(backgroundImage.asset->url) => backgroundImage.asset->url,
+        defined(backgroundImage) && backgroundImage match '/*' => backgroundImage,
+        null
+      )
     }
   }`,
 

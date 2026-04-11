@@ -14,8 +14,10 @@ interface Props {
     title: string;
     text?: string;
     image?: any;
+    imageUrl?: string;
     imagePosition?: 'left' | 'right';
     backgroundImage?: any;
+    backgroundImageUrl?: string;
     actions?: Action[];
   };
 }
@@ -32,8 +34,8 @@ const resolveImageUrl = (img: any) => {
   }
 };
 
-const imageUrl = resolveImageUrl(section?.image);
-const backgroundImageUrl = resolveImageUrl(section?.backgroundImage);
+const imageUrl = section?.imageUrl ?? resolveImageUrl(section?.image);
+const backgroundImageUrl = section?.backgroundImageUrl ?? resolveImageUrl(section?.backgroundImage);
 const actions = section?.actions ?? [];
 const hasImage = Boolean(imageUrl);
 const reverse = section?.imagePosition === 'left';
