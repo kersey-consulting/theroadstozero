@@ -1,0 +1,77 @@
+---
+interface PortableTextBlock {
+  listItem?: string;
+  children?: { text?: string }[];
+}
+
+interface Category {
+  _id?: string;
+  title?: string;
+  slug?: { current?: string };
+  homeCardTitle?: string;
+  homeCardDescription?: PortableTextBlock[];
+  image?: string;
+  homeCardImage?: string;
+}
+
+interface Props {
+  section: {
+    title?: string;
+    intro?: string;
+    categories?: Category[];
+  };
+  variant?: 'default' | 'alt';
+}
+
+const { section, variant = 'default' } = Astro.props;
+const categories = section?.categories ?? [];
+const blockText = (block: PortableTextBlock) => block.children?.map((c) => c.text).join('') ?? '';
+---
+
+<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+  <div class="wide">
+    {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
+    {section?.intro && <p class="centeredText">{section.intro}</p>}
+    <div class="servicesGrid">
+      {categories.map((category) => (
+        <article class="card">
+          <img class="cardImage" src={category.homeCardImage ?? category.image} alt={category.homeCardTitle ?? category.title} />
+          <div class="cardContent">
+            <h3 class="cardTitle">{category.homeCardTitle ?? category.title}</h3>
+            <div class="cardSubtext">
+              {(category.homeCardDescription ?? []).map((block) => (
+                block.listItem === 'bullet' ? (
+                  <li>{blockText(block)}</li>
+                ) : (
+                  <p>{blockText(block)}</p>
+                )
+              ))}
+            </div>
+            <a class="cardButton" href={`/services/${category.slug?.current}`}>Learn More</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section, .sectionAlt { padding: 5rem 1.5rem; }
+  .sectionAlt { background: rgba(210, 185, 150, 0.12); }
+  .wide { width: min(1200px, 100%); margin: 0 auto; }
+  .sectionTitleCentered { margin: 0 0 1.5rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; text-align: center; }
+  .centeredText { text-align: center; max-width: 760px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.85; }
+  .servicesGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 2rem; }
+  .card { display: flex; flex-direction: column; overflow: hidden; background: var(--color-surface); border-radius: 20px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.12); height: 100%; }
+  .cardImage { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .cardContent { display: flex; flex: 1; flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
+  .cardTitle { margin: 0; color: var(--color-primary); font-size: 20px; line-height: 1.2; }
+  .cardSubtext { flex: 1; margin: 0; color: var(--color-primary); font-size: 16px; }
+  .cardSubtext p { margin: 0 0 0.75rem; }
+  .cardSubtext li { margin: 0 0 0.5rem 1.25rem; }
+  .cardButton { display: block; width: 100%; text-align: center; padding: 1rem; color: var(--color-primary); background: transparent; border: 2px solid; border-radius: 15px; }
+  .cardButton:hover, .cardButton:focus { background: var(--color-surface); box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); text-decoration: none; }
+  @media (max-width: 768px) {
+    .section, .sectionAlt { padding: 4rem 1.25rem; }
+  }
+</style>

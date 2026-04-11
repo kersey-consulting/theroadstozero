@@ -104,6 +104,22 @@ export default defineType({
           ],
         }),
         defineArrayMember({
+          name: 'featuredServiceCategoriesSection',
+          title: 'Featured Service Categories Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
+            defineField({
+              name: 'categories',
+              title: 'Featured Categories',
+              type: 'array',
+              of: [{ type: 'reference', to: [{ type: 'serviceCategory' }] }],
+              validation: (r) => r.min(1),
+            }),
+          ],
+        }),
+        defineArrayMember({
           name: 'staffSection',
           title: 'Staff Section',
           type: 'object',
