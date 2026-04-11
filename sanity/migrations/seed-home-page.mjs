@@ -35,7 +35,7 @@ async function main() {
         _type: 'heroSection',
         title: 'The Road to Zero',
         text: 'Welcome to our sanctuary for Wellness, Beauty, and Transformative balance. Your journey toward confidence, vitality, and restoration begins here. We believe true Glow comes from within, nourishing the body, uplifting the spirit, and enhancing the natural beauty you already possess.\n\nWith science-backed treatments, a personalized approach, and holistic care, we\'re here to help you reset, restore, and realign with your best self. From IV hydration and peptides to hormone support, GLP therapy, and aesthetic enhancements, every service is crafted to elevate your well-being.\n\nStep into a space dedicated to renewal, and allow us to guide you toward total rejuvenation because you deserve to look, feel, and live your most vibrant, balanced, and radiant life.',
-        image: '/icons/gold-ring-logo.png',
+        image: { _type: 'image', asset: { _type: 'reference', _ref: 'image-523dd5b83f374960c9e0d7efa353f22f89399b33-1024x1024-png' } },
         imagePosition: 'left',
         actions: [
           { _key: 'book', label: 'Book a Consultation', href: 'https://booking.hydreight.com/widget-business/fk58k' },
@@ -90,7 +90,7 @@ async function main() {
           'Her personal journey of healing and balance inspired the creation of The Road to Zero, a space dedicated to helping individuals restore vitality, confidence, and inner alignment.',
           'Through personalized wellness therapies and aesthetic treatments, Rachel\'s mission is to help every client feel their absolute best, mind, body, and spirit.',
         ]),
-        image: '/assets/MyPicture_356x475.jpeg',
+        image: { _type: 'image', asset: { _type: 'reference', _ref: 'image-ea330bf50e6efb83133df23029b95dd2fcac8d60-356x475-jpg' } },
         actions: [
           { _key: 'about', label: 'Learn More About The Road to Zero', href: '/about' },
         ],
@@ -105,7 +105,7 @@ async function main() {
           'We provide services at private residences, corporate offices, spas and salons, fitness centers, yoga and wellness studios, and special events and private parties.',
           'Wellness should be convenient, comfortable, and personalized.',
         ]),
-        image: '/assets/home/savings.jpeg',
+        image: { _type: 'image', asset: { _type: 'reference', _ref: 'image-3fe9abebf39d893e1beb0ccad1f3fe49cf03d906-7200x4800-jpg' } },
         imagePosition: 'left',
         actions: [
           { _key: 'services', label: 'Explore Services', href: '/services' },
@@ -120,7 +120,7 @@ async function main() {
           'Share our aesthetic and wellness services with friends and earn income or complimentary services, plus earn an ongoing 3% override bonus from referrals your referred clients generate.',
           'Clients who refer others may receive rewards including Botox treatments, dermal fillers, IV hydration sessions, vitamin injections, and peptide therapy.',
         ]),
-        image: '/assets/home/Referral.webp',
+        image: { _type: 'image', asset: { _type: 'reference', _ref: 'image-8af7e65eb76fabe680bf632516cec8475b5b32c0-500x331-webp' } },
         actions: [
           { _key: 'referrals', label: 'Learn About the Referral Program', href: '/referral-program' },
         ],
