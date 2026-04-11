@@ -12,7 +12,7 @@ interface Props {
   section: {
     eyebrow?: string;
     title: string;
-    text?: string;
+    content?: { children?: { text?: string }[] }[];
     image?: any;
     imageUrl?: string;
     imagePosition?: 'left' | 'right';
@@ -36,6 +36,9 @@ const resolveImageUrl = (img: any) => {
 
 const imageUrl = section?.imageUrl ?? resolveImageUrl(section?.image);
 const backgroundImageUrl = section?.backgroundImageUrl ?? resolveImageUrl(section?.backgroundImage);
+const paragraphs = (section?.content ?? [])
+  .map((b) => b.children?.map((c) => c.text).join(''))
+  .filter(Boolean);
 const actions = section?.actions ?? [];
 const hasImage = Boolean(imageUrl);
 const reverse = section?.imagePosition === 'left';
@@ -45,7 +48,11 @@ const reverse = section?.imagePosition === 'left';
   <div slot="left" class:list={['heroContent', !hasImage && 'fullWidth']}>
     {section?.eyebrow && <p class="eyebrow">{section.eyebrow}</p>}
     <h1 class="heroTitle">{section?.title}</h1>
-    {section?.text && <p class="heroText">{section.text}</p>}
+    {paragraphs.length > 0 && (
+      <div class="heroCopy">
+        {paragraphs.map((paragraph) => <p class="heroText">{paragraph}</p>)}
+      </div>
+    )}
     {actions.length > 0 && (
       <div class="heroActions">
         {actions.map((action) => <Button label={action.label} href={action.href} theme="primary" />)}
@@ -60,6 +67,7 @@ const reverse = section?.imagePosition === 'left';
   .heroContent.fullWidth { max-width: 100%; }
   .eyebrow { margin: 0; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
   .heroTitle { margin: 0; font-size: clamp(2.5rem, 5vw, 3.5rem); line-height: 1.05; }
+  .heroCopy { display: flex; flex-direction: column; gap: 1rem; }
   .heroText { margin: 0; font-size: 1.1rem; line-height: 1.75; }
   .heroActions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.75rem; }
   .heroImage { width: min(100%, 380px); border-radius: 24px; object-fit: cover; margin: 0 auto; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18); }

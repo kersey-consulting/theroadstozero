@@ -93,7 +93,7 @@ export default defineType({
           fields: [
             defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
             defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
-            defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
+            defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
             defineField({ name: 'image', title: 'Foreground Image', type: 'image', options: { hotspot: true } }),
             defineField({
               name: 'imagePosition', title: 'Image Position', type: 'string', initialValue: 'right',
