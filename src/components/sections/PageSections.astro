@@ -5,6 +5,7 @@ import CardsSection from './CardsSection.astro';
 import StaffSection from './StaffSection.astro';
 import TagListSection from './TagListSection.astro';
 import CtaSection from './CtaSection.astro';
+import LegalSection from './LegalSection.astro';
 
 interface Props {
   sections?: any[];
@@ -34,6 +35,9 @@ const { sections = [], staffMembers = [] } = Astro.props;
   }
   if (section._type === 'ctaSection') {
     return <CtaSection section={section} />;
+  }
+  if (section._type === 'legalSection') {
+    return <LegalSection section={section} variant={variant} />;
   }
 
   return null;
