@@ -1,8 +1,11 @@
 ---
 import Button from '@/components/Button.astro';
+import { portableNodes } from '@/lib/portableText';
 import { urlFor } from '@/lib/sanity';
 
 interface Block {
+  style?: string;
+  listItem?: string;
   children?: { text?: string }[];
 }
 
@@ -25,9 +28,7 @@ interface Props {
 }
 
 const { section, variant = 'default' } = Astro.props;
-const paragraphs = (section?.content ?? [])
-  .map((b) => b.children?.map((c) => c.text).join(''))
-  .filter(Boolean);
+const nodes = portableNodes(section?.content ?? []);
 
 const resolveImageUrl = (img: any) => {
   if (!img) return undefined;
@@ -50,7 +51,13 @@ const reverse = section?.imagePosition === 'left';
       {section?.eyebrow && <p class="eyebrow">{section.eyebrow}</p>}
       {section?.title && <h2 class="sectionTitle">{section.title}</h2>}
       <div class="copy">
-        {paragraphs.map((p) => <p>{p}</p>)}
+        {nodes.map((node) => {
+          if (node.type === 'bulletList') return <ul>{node.items.map((item) => <li>{item}</li>)}</ul>;
+          if (node.type === 'h3') return <h3>{node.text}</h3>;
+          if (node.type === 'h4') return <h4>{node.text}</h4>;
+          if (node.type === 'blockquote') return <blockquote>{node.text}</blockquote>;
+          return <p>{node.text}</p>;
+        })}
       </div>
       {(section?.actions ?? []).length > 0 && (
         <div class="actions">
@@ -71,7 +78,12 @@ const reverse = section?.imagePosition === 'left';
   .eyebrow { margin: 0; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
   .sectionTitle { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
   .copy { display: grid; gap: 1rem; }
-  .copy p { margin: 0; font-size: 1.05rem; line-height: 1.85; }
+  .copy p, .copy blockquote { margin: 0; font-size: 1.05rem; line-height: 1.85; }
+  .copy h3, .copy h4 { margin: 1rem 0 0; line-height: 1.2; }
+  .copy h3 { font-size: clamp(1.35rem, 2vw, 1.7rem); }
+  .copy h4 { font-size: clamp(1.15rem, 1.8vw, 1.35rem); }
+  .copy blockquote { padding-left: 1rem; border-left: 3px solid rgba(185, 149, 94, 0.5); font-style: italic; }
+  .copy ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; }
   .actions { display: flex; flex-wrap: wrap; gap: 1rem; padding-top: 0.5rem; }
   .sectionImage { flex: 0 1 420px; width: min(100%, 420px); border-radius: 24px; object-fit: cover; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); margin: 0 auto; }
   @media (max-width: 900px) {

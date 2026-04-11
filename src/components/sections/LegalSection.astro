@@ -1,6 +1,9 @@
 ---
+import { portableNodes } from '@/lib/portableText';
+
 interface Block {
   style?: string;
+  listItem?: string;
   children?: { text?: string }[];
 }
 
@@ -13,21 +16,19 @@ interface Props {
 }
 
 const { section, variant = 'default' } = Astro.props;
-const blocks = section?.content ?? [];
-const toText = (block: Block) => block.children?.map((c) => c.text).join('')?.trim() ?? '';
+const nodes = portableNodes(section?.content ?? []);
 ---
 
 <section class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="narrow">
     {section?.title && <h2 class="sectionTitle">{section.title}</h2>}
     <div class="copy">
-      {blocks.map((block) => {
-        const text = toText(block);
-        if (!text) return null;
-        if (block.style === 'h3') return <h3>{text}</h3>;
-        if (block.style === 'h4') return <h4>{text}</h4>;
-        if (block.style === 'blockquote') return <blockquote>{text}</blockquote>;
-        return <p>{text}</p>;
+      {nodes.map((node) => {
+        if (node.type === 'bulletList') return <ul>{node.items.map((item) => <li>{item}</li>)}</ul>;
+        if (node.type === 'h3') return <h3>{node.text}</h3>;
+        if (node.type === 'h4') return <h4>{node.text}</h4>;
+        if (node.type === 'blockquote') return <blockquote>{node.text}</blockquote>;
+        return <p>{node.text}</p>;
       })}
     </div>
   </div>
@@ -44,5 +45,6 @@ const toText = (block: Block) => block.children?.map((c) => c.text).join('')?.tr
   .copy h3 { font-size: clamp(1.35rem, 2vw, 1.7rem); }
   .copy h4 { font-size: clamp(1.15rem, 1.8vw, 1.35rem); }
   .copy blockquote { padding-left: 1rem; border-left: 3px solid rgba(185, 149, 94, 0.5); font-style: italic; }
+  .copy ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; }
   @media (max-width: 900px) { .section, .sectionAlt { padding: 4rem 1.25rem; } }
 </style>
