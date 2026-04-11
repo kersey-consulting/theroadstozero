@@ -69,6 +69,13 @@ export default defineType({
         },
       ],
     }),
+    defineField({
+      name: 'homeServiceCategories',
+      title: 'Homepage Service Categories',
+      description: 'Select and order the service categories shown on the homepage cards.',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'serviceCategory' }] }],
+    }),
   ],
   preview: {
     select: { title: 'businessName' },

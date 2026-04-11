@@ -25,8 +25,9 @@ export default defineType({
     defineField({
       name: 'credentials',
       title: 'Credentials',
-      type: 'string',
-      description: 'e.g. "RN, Midwife, Certified IV Therapy Provider"',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Enter one credential per item, e.g. RN, Midwife, Certified IV Therapy Provider',
     }),
     defineField({
       name: 'bio',
@@ -39,11 +40,6 @@ export default defineType({
       title: 'Photo',
       type: 'image',
       options: { hotspot: true },
-    }),
-    defineField({
-      name: 'order',
-      title: 'Sort Order',
-      type: 'number',
     }),
   ],
   preview: {

@@ -39,7 +39,7 @@ const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget
 
 <BaseLayout title={`${data.name} — The Road to Zero`} description={data.heroText}>
   <div class="page">
-    <Hero id="hero" backgroundImage={data.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary">
+    <Hero id="hero" backgroundImage={data.heroImage ?? '/assets/Sand.jpeg'} backgroundParallax={true} theme="tertiary" hasRightColumn={false}>
       <div slot="left" class="heroContent">
         <div class="breadcrumb">
           <a href="/services/iv-therapy">← IV Therapy & Vitamin Injections</a>
@@ -131,7 +131,7 @@ const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget
 
 <style>
   .page { display: flex; flex-direction: column; }
-  .heroContent { max-width: 760px; display: flex; flex-direction: column; gap: 1rem; }
+  .heroContent { max-width: 100%; display: flex; flex-direction: column; gap: 1rem; }
   .breadcrumb { font-size: 0.9rem; font-weight: 600; opacity: 0.75; }
   .breadcrumb a { color: inherit; text-decoration: none; transition: opacity 0.15s ease; }
   .breadcrumb a:hover { opacity: 1; }

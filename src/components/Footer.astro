@@ -4,7 +4,7 @@ import { sanityClient, queries } from '@/lib/sanity';
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
 
 const EXTRA_LINKS = [
-  { id: 'privacy', label: 'Privacy Policy', href: '/privacy' },
+  { id: 'privacy', label: 'Privacy Policy', href: '/privacy-policy' },
   { id: 'contact', label: 'Contact', href: '/contact' },
 ];
 

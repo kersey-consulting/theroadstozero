@@ -11,3 +11,4 @@ sanity/dist/
 sanity/node_modules/
 sanity/the-road-to-zero/
 sanity/.sanity/
+.sanity.local

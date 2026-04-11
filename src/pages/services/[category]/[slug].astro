@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageSections from '@/components/sections/PageSections.astro';
+import { sanityClient } from '@/lib/sanity';
+
+export async function getStaticPaths() {
+  const services = await sanityClient.fetch(`*[_type == "service" && !defined(category->slug.current in ["iv-therapy"])]{
+    "category": category->slug.current,
+    "slug": slug.current,
+    sections,
+    seo,
+    name
+  }`).catch(() => []);
+
+  return services
+    .filter((service: any) => service.category && service.slug)
+    .map((service: any) => ({
+      params: { category: service.category, slug: service.slug },
+      props: { service },
+    }));
+}
+
+const { service } = Astro.props;
+const staffMembers = await sanityClient.fetch(`*[_type == "staffMember"] | order(name asc){
+  _id, name, role, credentials, bio, "photo": photo.asset->url
+}`).catch(() => []);
+---
+
+<BaseLayout title={service?.seo?.title ?? service?.name ?? 'Service'} description={service?.seo?.description ?? ''}>
+  <PageSections sections={service?.sections ?? []} staffMembers={staffMembers} />
+</BaseLayout>
