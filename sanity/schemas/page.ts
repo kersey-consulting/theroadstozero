@@ -145,6 +145,31 @@ export default defineType({
           ],
         }),
         defineArrayMember({
+          name: 'splitContentSection',
+          title: 'Split Content Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
+            defineField({ name: 'image', title: 'Image', type: 'image', options: { hotspot: true } }),
+            defineField({
+              name: 'imagePosition',
+              title: 'Image Position',
+              type: 'string',
+              initialValue: 'right',
+              options: {
+                list: [
+                  { title: 'Right', value: 'right' },
+                  { title: 'Left', value: 'left' },
+                ],
+                layout: 'radio',
+              },
+            }),
+            defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
+          ],
+        }),
+        defineArrayMember({
           name: 'ctaSection',
           title: 'CTA Section',
           type: 'object',

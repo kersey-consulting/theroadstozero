@@ -58,7 +58,8 @@ export const queries = {
         homeCardDescription,
         "image": image.asset->url,
         "homeCardImage": homeCardImage.asset->url
-      }
+      },
+      "image": image.asset->url
     }
   }`,
 

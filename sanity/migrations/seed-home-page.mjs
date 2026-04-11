@@ -20,6 +20,9 @@ const pt = (paragraphs) => paragraphs.map((text, i) => ({
 }));
 
 async function main() {
+  const rachelPhoto = await client.fetch(`*[_id == "staff-rachel"][0]{ photo }`);
+  const referralAsset = await client.fetch(`*[_id == "sanity.imageAsset" && originalFilename == "referral.webp"][0]{ _id }`);
+
   await client.createOrReplace({
     _id: 'page-home',
     _type: 'page',
@@ -75,6 +78,51 @@ async function main() {
           { _key: 'depletion', title: 'Zero Depletion', description: 'Restoring hydration, essential nutrients, and energy.' },
           { _key: 'imbalance', title: 'Zero Imbalance', description: 'Supporting hormonal, metabolic, and cellular health.' },
           { _key: 'barriers', title: 'Zero Barriers', description: 'Providing accessible wellness treatments that meet you where you are.' },
+        ],
+      },
+      {
+        _key: 'about-rachel',
+        _type: 'splitContentSection',
+        eyebrow: 'About Us',
+        title: 'Meet Rachel, founder of The Road to Zero',
+        content: pt([
+          'RN, Midwife, Certified IV Therapy Provider, Botulinum and Dermal Filler Clinician, and Reiki Practitioner.',
+          'Rachel has spent her career caring for individuals across the full spectrum of life, from welcoming new life as a midwife to supporting families during end-of-life care in hospice.',
+          'These experiences shaped her deep understanding of what it truly means to care for others and inspired the creation of The Road to Zero.',
+          'Through personalized wellness therapies and aesthetic treatments, Rachel\'s mission is to help every client feel their absolute best, mind, body, and spirit.',
+        ]),
+        image: rachelPhoto?.photo,
+        actions: [
+          { _key: 'about', label: 'Learn More About The Road to Zero', href: '/about' },
+        ],
+      },
+      {
+        _key: 'mobile-services',
+        _type: 'splitContentSection',
+        eyebrow: 'Concierge Care',
+        title: 'We bring wellness to you',
+        content: pt([
+          'Our concierge services allow you to receive treatments in the comfort of your home or at your business.',
+          'We provide services at private residences, corporate offices, spas and salons, fitness centers, yoga and wellness studios, and special events or private parties.',
+          'Wellness should be convenient, comfortable, and personalized.',
+        ]),
+        imagePosition: 'left',
+        actions: [
+          { _key: 'services', label: 'Explore Services', href: '/services' },
+        ],
+      },
+      {
+        _key: 'referral-program',
+        _type: 'splitContentSection',
+        eyebrow: 'Referral Rewards',
+        title: 'Share our services and earn rewards',
+        content: pt([
+          'Share our aesthetic and wellness services with friends and earn income or complimentary services. Clients who refer others may receive rewards tied to eligible referrals and ongoing activity.',
+          'Potential rewards may include Botulinum treatments, dermal fillers, IV hydration sessions, vitamin injections, and peptide therapy.',
+        ]),
+        image: referralAsset?._id ? { _type: 'image', asset: { _type: 'reference', _ref: referralAsset._id } } : undefined,
+        actions: [
+          { _key: 'referrals', label: 'Learn About the Referral Program', href: '/referral-program' },
         ],
       },
       {

@@ -1,0 +1,80 @@
+---
+import Button from '@/components/Button.astro';
+import { urlFor } from '@/lib/sanity';
+
+interface Block {
+  children?: { text?: string }[];
+}
+
+interface Action {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  section: {
+    eyebrow?: string;
+    title?: string;
+    content?: Block[];
+    image?: any;
+    imagePosition?: 'left' | 'right';
+    actions?: Action[];
+  };
+  variant?: 'default' | 'alt';
+}
+
+const { section, variant = 'default' } = Astro.props;
+const paragraphs = (section?.content ?? [])
+  .map((b) => b.children?.map((c) => c.text).join(''))
+  .filter(Boolean);
+
+const resolveImageUrl = (img: any) => {
+  if (!img) return undefined;
+  if (typeof img === 'string') return img;
+  if (img.asset?.url) return img.asset.url;
+  try {
+    return urlFor(img).url();
+  } catch {
+    return undefined;
+  }
+};
+
+const imageUrl = resolveImageUrl(section?.image);
+const reverse = section?.imagePosition === 'left';
+---
+
+<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+  <div class:list={['inner', reverse && 'reverse']}>
+    <div class="copyColumn">
+      {section?.eyebrow && <p class="eyebrow">{section.eyebrow}</p>}
+      {section?.title && <h2 class="sectionTitle">{section.title}</h2>}
+      <div class="copy">
+        {paragraphs.map((p) => <p>{p}</p>)}
+      </div>
+      {(section?.actions ?? []).length > 0 && (
+        <div class="actions">
+          {section.actions?.map((action) => <Button label={action.label} href={action.href} theme="primary" />)}
+        </div>
+      )}
+    </div>
+    {imageUrl && <img class="sectionImage" src={imageUrl} alt={section?.title ?? 'Section image'} />}
+  </div>
+</section>
+
+<style>
+  .section, .sectionAlt { padding: 5rem 1.5rem; }
+  .sectionAlt { background: rgba(210, 185, 150, 0.12); }
+  .inner { width: min(100%, 1200px); margin: 0 auto; display: flex; align-items: center; gap: clamp(1.5rem, 4vw, 3rem); }
+  .reverse { flex-direction: row-reverse; }
+  .copyColumn { flex: 1 1 0; display: grid; gap: 1rem; }
+  .eyebrow { margin: 0; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
+  .sectionTitle { margin: 0; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
+  .copy { display: grid; gap: 1rem; }
+  .copy p { margin: 0; font-size: 1.05rem; line-height: 1.85; }
+  .actions { display: flex; flex-wrap: wrap; gap: 1rem; padding-top: 0.5rem; }
+  .sectionImage { flex: 0 1 420px; width: min(100%, 420px); border-radius: 24px; object-fit: cover; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); margin: 0 auto; }
+  @media (max-width: 900px) {
+    .inner, .reverse { flex-direction: column; }
+    .section, .sectionAlt { padding: 4rem 1.25rem; }
+  }
+</style>
