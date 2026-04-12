@@ -46,7 +46,30 @@ export const queries = {
 
   homePage: `*[_type == "page" && slug.current == "home"][0]{
     title, seo,
-    sections[]{ _type, _key, ... }
+    sections[]{
+      _type,
+      _key,
+      ...,
+      categories[]->{
+        _id,
+        title,
+        slug,
+        homeCardTitle,
+        homeCardDescription,
+        "image": image.asset->url,
+        "homeCardImage": homeCardImage.asset->url
+      },
+      "imageUrl": select(
+        defined(image.asset->url) => image.asset->url,
+        defined(image) && image match '/*' => image,
+        null
+      ),
+      "backgroundImageUrl": select(
+        defined(backgroundImage.asset->url) => backgroundImage.asset->url,
+        defined(backgroundImage) && backgroundImage match '/*' => backgroundImage,
+        null
+      )
+    }
   }`,
 
   pageBySlug: `*[_type == "page" && slug.current == $slug][0]{
@@ -59,7 +82,6 @@ export const queries = {
     _id, title, slug, description,
     homeCardTitle,
     homeCardDescription,
-    homeCardOrder,
     homeCardEnabled,
     "image": image.asset->url,
     "homeCardImage": homeCardImage.asset->url

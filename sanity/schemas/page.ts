@@ -65,8 +65,15 @@ export default defineType({
           fields: [
             defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
             defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
-            defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
+            defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
             defineField({ name: 'image', title: 'Foreground Image', type: 'image', options: { hotspot: true } }),
+            defineField({ name: 'imageShadow', title: 'Image Shadow', type: 'boolean', initialValue: true }),
+            defineField({
+              name: 'imageMaxWidth',
+              title: 'Image Max Width',
+              type: 'string',
+              description: 'Optional CSS width value like 380px, 520px, min(100%, 380px), or 100%.',
+            }),
             defineField({
               name: 'imagePosition',
               title: 'Image Position',
@@ -104,6 +111,22 @@ export default defineType({
           ],
         }),
         defineArrayMember({
+          name: 'featuredServiceCategoriesSection',
+          title: 'Featured Service Categories Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
+            defineField({
+              name: 'categories',
+              title: 'Featured Categories',
+              type: 'array',
+              of: [{ type: 'reference', to: [{ type: 'serviceCategory' }] }],
+              validation: (r) => r.min(1),
+            }),
+          ],
+        }),
+        defineArrayMember({
           name: 'staffSection',
           title: 'Staff Section',
           type: 'object',
@@ -126,6 +149,31 @@ export default defineType({
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
             defineField({ name: 'tags', title: 'Tags', type: 'array', of: [{ type: 'string' }] }),
+          ],
+        }),
+        defineArrayMember({
+          name: 'splitContentSection',
+          title: 'Split Content Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
+            defineField({ name: 'image', title: 'Image', type: 'image', options: { hotspot: true } }),
+            defineField({
+              name: 'imagePosition',
+              title: 'Image Position',
+              type: 'string',
+              initialValue: 'right',
+              options: {
+                list: [
+                  { title: 'Right', value: 'right' },
+                  { title: 'Left', value: 'left' },
+                ],
+                layout: 'radio',
+              },
+            }),
+            defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
           ],
         }),
         defineArrayMember({

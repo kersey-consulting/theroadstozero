@@ -1,6 +1,7 @@
 ---
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
+import { portableNodes } from '@/lib/portableText';
 import { urlFor } from '@/lib/sanity';
 
 interface Action {
@@ -12,10 +13,14 @@ interface Props {
   section: {
     eyebrow?: string;
     title: string;
-    text?: string;
+    content?: { style?: string; listItem?: string; children?: { text?: string }[] }[];
     image?: any;
+    imageUrl?: string;
+    imageShadow?: boolean;
+    imageMaxWidth?: string;
     imagePosition?: 'left' | 'right';
     backgroundImage?: any;
+    backgroundImageUrl?: string;
     actions?: Action[];
   };
 }
@@ -32,8 +37,10 @@ const resolveImageUrl = (img: any) => {
   }
 };
 
-const imageUrl = resolveImageUrl(section?.image);
-const backgroundImageUrl = resolveImageUrl(section?.backgroundImage);
+const imageUrl = section?.imageUrl ?? resolveImageUrl(section?.image);
+const backgroundImageUrl = section?.backgroundImageUrl ?? resolveImageUrl(section?.backgroundImage);
+const imageStyle = section?.imageMaxWidth ? `width: ${section.imageMaxWidth};` : undefined;
+const nodes = portableNodes(section?.content ?? []);
 const actions = section?.actions ?? [];
 const hasImage = Boolean(imageUrl);
 const reverse = section?.imagePosition === 'left';
@@ -43,14 +50,21 @@ const reverse = section?.imagePosition === 'left';
   <div slot="left" class:list={['heroContent', !hasImage && 'fullWidth']}>
     {section?.eyebrow && <p class="eyebrow">{section.eyebrow}</p>}
     <h1 class="heroTitle">{section?.title}</h1>
-    {section?.text && <p class="heroText">{section.text}</p>}
+    {nodes.length > 0 && (
+      <div class="heroCopy">
+        {nodes.map((node) => {
+          if (node.type === 'bulletList') return <ul class="heroList">{node.items.map((item) => <li>{item}</li>)}</ul>;
+          return <p class="heroText">{node.text}</p>;
+        })}
+      </div>
+    )}
     {actions.length > 0 && (
       <div class="heroActions">
         {actions.map((action) => <Button label={action.label} href={action.href} theme="primary" />)}
       </div>
     )}
   </div>
-  {imageUrl && <img slot="right" class="heroImage" src={imageUrl} alt={section?.title ?? 'Hero image'} />}
+  {imageUrl && <img slot="right" class:list={['heroImage', section?.imageShadow === false && 'heroImageFlat']} style={imageStyle} src={imageUrl} alt={section?.title ?? 'Hero image'} />}
 </Hero>
 
 <style>
@@ -58,9 +72,12 @@ const reverse = section?.imagePosition === 'left';
   .heroContent.fullWidth { max-width: 100%; }
   .eyebrow { margin: 0; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
   .heroTitle { margin: 0; font-size: clamp(2.5rem, 5vw, 3.5rem); line-height: 1.05; }
+  .heroCopy { display: flex; flex-direction: column; gap: 1rem; }
   .heroText { margin: 0; font-size: 1.1rem; line-height: 1.75; }
+  .heroList { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; font-size: 1.1rem; line-height: 1.75; }
   .heroActions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.75rem; }
   .heroImage { width: min(100%, 380px); border-radius: 24px; object-fit: cover; margin: 0 auto; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18); }
+  .heroImageFlat { box-shadow: none; }
   @media (max-width: 900px) {
     .heroText { font-size: 1rem; }
   }

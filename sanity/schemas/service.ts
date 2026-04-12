@@ -93,8 +93,15 @@ export default defineType({
           fields: [
             defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
             defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
-            defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
+            defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
             defineField({ name: 'image', title: 'Foreground Image', type: 'image', options: { hotspot: true } }),
+            defineField({ name: 'imageShadow', title: 'Image Shadow', type: 'boolean', initialValue: true }),
+            defineField({
+              name: 'imageMaxWidth',
+              title: 'Image Max Width',
+              type: 'string',
+              description: 'Optional CSS width value like 380px, 520px, min(100%, 380px), or 100%.',
+            }),
             defineField({
               name: 'imagePosition', title: 'Image Position', type: 'string', initialValue: 'right',
               options: { list: [{ title: 'Right', value: 'right' }, { title: 'Left', value: 'left' }], layout: 'radio' },

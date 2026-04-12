@@ -1,5 +1,9 @@
 ---
+import { portableNodes } from '@/lib/portableText';
+
 interface Block {
+  style?: string;
+  listItem?: string;
   children?: { text?: string }[];
 }
 
@@ -12,16 +16,20 @@ interface Props {
 }
 
 const { section, variant = 'default' } = Astro.props;
-const paragraphs = (section?.content ?? [])
-  .map((b) => b.children?.map((c) => c.text).join(''))
-  .filter(Boolean);
+const nodes = portableNodes(section?.content ?? []);
 ---
 
 <section class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="narrow">
     {section?.title && <h2 class="sectionTitle">{section.title}</h2>}
     <div class="copy">
-      {paragraphs.map((p) => <p>{p}</p>)}
+      {nodes.map((node) => {
+        if (node.type === 'bulletList') return <ul>{node.items.map((item) => <li>{item}</li>)}</ul>;
+        if (node.type === 'h3') return <h3>{node.text}</h3>;
+        if (node.type === 'h4') return <h4>{node.text}</h4>;
+        if (node.type === 'blockquote') return <blockquote>{node.text}</blockquote>;
+        return <p>{node.text}</p>;
+      })}
     </div>
   </div>
 </section>
@@ -32,6 +40,11 @@ const paragraphs = (section?.content ?? [])
   .narrow { width: min(100%, 1000px); margin: 0 auto; }
   .sectionTitle { margin: 0 0 1.5rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; }
   .copy { display: flex; flex-direction: column; gap: 1rem; }
-  .copy p { margin: 0; font-size: 1.05rem; line-height: 1.85; }
+  .copy p, .copy blockquote { margin: 0; font-size: 1.05rem; line-height: 1.85; }
+  .copy h3, .copy h4 { margin: 1rem 0 0; line-height: 1.2; }
+  .copy h3 { font-size: clamp(1.35rem, 2vw, 1.7rem); }
+  .copy h4 { font-size: clamp(1.15rem, 1.8vw, 1.35rem); }
+  .copy blockquote { padding-left: 1rem; border-left: 3px solid rgba(185, 149, 94, 0.5); font-style: italic; }
+  .copy ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; }
   @media (max-width: 900px) { .section, .sectionAlt { padding: 4rem 1.25rem; } }
 </style>
