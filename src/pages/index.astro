@@ -1,0 +1,15 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageSections from '@/components/sections/PageSections.astro';
+import { sanityClient, queries } from '@/lib/sanity';
+
+const page = await sanityClient.fetch(queries.homePage).catch(() => null);
+const staffMembers = await sanityClient.fetch(queries.staffMembers).catch(() => []);
+---
+
+<BaseLayout
+  title={page?.seo?.title ?? page?.title ?? 'The Road to Zero — Aesthetics & Wellness'}
+  description={page?.seo?.description ?? 'Welcome to our sanctuary for Wellness, Beauty, and Transformative balance.'}
+>
+  <PageSections sections={page?.sections ?? []} staffMembers={staffMembers} />
+</BaseLayout>

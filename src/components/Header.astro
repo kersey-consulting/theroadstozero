@@ -1,0 +1,47 @@
+---
+import { sanityClient, queries } from '@/lib/sanity';
+import HeaderClient from './HeaderClient';
+
+const settings = await sanityClient.fetch(queries.siteSettings);
+const navigation = await sanityClient.fetch(queries.navigation);
+
+// Fallback if Sanity hasn't been populated yet
+const fallbackSettings = {
+  businessName: 'The Road to Zero',
+  phone: '801-682-7939',
+  email: 'info@theroadstozero.com',
+  bookingUrl: 'https://booking.hydreight.com/widget-business/fk58k',
+  socialLinks: [
+    { platform: 'facebook', url: 'https://www.facebook.com/theroadtozero0/' },
+    { platform: 'instagram', url: 'https://www.instagram.com/theroadtozero0/' },
+    { platform: 'youtube', url: 'https://www.youtube.com/@Theroadtozero0' },
+    { platform: 'tiktok', url: 'https://www.tiktok.com/@Theroadtozero0' },
+  ],
+};
+
+const fallbackNavigation = {
+  items: [
+    { _key: 'home', label: 'Home', href: '/' },
+    { _key: 'about', label: 'About Us', href: '/about' },
+    { _key: 'whyus', label: 'Why Us', href: '/why-us' },
+    { _key: 'location', label: 'Locations', href: '/locations' },
+    {
+      _key: 'services', label: 'Services', href: '/services',
+      children: [
+        { _key: 'aesthetic-treatments', label: 'Aesthetic Treatments', href: '/services/aesthetic-treatments' },
+        { _key: 'body-transformation', label: 'Body Transformation', href: '/services/body-transformation' },
+        { _key: 'iv-therapy', label: 'IV Therapy & Vitamin Injections', href: '/services/iv-therapy' },
+        { _key: 'medical-weight-management', label: 'Medical Weight Management', href: '/services/medical-weight-management' },
+        { _key: 'peptide-hormone-support', label: 'Peptide & Hormone Support', href: '/services/peptide-hormone-support' },
+        { _key: 'holistic-services', label: 'Holistic Services', href: '/services/holistic-services' },
+      ],
+    },
+  ],
+};
+---
+
+<HeaderClient
+  client:load
+  settings={settings || fallbackSettings}
+  navigation={navigation || fallbackNavigation}
+/>

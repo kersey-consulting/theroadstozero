@@ -1,36 +1,23 @@
 {
-  "name": "mywebsite",
-  "private": true,
-  "version": "0.0.0",
+  "name": "theroadstozero",
   "type": "module",
+  "version": "2.0.0",
   "scripts": {
-    "dev:pages": "npm run build:pages && vite",
-    "dev": "vite",
-    "build:pages": "node scripts/build-pages.js",
-    "build": "npm run build:pages && tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
   },
   "dependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-microsoft-clarity": "^2.0.0"
+    "@astrojs/react": "^4.0.0",
+    "@sanity/client": "^7.0.0",
+    "@sanity/image-url": "^1.1.0",
+    "astro": "^5.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20251217.0",
-    "@eslint/js": "^9.39.1",
-    "@types/node": "^24.10.4",
-    "@types/react": "^19.2.5",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "eslint": "^9.39.1",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "globals": "^16.5.0",
-    "ts-node": "^10.9.2",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4",
-    "wrangler": "^4.54.0"
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.8.0"
   }
 }

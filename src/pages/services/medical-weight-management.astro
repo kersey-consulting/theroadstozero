@@ -1,0 +1,92 @@
+---
+import ServiceHubLayout from '@/layouts/ServiceHubLayout.astro';
+import Hero from '@/components/Hero.astro';
+import Button from '@/components/Button.astro';
+import { sanityClient, queries } from '@/lib/sanity';
+
+const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug: 'medical-weight-management' }).catch(() => null);
+const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
+const cards = category?.services ?? [];
+const introBody = category?.introBody?.map((b) => b.children?.map((c) => c.text).join('')).filter(Boolean) ?? [];
+const supportItems = category?.supportingItems ?? [];
+const secondaryItems = category?.secondaryItems ?? [];
+const tagLinks = category?.tagLinks ?? [];
+---
+
+<ServiceHubLayout title="Medical Weight Management — The Road to Zero" description={category?.description ?? ''}>
+  <Hero id="hero" backgroundImage={category?.heroImage} backgroundParallax={true} theme="tertiary" hasRightColumn={false}>
+    <div slot="left" class="hub-heroContent">
+      <p class="hub-eyebrow">{category?.eyebrow}</p>
+      <h1 class="hub-heroTitle">{category?.heroTitle}</h1>
+      <p class="hub-heroText">{category?.heroText ?? category?.description ?? ''}</p>
+      <div class="hub-heroActions">
+        <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
+        <Button label="View All Services" href="/services" theme="primary" />
+      </div>
+    </div>
+  </Hero>
+
+  <section class="hub-section">
+    <div class="hub-narrow">
+      <h2 class="hub-sectionTitle">{category?.introTitle}</h2>
+      <div class="hub-copy">{introBody.map((p) => <p>{p}</p>)}</div>
+    </div>
+  </section>
+
+  <section class="hub-sectionAlt">
+    <div class="hub-wide">
+      <h2 class="hub-sectionTitle">{category?.cardSectionTitle}</h2>
+      {category?.cardSectionSubtitle && <p class="hub-sectionSubtitle">{category.cardSectionSubtitle}</p>}
+      <div class="hub-treatmentsGrid">
+        {cards.map((item) => (
+          <div class="hub-treatmentCard">
+            <span class="hub-cardTag">{item.tagline ?? item.type}</span>
+            <h3>{item.name}</h3>
+            <p>{item.shortDescription}</p>
+            <ul>{(item.keyBenefits ?? []).map((h) => <li>{h}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {supportItems.length > 0 && (
+    <section class="hub-section">
+      <div class="hub-narrow">
+        <h2 class="hub-sectionTitle">{category?.supportingSectionTitle}</h2>
+        <div class="hub-highlightsGrid">{supportItems.map((item) => <div class="hub-highlightCard"><h3>{item.title}</h3><p>{item.description}</p></div>)}</div>
+      </div>
+    </section>
+  )}
+
+  {secondaryItems.length > 0 && (
+    <section class="hub-sectionAlt">
+      <div class="hub-narrow">
+        <h2 class="hub-sectionTitle">{category?.secondarySectionTitle}</h2>
+        <div class="hub-copy">{secondaryItems.map((item) => <><p><strong>{item.title}</strong></p><p>{item.description}</p></>)}</div>
+      </div>
+    </section>
+  )}
+
+  {tagLinks.length > 0 && (
+    <section class="hub-sectionAlt">
+      <div class="hub-narrow">
+        <h2 class="hub-sectionTitle">{category?.tagSectionTitle}</h2>
+        {category?.tagSectionIntro && <div class="hub-copy"><p>{category.tagSectionIntro}</p></div>}
+        <div class="hub-tags">{tagLinks.map((link) => <a href={link.href} class="hub-tag">{link.label}</a>)}</div>
+      </div>
+    </section>
+  )}
+
+  <section class="hub-section">
+    <div class="hub-ctaCard">
+      <h2>{category?.ctaTitle}</h2>
+      <p>{category?.ctaText}</p>
+      <div class="hub-ctaActions">
+        <Button label={category?.ctaPrimaryLabel} href={category?.ctaPrimaryHref ?? bookingUrl} theme="primary" />
+        {category?.ctaSecondaryLabel && <Button label={category.ctaSecondaryLabel} href={category?.ctaSecondaryHref ?? '/services'} theme="primary" />}
+      </div>
+    </div>
+  </section>
+</ServiceHubLayout>

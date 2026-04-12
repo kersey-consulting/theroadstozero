@@ -1,0 +1,72 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/Hero.astro';
+import Button from '@/components/Button.astro';
+import { sanityClient, queries } from '@/lib/sanity';
+
+const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+
+const bookingUrl = settings?.bookingUrl ?? 'https://booking.hydreight.com/widget-business/fk58k';
+
+const services = [
+  { title: 'Aesthetic Treatments', href: '/services/aesthetic-treatments', description: 'Subtle, natural-looking enhancements designed to restore balance and refresh your appearance.' },
+  { title: 'Body Transformation', href: '/services/body-transformation', description: 'A comprehensive, medically guided approach to transforming your body.' },
+  { title: 'IV Therapy & Vitamin Injections', href: '/services/iv-therapy', description: 'Customized IV infusions and vitamin injections for hydration, recovery, beauty, and wellness.' },
+  { title: 'Medical Weight Management', href: '/services/medical-weight-management', description: 'GLP-1 medications for sustainable, medically guided weight loss.' },
+  { title: 'Peptide & Hormone Support', href: '/services/peptide-hormone-support', description: 'Targeted peptide therapies that support natural hormone function and recovery.' },
+  { title: 'Holistic Services', href: '/services/holistic-services', description: 'Reiki energy healing and integrative wellness sessions for mind, body, and spirit.' },
+];
+---
+
+<BaseLayout title="Services — The Road to Zero" description="Explore our full menu of wellness, aesthetic, and holistic services.">
+  <div class="page">
+    <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
+      <div slot="left" class="heroContent">
+        <p class="eyebrow">What We Offer</p>
+        <h1 class="heroTitle">Our Services</h1>
+        <p class="heroText">From IV therapy and aesthetic treatments to hormone support and holistic healing — every service is designed to help you restore balance, reclaim vitality, and feel your absolute best.</p>
+        <div class="heroActions">
+          <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
+        </div>
+      </div>
+    </Hero>
+
+    <section class="section">
+      <div class="grid">
+        {services.map(s => (
+          <a href={s.href} class="serviceCard">
+            <h3>{s.title}</h3>
+            <p>{s.description}</p>
+            <span class="cardLink">Learn More →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page { display: flex; flex-direction: column; }
+  .heroContent { max-width: 740px; display: flex; flex-direction: column; gap: 1rem; }
+  .eyebrow { margin: 0; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
+  .heroTitle { margin: 0; font-size: clamp(2.25rem, 5vw, 3.5rem); line-height: 1.05; }
+  .heroText { margin: 0; font-size: 1.375rem; line-height: 1.8; max-width: 64ch; }
+  .heroActions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
+  .section { padding: 5rem 1.5rem; width: min(100%, 1200px); margin: 0 auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+  .serviceCard {
+    background: white; border-radius: 20px; padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.07);
+    border-top: 4px solid var(--color-secondary);
+    display: flex; flex-direction: column; gap: 0.75rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none; color: inherit;
+  }
+  .serviceCard:hover { transform: translateY(-3px); box-shadow: 0 18px 44px rgba(0, 0, 0, 0.12); text-decoration: none; }
+  .serviceCard h3 { margin: 0; font-size: 1.3rem; color: var(--color-primary); }
+  .serviceCard p { margin: 0; font-size: 0.97rem; line-height: 1.75; flex: 1; }
+  .cardLink { font-weight: 600; color: var(--color-secondary); font-size: 0.95rem; }
+  @media (max-width: 768px) {
+    .section { padding: 3.5rem 1.25rem; }
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+import ServicePageLayout from '@/layouts/ServicePageLayout.astro';
+import { sanityClient, queries } from '@/lib/sanity';
+import { ivServices } from '@/data/iv-services';
+
+export async function getStaticPaths() {
+  // Try fetching from Sanity first
+  try {
+    const allServices = await sanityClient.fetch(
+      `*[_type == "service" && category->slug.current == "iv-therapy"]{
+        slug,
+        name,
+        type,
+        tagline,
+        heroText,
+        shortDescription,
+        keyBenefits,
+        "description": description[].children[0].text,
+        requiresConsultation,
+        benefits[]{ "title": title, "description": description },
+        addOns[]{ "name": name, "detail": detail },
+        "pairsWith": pairsWith[]->name,
+        "heroImage": heroImage.asset->url
+      } | order(order asc)`
+    );
+
+    if (allServices && allServices.length > 0) {
+      return allServices.map((service: any) => ({
+        params: { slug: service.slug.current },
+        props: {
+          data: {
+            type: service.type,
+            name: service.name,
+            tagline: service.tagline,
+            heroText: service.heroText,
+            description: service.description || [],
+            benefits: service.benefits || [],
+            addOns: service.addOns,
+            pairWith: service.pairsWith,
+            requiresConsultation: service.requiresConsultation || false,
+            heroImage: service.heroImage,
+          },
+        },
+      }));
+    }
+  } catch (e) {
+    console.warn('Sanity fetch failed, falling back to local data:', (e as Error).message);
+  }
+
+  // Fallback to local data
+  return ivServices.map((service) => ({
+    params: { slug: service.slug },
+    props: { data: service },
+  }));
+}
+
+const { data } = Astro.props;
+---
+
+<ServicePageLayout data={data} />
