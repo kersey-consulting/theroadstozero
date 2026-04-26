@@ -46,6 +46,7 @@ const nodes = portableNodes(section?.content ?? []);
   .copy h3 { font-size: clamp(1.35rem, 2vw, 1.7rem); }
   .copy h4 { font-size: clamp(1.15rem, 1.8vw, 1.35rem); }
   .copy blockquote { padding-left: 1rem; border-left: 3px solid rgba(185, 149, 94, 0.5); font-style: italic; }
-  .copy ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; }
+  .copy ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; font-size: 1.05rem; line-height: 1.85; }
+  .copy li { font-size: inherit; line-height: inherit; }
   @media (max-width: 900px) { .section, .sectionAlt { padding: 4rem 1.25rem; } }
 </style>
