@@ -1,14 +1,35 @@
+export interface PortableTextChild {
+  text?: string;
+  marks?: string[];
+}
+
 export interface PortableTextBlock {
   _type?: string;
   style?: string;
   listItem?: string;
   level?: number;
-  children?: { text?: string }[];
+  children?: PortableTextChild[];
 }
 
+export type PortableInline =
+  | { type: 'text'; text: string }
+  | { type: 'strong'; text: string };
+
 export type PortableNode =
-  | { type: 'paragraph' | 'h3' | 'h4' | 'blockquote'; text: string }
-  | { type: 'bulletList'; items: string[] };
+  | { type: 'paragraph' | 'h3' | 'h4' | 'blockquote'; children: PortableInline[] }
+  | { type: 'bulletList'; items: PortableInline[][] };
+
+export function inlineChildren(children: PortableTextChild[] = []): PortableInline[] {
+  return children
+    .map((child) => {
+      const text = child.text?.trim() ? child.text : child.text ?? '';
+      if (!text) return null;
+      return child.marks?.includes('strong')
+        ? { type: 'strong', text }
+        : { type: 'text', text };
+    })
+    .filter(Boolean) as PortableInline[];
+}
 
 export function blockText(block: PortableTextBlock) {
   return block.children?.map((c) => c.text).join('')?.trim() ?? '';
@@ -16,7 +37,7 @@ export function blockText(block: PortableTextBlock) {
 
 export function portableNodes(blocks: PortableTextBlock[] = []): PortableNode[] {
   const nodes: PortableNode[] = [];
-  let bulletBuffer: string[] = [];
+  let bulletBuffer: PortableInline[][] = [];
 
   const flushBullets = () => {
     if (bulletBuffer.length > 0) {
@@ -29,21 +50,24 @@ export function portableNodes(blocks: PortableTextBlock[] = []): PortableNode[] 
     const text = blockText(block);
     if (!text) continue;
 
+    const children = inlineChildren(block.children ?? []);
+    if (children.length === 0) continue;
+
     if (block.listItem === 'bullet') {
-      bulletBuffer.push(text);
+      bulletBuffer.push(children);
       continue;
     }
 
     flushBullets();
 
     if (block.style === 'h3') {
-      nodes.push({ type: 'h3', text });
+      nodes.push({ type: 'h3', children });
     } else if (block.style === 'h4') {
-      nodes.push({ type: 'h4', text });
+      nodes.push({ type: 'h4', children });
     } else if (block.style === 'blockquote') {
-      nodes.push({ type: 'blockquote', text });
+      nodes.push({ type: 'blockquote', children });
     } else {
-      nodes.push({ type: 'paragraph', text });
+      nodes.push({ type: 'paragraph', children });
     }
   }
 

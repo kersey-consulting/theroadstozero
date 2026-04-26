@@ -1,0 +1,11 @@
+---
+import type { PortableInline } from '@/lib/portableText';
+
+interface Props {
+  children?: PortableInline[];
+}
+
+const { children = [] } = Astro.props;
+---
+
+{children.map((child) => child.type === 'strong' ? <strong>{child.text}</strong> : child.text)}
