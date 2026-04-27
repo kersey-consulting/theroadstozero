@@ -1,0 +1,52 @@
+---
+import ServiceHubLayout from '@/layouts/ServiceHubLayout.astro';
+import PageSections from '@/components/sections/PageSections.astro';
+import { sanityClient } from '@/lib/sanity';
+
+export async function getStaticPaths() {
+  const categories = await sanityClient.fetch(`*[_type == "serviceCategory"]{ "slug": slug.current }`).catch(() => []);
+
+  return categories
+    .filter((category: any) => category.slug && category.slug !== 'iv-therapy')
+    .map((category: any) => ({
+      params: { slug: category.slug },
+    }));
+}
+
+const { slug } = Astro.params;
+const category = await sanityClient.fetch(`*[_type == "serviceCategory" && slug.current == $slug][0]{
+  title,
+  description,
+  seo,
+  sections[]{
+    _type,
+    _key,
+    ...,
+    services[]->{
+      _id,
+      name,
+      slug,
+      type,
+      tagline,
+      shortDescription,
+      keyBenefits,
+      "image": image.asset->url,
+      category->{ slug }
+    },
+    "imageUrl": select(
+      defined(image.asset->url) => image.asset->url,
+      defined(image) && image match '/*' => image,
+      null
+    ),
+    "backgroundImageUrl": select(
+      defined(backgroundImage.asset->url) => backgroundImage.asset->url,
+      defined(backgroundImage) && backgroundImage match '/*' => backgroundImage,
+      null
+    )
+  }
+}`, { slug }).catch(() => null);
+---
+
+<ServiceHubLayout title={category?.seo?.title ?? `${category?.title ?? 'Service Category'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''}>
+  <PageSections sections={category?.sections ?? []} />
+</ServiceHubLayout>

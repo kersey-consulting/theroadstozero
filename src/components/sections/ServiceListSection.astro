@@ -1,0 +1,79 @@
+---
+interface Service {
+  _id?: string;
+  name?: string;
+  slug?: { current?: string };
+  category?: { slug?: { current?: string } };
+  type?: string;
+  tagline?: string;
+  shortDescription?: string;
+  keyBenefits?: string[];
+  image?: string;
+}
+
+interface Props {
+  section: {
+    title?: string;
+    intro?: string;
+    services?: Service[];
+  };
+  variant?: 'default' | 'alt';
+}
+
+const { section, variant = 'default' } = Astro.props;
+const services = section?.services ?? [];
+const serviceHref = (service: Service) => {
+  const categorySlug = service?.category?.slug?.current;
+  const serviceSlug = service?.slug?.current;
+  if (!serviceSlug) return '#';
+  if (categorySlug && categorySlug !== 'iv-therapy') return `/services/${categorySlug}/${serviceSlug}`;
+  if (categorySlug === 'iv-therapy') return `/services/iv-therapy/${serviceSlug}`;
+  return `/services/${serviceSlug}`;
+};
+---
+
+<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+  <div class="wide">
+    {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
+    {section?.intro && <p class="centeredText">{section.intro}</p>}
+    <div class="servicesGrid">
+      {services.map((service) => (
+        <article class="card">
+          {service.image && <img class="cardImage" src={service.image} alt={service.name ?? 'Service image'} />}
+          <div class="cardContent">
+            {(service.tagline ?? service.type) && <span class="cardTag">{service.tagline ?? service.type}</span>}
+            <h3 class="cardTitle">{service.name}</h3>
+            {service.shortDescription && <p class="cardSubtext">{service.shortDescription}</p>}
+            {(service.keyBenefits?.length ?? 0) > 0 && (
+              <ul class="benefitsList">
+                {service.keyBenefits?.map((benefit) => <li>{benefit}</li>)}
+              </ul>
+            )}
+            <a class="cardButton" href={serviceHref(service)}>Learn More</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section, .sectionAlt { padding: 5rem 1.5rem; }
+  .sectionAlt { background: rgba(210, 185, 150, 0.12); }
+  .wide { width: min(1200px, 100%); margin: 0 auto; }
+  .sectionTitleCentered { margin: 0 0 1.5rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; text-align: center; }
+  .centeredText { text-align: center; max-width: 760px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.85; }
+  .servicesGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 2rem; }
+  .card { display: flex; flex-direction: column; overflow: hidden; background: var(--color-surface); border-radius: 20px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.12); height: 100%; }
+  .cardImage { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .cardContent { display: flex; flex: 1; flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
+  .cardTag { display: inline-flex; padding: 0.45rem 0.75rem; border-radius: 999px; background: rgba(210, 185, 150, 0.18); font-weight: 600; font-size: 0.9rem; }
+  .cardTitle { margin: 0; color: var(--color-primary); font-size: 20px; line-height: 1.2; }
+  .cardSubtext { margin: 0; color: var(--color-primary); font-size: 16px; line-height: 1.75; }
+  .benefitsList { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.5rem; font-size: 16px; line-height: 1.75; color: var(--color-primary); }
+  .cardButton { display: block; width: 100%; text-align: center; padding: 1rem; margin-top: auto; color: var(--color-primary); background: transparent; border: 2px solid; border-radius: 15px; }
+  .cardButton:hover, .cardButton:focus { background: var(--color-surface); box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); text-decoration: none; }
+  @media (max-width: 768px) {
+    .section, .sectionAlt { padding: 4rem 1.25rem; }
+  }
+</style>
