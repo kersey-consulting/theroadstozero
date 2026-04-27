@@ -87,7 +87,9 @@ export const queries = {
     title, seo,
     body[]{...},
     sections[]{
-      _type, _key, ...,
+      _type,
+      _key,
+      ...,
       services[]->{
         _id,
         name,
@@ -98,7 +100,17 @@ export const queries = {
         keyBenefits,
         "image": image.asset->url,
         category->{ slug }
-      }
+      },
+      "imageUrl": select(
+        defined(image.asset->url) => image.asset->url,
+        defined(image) && image match '/*' => image,
+        null
+      ),
+      "backgroundImageUrl": select(
+        defined(backgroundImage.asset->url) => backgroundImage.asset->url,
+        defined(backgroundImage) && backgroundImage match '/*' => backgroundImage,
+        null
+      )
     }
   }`,
 
@@ -112,20 +124,36 @@ export const queries = {
   }`,
 
   serviceCategoryBySlug: `*[_type == "serviceCategory" && slug.current == $slug][0]{
-    _id, title, slug, description, eyebrow, heroTitle, heroText,
-    introTitle, introBody,
-    cardSectionTitle, cardSectionSubtitle,
-    supportingSectionTitle, supportingItems,
-    secondarySectionTitle, secondaryItems,
-    infoCards,
-    tagSectionTitle, tagSectionIntro, tagLinks,
-    ctaTitle, ctaText, ctaPrimaryLabel, ctaPrimaryHref, ctaSecondaryLabel, ctaSecondaryHref,
+    _id,
+    title,
+    slug,
+    description,
     seo,
-    "image": image.asset->url,
-    "heroImage": heroImage.asset->url,
-    "services": *[_type == "service" && references(^._id)] | order(order asc){
-      _id, name, slug, type, tagline, shortDescription,
-      "image": image.asset->url, keyBenefits
+    sections[]{
+      _type,
+      _key,
+      ...,
+      services[]->{
+        _id,
+        name,
+        slug,
+        type,
+        tagline,
+        shortDescription,
+        keyBenefits,
+        "image": image.asset->url,
+        category->{ slug }
+      },
+      "imageUrl": select(
+        defined(image.asset->url) => image.asset->url,
+        defined(image) && image match '/*' => image,
+        null
+      ),
+      "backgroundImageUrl": select(
+        defined(backgroundImage.asset->url) => backgroundImage.asset->url,
+        defined(backgroundImage) && backgroundImage match '/*' => backgroundImage,
+        null
+      )
     }
   }`,
 

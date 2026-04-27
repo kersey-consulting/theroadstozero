@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageSections from '@/components/sections/PageSections.astro';
-import { sanityClient } from '@/lib/sanity';
+import { sanityClient, queries } from '@/lib/sanity';
 
 export async function getStaticPaths() {
   const categories = await sanityClient.fetch(`*[_type == "serviceCategory"]{ "slug": slug.current }`).catch(() => []);
@@ -14,37 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const category = await sanityClient.fetch(`*[_type == "serviceCategory" && slug.current == $slug][0]{
-  title,
-  description,
-  seo,
-  sections[]{
-    _type,
-    _key,
-    ...,
-    services[]->{
-      _id,
-      name,
-      slug,
-      type,
-      tagline,
-      shortDescription,
-      keyBenefits,
-      "image": image.asset->url,
-      category->{ slug }
-    },
-    "imageUrl": select(
-      defined(image.asset->url) => image.asset->url,
-      defined(image) && image match '/*' => image,
-      null
-    ),
-    "backgroundImageUrl": select(
-      defined(backgroundImage.asset->url) => backgroundImage.asset->url,
-      defined(backgroundImage) && backgroundImage match '/*' => backgroundImage,
-      null
-    )
-  }
-}`, { slug }).catch(() => null);
+const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug }).catch(() => null);
 ---
 
 <BaseLayout title={category?.seo?.title ?? `${category?.title ?? 'Service Category'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''}>
