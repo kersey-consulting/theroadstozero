@@ -1,6 +1,7 @@
 ---
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
+import PortableInline from './PortableInline.astro';
 import { portableNodes } from '@/lib/portableText';
 import { urlFor } from '@/lib/sanity';
 
@@ -53,8 +54,11 @@ const reverse = section?.imagePosition === 'left';
     {nodes.length > 0 && (
       <div class="heroCopy">
         {nodes.map((node) => {
-          if (node.type === 'bulletList') return <ul class="heroList">{node.items.map((item) => <li>{item}</li>)}</ul>;
-          return <p class="heroText">{node.text}</p>;
+          if (node.type === 'bulletList') return <ul class="heroList">{node.items.map((item) => <li><PortableInline children={item} /></li>)}</ul>;
+          if (node.type === 'h3') return <h3 class="heroSubheading"><PortableInline children={node.children} /></h3>;
+          if (node.type === 'h4') return <h4 class="heroSubheadingSmall"><PortableInline children={node.children} /></h4>;
+          if (node.type === 'blockquote') return <blockquote class="heroQuote"><PortableInline children={node.children} /></blockquote>;
+          return <p class="heroText"><PortableInline children={node.children} /></p>;
         })}
       </div>
     )}
@@ -73,7 +77,11 @@ const reverse = section?.imagePosition === 'left';
   .eyebrow { margin: 0; text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.85rem; font-weight: 700; opacity: 0.8; }
   .heroTitle { margin: 0; font-size: clamp(2.5rem, 5vw, 3.5rem); line-height: 1.05; }
   .heroCopy { display: flex; flex-direction: column; gap: 1rem; }
-  .heroText { margin: 0; font-size: 1.1rem; line-height: 1.75; }
+  .heroText, .heroQuote { margin: 0; font-size: 1.1rem; line-height: 1.75; }
+  .heroSubheading, .heroSubheadingSmall { margin: 0; line-height: 1.2; }
+  .heroSubheading { font-size: clamp(1.35rem, 2vw, 1.7rem); }
+  .heroSubheadingSmall { font-size: clamp(1.15rem, 1.8vw, 1.35rem); }
+  .heroQuote { padding-left: 1rem; border-left: 3px solid rgba(185, 149, 94, 0.5); font-style: italic; }
   .heroList { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; font-size: 1.1rem; line-height: 1.75; }
   .heroList li { font-size: inherit; line-height: inherit; }
   .heroActions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.75rem; }
