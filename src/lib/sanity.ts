@@ -114,15 +114,6 @@ export const queries = {
     }
   }`,
 
-  serviceCategories: `*[_type == "serviceCategory"] | order(order asc){
-    _id, title, slug, description,
-    homeCardTitle,
-    homeCardDescription,
-    homeCardEnabled,
-    "image": image.asset->url,
-    "homeCardImage": homeCardImage.asset->url
-  }`,
-
   serviceCategoryBySlug: `*[_type == "serviceCategory" && slug.current == $slug][0]{
     _id,
     title,

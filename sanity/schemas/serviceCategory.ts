@@ -168,11 +168,6 @@ export default defineType({
         defineField({ name: 'description', title: 'SEO Description', type: 'text', rows: 3 }),
       ],
     }),
-    defineField({
-      name: 'order',
-      title: 'Sort Order',
-      type: 'number',
-    }),
   ],
   preview: {
     select: { title: 'title', media: 'image' },
