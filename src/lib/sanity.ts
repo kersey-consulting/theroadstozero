@@ -59,6 +59,17 @@ export const queries = {
         "image": image.asset->url,
         "homeCardImage": homeCardImage.asset->url
       },
+      services[]->{
+        _id,
+        name,
+        slug,
+        type,
+        tagline,
+        shortDescription,
+        keyBenefits,
+        "image": image.asset->url,
+        category->{ slug }
+      },
       "imageUrl": select(
         defined(image.asset->url) => image.asset->url,
         defined(image) && image match '/*' => image,
@@ -75,7 +86,20 @@ export const queries = {
   pageBySlug: `*[_type == "page" && slug.current == $slug][0]{
     title, seo,
     body[]{...},
-    sections[]{ _type, _key, ... }
+    sections[]{
+      _type, _key, ...,
+      services[]->{
+        _id,
+        name,
+        slug,
+        type,
+        tagline,
+        shortDescription,
+        keyBenefits,
+        "image": image.asset->url,
+        category->{ slug }
+      }
+    }
   }`,
 
   serviceCategories: `*[_type == "serviceCategory"] | order(order asc){

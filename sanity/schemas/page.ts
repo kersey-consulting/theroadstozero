@@ -127,6 +127,22 @@ export default defineType({
           ],
         }),
         defineArrayMember({
+          name: 'serviceListSection',
+          title: 'Service List Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
+            defineField({
+              name: 'services',
+              title: 'Services',
+              type: 'array',
+              of: [{ type: 'reference', to: [{ type: 'service' }] }],
+              validation: (r) => r.min(1),
+            }),
+          ],
+        }),
+        defineArrayMember({
           name: 'staffSection',
           title: 'Staff Section',
           type: 'object',
