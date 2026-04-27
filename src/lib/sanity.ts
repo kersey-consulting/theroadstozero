@@ -160,15 +160,49 @@ export const queries = {
   }`,
 
   serviceBySlug: `*[_type == "service" && slug.current == $slug][0]{
-    _id, name, slug, type, tagline, heroText, description,
+    _id,
+    name,
+    slug,
+    type,
+    tagline,
+    shortDescription,
+    heroText,
+    description,
     requiresConsultation,
+    seo,
     "image": image.asset->url,
     "heroImage": heroImage.asset->url,
-    seo,
+    "category": category->{ title, slug },
+    sections[]{
+      _type,
+      _key,
+      ...,
+      services[]->{
+        _id,
+        name,
+        slug,
+        type,
+        tagline,
+        shortDescription,
+        keyBenefits,
+        "image": image.asset->url,
+        category->{ slug }
+      },
+      "imageUrl": select(
+        defined(image.asset->url) => image.asset->url,
+        defined(image) && image match '/*' => image,
+        null
+      ),
+      "backgroundImageUrl": select(
+        defined(backgroundImage.asset->url) => backgroundImage.asset->url,
+        defined(backgroundImage) && backgroundImage match '/*' => backgroundImage,
+        null
+      )
+    },
     benefits[]{ title, description },
     addOns[]{ name, detail },
     "pairsWith": pairsWith[]->{ name, slug },
-    "category": category->{ title, slug }
+    keyBenefits
   }`,
 
   allServices: `*[_type == "service"]{
