@@ -1,5 +1,5 @@
 ---
-import ServiceHubLayout from '@/layouts/ServiceHubLayout.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageSections from '@/components/sections/PageSections.astro';
 import { sanityClient } from '@/lib/sanity';
 
@@ -47,6 +47,6 @@ const category = await sanityClient.fetch(`*[_type == "serviceCategory" && slug.
 }`, { slug }).catch(() => null);
 ---
 
-<ServiceHubLayout title={category?.seo?.title ?? `${category?.title ?? 'Service Category'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''}>
+<BaseLayout title={category?.seo?.title ?? `${category?.title ?? 'Service Category'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''}>
   <PageSections sections={category?.sections ?? []} />
-</ServiceHubLayout>
+</BaseLayout>
