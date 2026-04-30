@@ -1,0 +1,116 @@
+---
+import PortableInline from './PortableInline.astro';
+import { portableNodes } from '@/lib/portableText';
+import { urlFor } from '@/lib/sanity';
+
+interface Block {
+  style?: string;
+  listItem?: string;
+  children?: { text?: string; marks?: string[] }[];
+}
+
+interface Item {
+  title?: string;
+  content?: Block[];
+  image?: any;
+  imageUrl?: string;
+  alt?: string;
+}
+
+interface Props {
+  section: {
+    title?: string;
+    intro?: Block[];
+    items?: Item[];
+  };
+  variant?: 'default' | 'alt';
+}
+
+const { section, variant = 'default' } = Astro.props;
+
+const resolveImageUrl = (img: any) => {
+  if (!img) return undefined;
+  if (typeof img === 'string') return img;
+  if (img.asset?.url) return img.asset.url;
+  try {
+    return urlFor(img).url();
+  } catch {
+    return undefined;
+  }
+};
+
+const introNodes = portableNodes(section?.intro ?? []);
+const items = (section?.items ?? []).map((item) => ({
+  ...item,
+  imageUrl: item?.imageUrl ?? resolveImageUrl(item?.image),
+  nodes: portableNodes(item?.content ?? []),
+}));
+const twoUp = items.length === 2;
+---
+
+<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+  <div class="narrow">
+    {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
+    {introNodes.length > 0 && (
+      <div class="intro">
+        {introNodes.map((node) => {
+          if (node.type === 'bulletList') return <ul>{node.items.map((item) => <li><PortableInline children={item} /></li>)}</ul>;
+          if (node.type === 'h3') return <h3><PortableInline children={node.children} /></h3>;
+          if (node.type === 'h4') return <h4><PortableInline children={node.children} /></h4>;
+          if (node.type === 'blockquote') return <blockquote><PortableInline children={node.children} /></blockquote>;
+          return <p><PortableInline children={node.children} /></p>;
+        })}
+      </div>
+    )}
+
+    <div class:list={['grid', twoUp && 'gridTwo']}>
+      {items.map((item) => (
+        <article class="card">
+          {item.imageUrl && <img class="image" src={item.imageUrl} alt={item.alt ?? item.title ?? section?.title ?? 'Showcase image'} />}
+          {(item.title || item.nodes.length > 0) && (
+            <div class="copy">
+              {item.title && <h3>{item.title}</h3>}
+              {item.nodes.map((node) => {
+                if (node.type === 'bulletList') return <ul>{node.items.map((child) => <li><PortableInline children={child} /></li>)}</ul>;
+                if (node.type === 'h3') return <h4><PortableInline children={node.children} /></h4>;
+                if (node.type === 'h4') return <h5><PortableInline children={node.children} /></h5>;
+                if (node.type === 'blockquote') return <blockquote><PortableInline children={node.children} /></blockquote>;
+                return <p><PortableInline children={node.children} /></p>;
+              })}
+            </div>
+          )}
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section, .sectionAlt { padding: 5rem 1.5rem; }
+  .sectionAlt { background: rgba(210, 185, 150, 0.12); }
+  .narrow { width: min(100%, 1100px); margin: 0 auto; }
+  .sectionTitleCentered { margin: 0 0 1.5rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; text-align: center; }
+  .intro { max-width: 820px; margin: 0 auto 2rem; display: grid; gap: 1rem; }
+  .intro p, .intro blockquote { margin: 0; text-align: center; font-size: 1.05rem; line-height: 1.85; }
+  .intro h3, .intro h4 { margin: 0; text-align: center; line-height: 1.2; }
+  .intro h3 { font-size: clamp(1.35rem, 2vw, 1.7rem); }
+  .intro h4 { font-size: clamp(1.15rem, 1.8vw, 1.35rem); }
+  .intro blockquote { padding-left: 1rem; border-left: 3px solid rgba(185, 149, 94, 0.5); font-style: italic; text-align: left; }
+  .intro ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; font-size: 1.05rem; line-height: 1.85; }
+  .grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  .gridTwo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card { background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08); }
+  .image { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+  .copy { display: grid; gap: 0.85rem; padding: 1.5rem; }
+  .copy h3, .copy h4, .copy h5 { margin: 0; line-height: 1.2; }
+  .copy h3 { font-size: 1.3rem; }
+  .copy h4 { font-size: 1.1rem; }
+  .copy h5 { font-size: 1rem; }
+  .copy p, .copy blockquote { margin: 0; font-size: 1rem; line-height: 1.75; }
+  .copy blockquote { padding-left: 1rem; border-left: 3px solid rgba(185, 149, 94, 0.5); font-style: italic; }
+  .copy ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; font-size: 1rem; line-height: 1.75; }
+  @media (max-width: 900px) {
+    .gridTwo { grid-template-columns: 1fr; }
+    .section, .sectionAlt { padding: 4rem 1.25rem; }
+  }
+</style>

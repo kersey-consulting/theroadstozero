@@ -4,7 +4,7 @@ import PageSections from '@/components/sections/PageSections.astro';
 import { sanityClient } from '@/lib/sanity';
 
 export async function getStaticPaths() {
-  const services = await sanityClient.fetch(`*[_type == "service" && !defined(category->slug.current in ["iv-therapy"])]{
+  const services = await sanityClient.fetch(`*[_type == "service" && category->slug.current != "iv-therapy"]{
     "category": category->slug.current,
     "slug": slug.current,
     sections,
