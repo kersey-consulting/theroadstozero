@@ -16,6 +16,22 @@ const simpleCard = {
   ],
 };
 
+const imageShowcaseItem = {
+  type: 'object',
+  fields: [
+    defineField({ name: 'title', title: 'Title', type: 'string' }),
+    defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
+    defineField({
+      name: 'image',
+      title: 'Image',
+      type: 'image',
+      options: { hotspot: true },
+      validation: (r) => r.required(),
+    }),
+    defineField({ name: 'alt', title: 'Alt Text', type: 'string' }),
+  ],
+};
+
 export default defineType({
   name: 'page',
   title: 'Page',
@@ -200,6 +216,22 @@ export default defineType({
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
             defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
+          ],
+        }),
+        defineArrayMember({
+          name: 'imageShowcaseSection',
+          title: 'Image Showcase Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Section Title', type: 'string' }),
+            defineField({ name: 'intro', title: 'Section Intro', type: 'array', of: [{ type: 'block' }] }),
+            defineField({
+              name: 'items',
+              title: 'Images',
+              type: 'array',
+              of: [imageShowcaseItem],
+              validation: (r) => r.min(1).max(2).required(),
+            }),
           ],
         }),
         defineArrayMember({

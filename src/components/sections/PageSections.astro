@@ -7,6 +7,7 @@ import ServiceListSection from './ServiceListSection.astro';
 import StaffSection from './StaffSection.astro';
 import TagListSection from './TagListSection.astro';
 import SplitContentSection from './SplitContentSection.astro';
+import ImageShowcaseSection from './ImageShowcaseSection.astro';
 import CtaSection from './CtaSection.astro';
 import LegalSection from './LegalSection.astro';
 
@@ -44,6 +45,9 @@ const { sections = [], staffMembers = [] } = Astro.props;
   }
   if (section._type === 'splitContentSection') {
     return <SplitContentSection section={section} variant={variant} />;
+  }
+  if (section._type === 'imageShowcaseSection') {
+    return <ImageShowcaseSection section={section} variant={variant} />;
   }
   if (section._type === 'ctaSection') {
     return <CtaSection section={section} />;
