@@ -1,7 +1,8 @@
 ---
-import { sanityClient, queries } from '@/lib/sanity';
+import { getSanityClient, queries } from '@/lib/sanity';
 import HeaderClient from './HeaderClient';
 
+const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const settings = await sanityClient.fetch(queries.siteSettings);
 const navigation = await sanityClient.fetch(queries.navigation);
 
