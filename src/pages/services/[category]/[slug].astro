@@ -7,22 +7,63 @@ export async function getStaticPaths() {
   const sanityClient = getSanityClient(Astro.locals.runtime?.env);
   const services = await sanityClient.fetch(`*[_type == "service" && category->slug.current != "iv-therapy"]{
     "category": category->slug.current,
-    "slug": slug.current,
-    sections,
-    seo,
-    name
+    "slug": slug.current
   }`).catch(() => []);
 
   return services
     .filter((service: any) => service.category && service.slug)
     .map((service: any) => ({
       params: { category: service.category, slug: service.slug },
-      props: { service },
     }));
 }
 
 const sanityClient = getSanityClient(Astro.locals.runtime?.env);
-const { service } = Astro.props;
+const { slug } = Astro.params;
+const service = await sanityClient.fetch(`*[_type == "service" && slug.current == $slug && category->slug.current == $category][0]{
+  _id,
+  name,
+  slug,
+  type,
+  tagline,
+  shortDescription,
+  heroText,
+  description,
+  requiresConsultation,
+  seo,
+  "image": image.asset->url,
+  "heroImage": heroImage.asset->url,
+  "category": category->{ title, slug },
+  sections[]{
+    _type,
+    _key,
+    ...,
+    services[]->{
+      _id,
+      name,
+      slug,
+      type,
+      tagline,
+      shortDescription,
+      keyBenefits,
+      "image": image.asset->url,
+      category->{ slug }
+    },
+    "imageUrl": select(
+      defined(image.asset->url) => image.asset->url,
+      defined(image) && image match '/*' => image,
+      null
+    ),
+    "backgroundImageUrl": select(
+      defined(backgroundImage.asset->url) => backgroundImage.asset->url,
+      defined(backgroundImage) && backgroundImage match '/*' => backgroundImage,
+      null
+    )
+  },
+  benefits[]{ title, description },
+  addOns[]{ name, detail },
+  "pairsWith": pairsWith[]->{ name, slug },
+  keyBenefits
+}`, { slug, category: Astro.params.category }).catch(() => null);
 const staffMembers = await sanityClient.fetch(`*[_type == "staffMember"] | order(name asc){
   _id, name, role, credentials, bio, "photo": photo.asset->url
 }`).catch(() => []);
