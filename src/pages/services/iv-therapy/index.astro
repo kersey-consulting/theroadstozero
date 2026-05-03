@@ -5,6 +5,7 @@ import Button from '@/components/Button.astro';
 import { getSanityClient } from '@/lib/sanity';
 import { ivDrips as localDrips, imInjections as localInjections } from '@/data/iv-services';
 
+const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';
 
 // Try Sanity, fall back to local data
