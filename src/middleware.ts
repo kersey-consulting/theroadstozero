@@ -4,6 +4,18 @@ function shouldRequireAuth() {
   return Boolean(process.env.BASIC_AUTH_USER && process.env.BASIC_AUTH_PASS);
 }
 
+function envPresence() {
+  return {
+    BASIC_AUTH_USER: Boolean(process.env.BASIC_AUTH_USER),
+    BASIC_AUTH_PASS: Boolean(process.env.BASIC_AUTH_PASS),
+    SANITY_PREVIEW_ENABLED: Boolean(process.env.SANITY_PREVIEW_ENABLED),
+    SANITY_PREVIEW_TOKEN: Boolean(process.env.SANITY_PREVIEW_TOKEN),
+    CF_PAGES: Boolean(process.env.CF_PAGES),
+    CF_PAGES_BRANCH: Boolean(process.env.CF_PAGES_BRANCH),
+    NODE_ENV: process.env.NODE_ENV || null,
+  };
+}
+
 function unauthorized() {
   return new Response('Authentication required', {
     status: 401,
@@ -35,6 +47,16 @@ function decodeBasicAuth(header: string | null) {
 }
 
 export const onRequest = defineMiddleware(async (_context, next) => {
+  if (_context.url.pathname === '/__env-check') {
+    return new Response(JSON.stringify(envPresence(), null, 2), {
+      status: 200,
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'cache-control': 'no-store',
+      },
+    });
+  }
+
   if (!shouldRequireAuth()) {
     return next();
   }
