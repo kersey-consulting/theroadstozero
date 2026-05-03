@@ -1,7 +1,7 @@
 ---
 import { getSanityClient, queries } from '@/lib/sanity';
 
-const sanityClient = getSanityClient();
+const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
 
 const EXTRA_LINKS = [

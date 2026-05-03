@@ -1,18 +1,23 @@
 import { defineMiddleware } from 'astro:middleware';
 
-function shouldRequireAuth() {
-  return Boolean(process.env.BASIC_AUTH_USER && process.env.BASIC_AUTH_PASS);
+function getRuntimeEnv(context: any) {
+  return context?.locals?.runtime?.env ?? {};
 }
 
-function envPresence() {
+function shouldRequireAuth(env: Record<string, unknown>) {
+  return Boolean(env.BASIC_AUTH_USER && env.BASIC_AUTH_PASS);
+}
+
+function envPresence(context: any) {
+  const env = getRuntimeEnv(context);
   return {
-    BASIC_AUTH_USER: Boolean(process.env.BASIC_AUTH_USER),
-    BASIC_AUTH_PASS: Boolean(process.env.BASIC_AUTH_PASS),
-    SANITY_PREVIEW_ENABLED: Boolean(process.env.SANITY_PREVIEW_ENABLED),
-    SANITY_PREVIEW_TOKEN: Boolean(process.env.SANITY_PREVIEW_TOKEN),
-    CF_PAGES: Boolean(process.env.CF_PAGES),
-    CF_PAGES_BRANCH: Boolean(process.env.CF_PAGES_BRANCH),
-    NODE_ENV: process.env.NODE_ENV || null,
+    BASIC_AUTH_USER: Boolean(env.BASIC_AUTH_USER),
+    BASIC_AUTH_PASS: Boolean(env.BASIC_AUTH_PASS),
+    SANITY_PREVIEW_ENABLED: Boolean(env.SANITY_PREVIEW_ENABLED),
+    SANITY_PREVIEW_TOKEN: Boolean(env.SANITY_PREVIEW_TOKEN),
+    CF_PAGES: Boolean(env.CF_PAGES),
+    CF_PAGES_BRANCH: Boolean(env.CF_PAGES_BRANCH),
+    NODE_ENV: typeof env.NODE_ENV === 'string' ? env.NODE_ENV : null,
   };
 }
 
@@ -47,8 +52,10 @@ function decodeBasicAuth(header: string | null) {
 }
 
 export const onRequest = defineMiddleware(async (_context, next) => {
+  const env = getRuntimeEnv(_context);
+
   if (_context.url.pathname === '/__env-check') {
-    return new Response(JSON.stringify(envPresence(), null, 2), {
+    return new Response(JSON.stringify(envPresence(_context), null, 2), {
       status: 200,
       headers: {
         'content-type': 'application/json; charset=utf-8',
@@ -57,12 +64,12 @@ export const onRequest = defineMiddleware(async (_context, next) => {
     });
   }
 
-  if (!shouldRequireAuth()) {
+  if (!shouldRequireAuth(env)) {
     return next();
   }
 
-  const expectedUser = process.env.BASIC_AUTH_USER as string;
-  const expectedPass = process.env.BASIC_AUTH_PASS as string;
+  const expectedUser = String(env.BASIC_AUTH_USER);
+  const expectedPass = String(env.BASIC_AUTH_PASS);
 
   const credentials = decodeBasicAuth(_context.request.headers.get('authorization'));
   if (!credentials) {

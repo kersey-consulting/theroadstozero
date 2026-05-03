@@ -4,7 +4,7 @@ import PageSections from '@/components/sections/PageSections.astro';
 import { getSanityClient, queries } from '@/lib/sanity';
 
 export async function getStaticPaths() {
-  const sanityClient = getSanityClient();
+  const sanityClient = getSanityClient(Astro.locals.runtime?.env);
   const allServices = await sanityClient.fetch(
     `*[_type == "service" && category->slug.current == "iv-therapy"]{
       "slug": slug.current
