@@ -55,7 +55,7 @@ const reviewItem = {
     }),
     defineField({ name: 'reviewText', title: 'Review Text', type: 'text', rows: 5, validation: (r) => r.required() }),
     defineField({ name: 'reviewDate', title: 'Review Date', type: 'date' }),
-    defineField({ name: 'sourceLabel', title: 'Source Label', type: 'string', initialValue: 'Google Review' }),
+    defineField({ name: 'sourceLabel', title: 'Source Label', type: 'string' }),
     defineField({ name: 'sourceUrl', title: 'Source URL', type: 'url' }),
   ],
 };
