@@ -1,0 +1,160 @@
+---
+interface ReviewItem {
+  reviewerName?: string;
+  reviewerMeta?: string;
+  rating?: number;
+  reviewText?: string;
+  reviewDate?: string;
+  sourceLabel?: string;
+  sourceUrl?: string;
+}
+
+interface Props {
+  section: {
+    title?: string;
+    intro?: string;
+    maxReviewsPerRow?: number;
+    reviews?: ReviewItem[];
+    ctaLabel?: string;
+    ctaHref?: string;
+  };
+  variant?: 'default' | 'alt';
+}
+
+const { section, variant = 'default' } = Astro.props;
+const reviews = section?.reviews ?? [];
+const maxReviewsPerRow = Math.min(4, Math.max(1, Number(section?.maxReviewsPerRow ?? 3)));
+
+const formatDate = (value?: string) => {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  }).format(date);
+};
+
+const renderStars = (rating = 5) => '★'.repeat(Math.max(1, Math.min(5, Math.round(rating))));
+---
+
+<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+  <div class="wide">
+    {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
+    {section?.intro && <p class="centeredText">{section.intro}</p>}
+
+    <div class="reviewsGrid" style={`--reviews-per-row: ${maxReviewsPerRow};`}>
+      {reviews.map((review) => (
+        <article class="reviewCard">
+          <div class="reviewHeader">
+            <div>
+              <h3 class="reviewerName">{review.reviewerName}</h3>
+              {(review.reviewerMeta || review.sourceLabel || review.reviewDate) && (
+                <p class="reviewMeta">
+                  {[review.reviewerMeta, review.sourceLabel, formatDate(review.reviewDate)].filter(Boolean).join(' • ')}
+                </p>
+              )}
+            </div>
+            <div class="rating" aria-label={`${review.rating ?? 5} out of 5 stars`}>{renderStars(review.rating)}</div>
+          </div>
+
+          {review.reviewText && <p class="reviewText">“{review.reviewText}”</p>}
+
+          {review.sourceUrl && (
+            <a class="sourceLink" href={review.sourceUrl} target="_blank" rel="noreferrer">View Source</a>
+          )}
+        </article>
+      ))}
+    </div>
+
+    {section?.ctaLabel && section?.ctaHref && (
+      <div class="actions">
+        <a class="ctaButton" href={section.ctaHref}>{section.ctaLabel}</a>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .section, .sectionAlt { padding: 5rem 1.5rem; }
+  .sectionAlt { background: rgba(210, 185, 150, 0.12); }
+  .wide { width: min(1200px, 100%); margin: 0 auto; }
+  .sectionTitleCentered { margin: 0 0 1.5rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; text-align: center; }
+  .centeredText { text-align: center; max-width: 760px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.85; }
+  .reviewsGrid {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(min(100%, calc((100% - (var(--reviews-per-row) - 1) * 1.5rem) / var(--reviews-per-row))), 1fr)
+    );
+    gap: 1.5rem;
+  }
+  .reviewCard {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+    padding: 1.75rem;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(210, 185, 150, 0.24);
+  }
+  .reviewHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .reviewerName { margin: 0; font-size: 1.2rem; color: var(--color-primary); }
+  .reviewMeta { margin: 0.35rem 0 0; font-size: 0.95rem; opacity: 0.72; line-height: 1.5; }
+  .rating {
+    flex-shrink: 0;
+    color: #f4b400;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+  .reviewText {
+    margin: 0;
+    line-height: 1.8;
+    white-space: pre-line;
+    color: var(--color-primary);
+    opacity: 0.9;
+  }
+  .sourceLink {
+    margin-top: auto;
+    font-weight: 700;
+    color: var(--color-primary);
+  }
+  .actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+  .ctaButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 220px;
+    padding: 1rem 1.5rem;
+    border: 2px solid;
+    border-radius: 999px;
+    color: var(--color-primary);
+    background: transparent;
+    font-weight: 700;
+  }
+  .ctaButton:hover,
+  .ctaButton:focus {
+    background: var(--color-surface);
+    text-decoration: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  }
+  @media (max-width: 768px) {
+    .section, .sectionAlt { padding: 4rem 1.25rem; }
+    .reviewHeader { flex-direction: column; }
+    .rating { font-size: 1rem; }
+  }
+</style>
