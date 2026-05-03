@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageSections from '@/components/sections/PageSections.astro';
-import { sanityClient, queries } from '@/lib/sanity';
+import { getSanityClient, queries } from '@/lib/sanity';
 
 export async function getStaticPaths() {
+  const sanityClient = getSanityClient();
   const allServices = await sanityClient.fetch(
     `*[_type == "service" && category->slug.current == "iv-therapy"]{
       "slug": slug.current
