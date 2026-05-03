@@ -1,0 +1,136 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page Not Found — The Road to Zero"
+  description="The page you were looking for could not be found."
+>
+  <section class="notFoundSection">
+    <div class="notFoundCard">
+      <p class="eyebrow">404</p>
+      <h1>Page not found</h1>
+      <p>
+        Sorry, we couldn’t find the page you were looking for. It may have moved, been removed,
+        or the link may be incorrect.
+      </p>
+      <div class="actions">
+        <a class="primaryButton" href="/">Go to Homepage</a>
+        <a class="secondaryButton" href="/services">View Services</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notFoundSection {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+    background: linear-gradient(180deg, rgba(210, 185, 150, 0.08) 0%, rgba(255, 255, 255, 1) 100%);
+  }
+
+  .notFoundCard {
+    width: min(100%, 760px);
+    text-align: center;
+    background: white;
+    border-radius: 24px;
+    padding: 3rem 2rem;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+  }
+
+  .eyebrow {
+    margin: 0 0 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+  }
+
+  h1 {
+    margin: 0 0 1rem;
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    line-height: 1.05;
+  }
+
+  p {
+    margin: 0 auto;
+    max-width: 40rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    opacity: 0.82;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 180px;
+    padding: 0.95rem 1.4rem;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+
+  .primaryButton {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  }
+
+  .primaryButton:hover,
+  .primaryButton:focus {
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+
+  .secondaryButton {
+    background: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-secondary);
+  }
+
+  .secondaryButton:hover,
+  .secondaryButton:focus {
+    background: rgba(210, 185, 150, 0.08);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .notFoundSection {
+      min-height: 60vh;
+      padding: 3rem 1.25rem;
+    }
+
+    .notFoundCard {
+      padding: 2.5rem 1.5rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+
+    .actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .primaryButton,
+    .secondaryButton {
+      width: 100%;
+    }
+  }
+</style>
