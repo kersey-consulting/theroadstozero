@@ -7,6 +7,7 @@ const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null
 const EXTRA_LINKS = [
   { id: 'privacy', label: 'Privacy Policy', href: '/privacy-policy' },
   { id: 'contact', label: 'Contact', href: '/contact' },
+  { id: 'faq', label: 'FAQs', href: '/faq' },
 ];
 
 const socialSvgs: Record<string, string> = {

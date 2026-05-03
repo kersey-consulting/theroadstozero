@@ -60,6 +60,9 @@
     font-style: italic;
     font-size: 0.9rem;
     padding-left: 0.75rem;
+    @media (max-width: 1110px) {
+        text-align: center;
+    }
 }
 
 .headerContainer {
