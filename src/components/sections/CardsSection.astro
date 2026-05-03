@@ -9,12 +9,13 @@ interface Props {
 }
 const { section, variant = 'default' } = Astro.props;
 const maxCardsPerRow = Math.min(4, Math.max(1, Number(section?.maxCardsPerRow ?? 4)));
+const maxGridWidth = `${maxCardsPerRow * 320 + (maxCardsPerRow - 1) * 24}px`;
 ---
 <section class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="narrow">
     {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
     {section?.intro && <p class="centeredText">{section.intro}</p>}
-    <div class="grid" style={`--cards-per-row: ${maxCardsPerRow};`}>
+    <div class="grid" style={`--cards-per-row: ${maxCardsPerRow}; --grid-max-width: ${maxGridWidth};`}>
       {(section?.cards ?? []).map((card) => (
         <div class="card">
           <h3>{card.title}</h3>
@@ -32,10 +33,9 @@ const maxCardsPerRow = Math.min(4, Math.max(1, Number(section?.maxCardsPerRow ??
   .centeredText { text-align: center; max-width: 760px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.85; }
   .grid {
     display: grid;
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(min(100%, calc((100% - (var(--cards-per-row) - 1) * 1.5rem) / var(--cards-per-row))), 1fr)
-    );
+    width: min(100%, var(--grid-max-width));
+    margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
     gap: 1.5rem;
   }
   .card { background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08); }
