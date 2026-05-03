@@ -18,6 +18,7 @@ export async function getStaticPaths() {
     }));
 }
 
+const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const { slug } = Astro.params;
 const service = await sanityClient.fetch(queries.serviceBySlug, { slug }).catch(() => null);
 const staffMembers = await sanityClient.fetch(queries.staffMembers).catch(() => []);

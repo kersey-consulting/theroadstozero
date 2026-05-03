@@ -21,6 +21,7 @@ export async function getStaticPaths() {
     }));
 }
 
+const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const { service } = Astro.props;
 const staffMembers = await sanityClient.fetch(`*[_type == "staffMember"] | order(name asc){
   _id, name, role, credentials, bio, "photo": photo.asset->url
