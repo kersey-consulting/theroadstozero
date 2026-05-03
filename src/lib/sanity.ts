@@ -1,18 +1,38 @@
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
+import type { SanityClient } from '@sanity/client';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
-export const sanityClient = createClient({
-  projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'dm3m4n0d',
-  dataset: import.meta.env.PUBLIC_SANITY_DATASET || 'production',
-  apiVersion: '2026-03-31',
-  useCdn: true,
-});
+const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'dm3m4n0d';
+const dataset = import.meta.env.PUBLIC_SANITY_DATASET || 'production';
+const apiVersion = '2026-03-31';
 
-const builder = imageUrlBuilder(sanityClient);
+export function isPreviewEnabled() {
+  return import.meta.env.SANITY_PREVIEW_ENABLED === 'true';
+}
+
+export function createSanityClient(preview = isPreviewEnabled()) {
+  return createClient({
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: !preview,
+    token: preview ? import.meta.env.SANITY_PREVIEW_TOKEN : undefined,
+    perspective: preview ? 'drafts' : 'published',
+  });
+}
+
+export const sanityClient = createSanityClient(false);
+export const previewSanityClient = createSanityClient(true);
+
+const publishedBuilder = imageUrlBuilder(sanityClient);
 
 export function urlFor(source: SanityImageSource) {
-  return builder.image(source);
+  return publishedBuilder.image(source);
+}
+
+export function getSanityClient(preview = isPreviewEnabled()): SanityClient {
+  return preview ? previewSanityClient : sanityClient;
 }
 
 // ── GROQ Queries ──
