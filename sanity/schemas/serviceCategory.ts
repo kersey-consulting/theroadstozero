@@ -24,6 +24,34 @@ const imageShowcaseItem = {
   ],
 };
 
+const reviewItem = {
+  type: 'object',
+  fields: [
+    defineField({ name: 'reviewerName', title: 'Reviewer Name', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'reviewerMeta', title: 'Reviewer Meta', type: 'string' }),
+    defineField({
+      name: 'rating',
+      title: 'Rating',
+      type: 'number',
+      initialValue: 5,
+      options: {
+        list: [
+          { title: '1 star', value: 1 },
+          { title: '2 stars', value: 2 },
+          { title: '3 stars', value: 3 },
+          { title: '4 stars', value: 4 },
+          { title: '5 stars', value: 5 },
+        ],
+      },
+      validation: (r) => r.required().min(1).max(5),
+    }),
+    defineField({ name: 'reviewText', title: 'Review Text', type: 'text', rows: 5, validation: (r) => r.required() }),
+    defineField({ name: 'reviewDate', title: 'Review Date', type: 'date' }),
+    defineField({ name: 'sourceLabel', title: 'Source Label', type: 'string' }),
+    defineField({ name: 'sourceUrl', title: 'Source URL', type: 'url' }),
+  ],
+};
+
 const sectionAction = {
   type: 'object',
   fields: [
@@ -187,6 +215,34 @@ export default defineType({
               of: [imageShowcaseItem],
               validation: (r) => r.min(1).max(2).required(),
             }),
+          ],
+        }),
+        defineArrayMember({
+          name: 'reviewsSection',
+          title: 'Reviews Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
+            defineField({
+              name: 'maxReviewsPerRow',
+              title: 'Max Reviews Per Row',
+              type: 'number',
+              initialValue: 3,
+              options: {
+                list: [
+                  { title: '1', value: 1 },
+                  { title: '2', value: 2 },
+                  { title: '3', value: 3 },
+                  { title: '4', value: 4 },
+                ],
+                layout: 'radio',
+              },
+              validation: (r) => r.min(1).max(4),
+            }),
+            defineField({ name: 'reviews', title: 'Reviews', type: 'array', of: [reviewItem], validation: (r) => r.min(1) }),
+            defineField({ name: 'ctaLabel', title: 'CTA Label', type: 'string' }),
+            defineField({ name: 'ctaHref', title: 'CTA Href', type: 'string' }),
           ],
         }),
       ],
