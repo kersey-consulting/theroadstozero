@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
-import { sanityClient } from '@/lib/sanity';
+import { getSanityClient } from '@/lib/sanity';
 import { ivDrips as localDrips, imInjections as localInjections } from '@/data/iv-services';
 
 const bookingUrl = 'https://booking.hydreight.com/widget-business/fk58k';

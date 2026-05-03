@@ -1,18 +1,57 @@
 import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
+import type { SanityClient } from '@sanity/client';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
-export const sanityClient = createClient({
-  projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'dm3m4n0d',
-  dataset: import.meta.env.PUBLIC_SANITY_DATASET || 'production',
-  apiVersion: '2026-03-31',
-  useCdn: true,
-});
+const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'dm3m4n0d';
+const dataset = import.meta.env.PUBLIC_SANITY_DATASET || 'production';
+const apiVersion = '2026-03-31';
 
-const builder = imageUrlBuilder(sanityClient);
+export function isPreviewEnabled(runtimeEnv?: Record<string, any>) {
+  if (runtimeEnv && typeof runtimeEnv.SANITY_PREVIEW_ENABLED !== 'undefined') {
+    return String(runtimeEnv.SANITY_PREVIEW_ENABLED) === 'true';
+  }
+
+  return import.meta.env.SANITY_PREVIEW_ENABLED === 'true';
+}
+
+export function createSanityClient(previewOrOptions: boolean | { preview?: boolean; token?: string } = isPreviewEnabled()) {
+  const preview = typeof previewOrOptions === 'boolean' ? previewOrOptions : Boolean(previewOrOptions.preview);
+  const token = typeof previewOrOptions === 'boolean'
+    ? (preview ? import.meta.env.SANITY_PREVIEW_TOKEN : undefined)
+    : previewOrOptions.token;
+
+  return createClient({
+    projectId,
+    dataset,
+    apiVersion,
+    useCdn: !preview,
+    token,
+    perspective: preview ? 'drafts' : 'published',
+  });
+}
+
+export const sanityClient = createSanityClient(false);
+export const previewSanityClient = createSanityClient({ preview: true, token: import.meta.env.SANITY_PREVIEW_TOKEN });
+
+const publishedBuilder = imageUrlBuilder(sanityClient);
 
 export function urlFor(source: SanityImageSource) {
-  return builder.image(source);
+  return publishedBuilder.image(source);
+}
+
+export function getSanityClient(previewOrRuntime?: boolean | Record<string, any>): SanityClient {
+  if (typeof previewOrRuntime === 'boolean') {
+    return previewOrRuntime ? previewSanityClient : sanityClient;
+  }
+
+  if (previewOrRuntime) {
+    const preview = isPreviewEnabled(previewOrRuntime);
+    const token = preview ? String(previewOrRuntime.SANITY_PREVIEW_TOKEN || '') || undefined : undefined;
+    return createSanityClient({ preview, token });
+  }
+
+  return isPreviewEnabled() ? previewSanityClient : sanityClient;
 }
 
 // ── GROQ Queries ──
