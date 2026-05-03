@@ -1,5 +1,6 @@
 ---
 import Button from '@/components/Button.astro';
+import PortableInline from './PortableInline.astro';
 import { portableNodes } from '@/lib/portableText';
 import { urlFor } from '@/lib/sanity';
 
@@ -52,11 +53,11 @@ const reverse = section?.imagePosition === 'left';
       {section?.title && <h2 class="sectionTitle">{section.title}</h2>}
       <div class="copy">
         {nodes.map((node) => {
-          if (node.type === 'bulletList') return <ul>{node.items.map((item) => <li>{item}</li>)}</ul>;
-          if (node.type === 'h3') return <h3>{node.text}</h3>;
-          if (node.type === 'h4') return <h4>{node.text}</h4>;
-          if (node.type === 'blockquote') return <blockquote>{node.text}</blockquote>;
-          return <p>{node.text}</p>;
+          if (node.type === 'bulletList') return <ul>{node.items.map((item) => <li><PortableInline children={item} /></li>)}</ul>;
+          if (node.type === 'h3') return <h3><PortableInline children={node.children} /></h3>;
+          if (node.type === 'h4') return <h4><PortableInline children={node.children} /></h4>;
+          if (node.type === 'blockquote') return <blockquote><PortableInline children={node.children} /></blockquote>;
+          return <p><PortableInline children={node.children} /></p>;
         })}
       </div>
       {(section?.actions ?? []).length > 0 && (
