@@ -17,8 +17,10 @@ const { children = [] } = Astro.props;
     return <a href={child.href}><PortableInline children={child.children} /></a>;
   }
 
-  const parts = child.text.split('\n');
-  return parts.map((part, index) => (
-    index === 0 ? part : [<br />, part]
+  return child.text.split('\n').map((part, index) => (
+    <>
+      {index > 0 && <br />}
+      {part}
+    </>
   ));
 })}
