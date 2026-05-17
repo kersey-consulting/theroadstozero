@@ -52,6 +52,9 @@ const reviewItem = {
   ],
 };
 
+const withUntitled = (value?: string) => value || 'Untitled section';
+const withCount = (label: string, count?: number) => `${count ?? 0} ${label}${count === 1 ? '' : 's'}`;
+
 const sectionAction = {
   type: 'object',
   fields: [
@@ -129,6 +132,10 @@ export default defineType({
             defineField({ name: 'backgroundImage', title: 'Background Image', type: 'image', options: { hotspot: true } }),
             defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
           ],
+          preview: {
+            select: { title: 'title', eyebrow: 'eyebrow' },
+            prepare: ({ title, eyebrow }) => ({ title: 'Hero Section', subtitle: withUntitled(title || eyebrow) }),
+          },
         }),
         defineArrayMember({
           name: 'richTextSection',
@@ -138,6 +145,10 @@ export default defineType({
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
           ],
+          preview: {
+            select: { title: 'title' },
+            prepare: ({ title }) => ({ title: 'Rich Text Section', subtitle: withUntitled(title) }),
+          },
         }),
         defineArrayMember({
           name: 'cardsSection',
@@ -164,6 +175,10 @@ export default defineType({
             }),
             defineField({ name: 'cards', title: 'Cards', type: 'array', of: [simpleCard] }),
           ],
+          preview: {
+            select: { title: 'title', cards: 'cards' },
+            prepare: ({ title, cards }) => ({ title: 'Cards Section', subtitle: title || withCount('card', cards?.length) }),
+          },
         }),
         defineArrayMember({
           name: 'serviceListSection',
@@ -180,6 +195,10 @@ export default defineType({
               validation: (r) => r.min(1),
             }),
           ],
+          preview: {
+            select: { title: 'title', services: 'services' },
+            prepare: ({ title, services }) => ({ title: 'Service List Section', subtitle: title || withCount('service', services?.length) }),
+          },
         }),
         defineArrayMember({
           name: 'tagListSection',
@@ -190,6 +209,10 @@ export default defineType({
             defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
             defineField({ name: 'tags', title: 'Tags', type: 'array', of: [{ type: 'string' }] }),
           ],
+          preview: {
+            select: { title: 'title', tags: 'tags' },
+            prepare: ({ title, tags }) => ({ title: 'Tag List Section', subtitle: title || withCount('tag', tags?.length) }),
+          },
         }),
         defineArrayMember({
           name: 'ctaSection',
@@ -200,6 +223,10 @@ export default defineType({
             defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
             defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
           ],
+          preview: {
+            select: { title: 'title', actions: 'actions' },
+            prepare: ({ title, actions }) => ({ title: 'CTA Section', subtitle: title || withCount('action', actions?.length) }),
+          },
         }),
         defineArrayMember({
           name: 'imageShowcaseSection',
@@ -216,6 +243,10 @@ export default defineType({
               validation: (r) => r.min(1).max(2).required(),
             }),
           ],
+          preview: {
+            select: { title: 'title', items: 'items' },
+            prepare: ({ title, items }) => ({ title: 'Image Showcase Section', subtitle: title || withCount('image', items?.length) }),
+          },
         }),
         defineArrayMember({
           name: 'reviewsSection',
@@ -244,6 +275,10 @@ export default defineType({
             defineField({ name: 'ctaLabel', title: 'CTA Label', type: 'string' }),
             defineField({ name: 'ctaHref', title: 'CTA Href', type: 'string' }),
           ],
+          preview: {
+            select: { title: 'title', reviews: 'reviews' },
+            prepare: ({ title, reviews }) => ({ title: 'Reviews Section', subtitle: title || withCount('review', reviews?.length) }),
+          },
         }),
       ],
     }),
