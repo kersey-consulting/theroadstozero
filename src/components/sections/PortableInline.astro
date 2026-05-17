@@ -8,4 +8,17 @@ interface Props {
 const { children = [] } = Astro.props;
 ---
 
-{children.map((child) => child.type === 'strong' ? <strong>{child.text}</strong> : child.text)}
+{children.map((child) => {
+  if (child.type === 'strong') {
+    return <strong><PortableInline children={child.children} /></strong>;
+  }
+
+  if (child.type === 'link') {
+    return <a href={child.href}><PortableInline children={child.children} /></a>;
+  }
+
+  const parts = child.text.split('\n');
+  return parts.map((part, index) => (
+    index === 0 ? part : [<br />, part]
+  ));
+})}
