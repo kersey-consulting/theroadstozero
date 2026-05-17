@@ -1,6 +1,13 @@
 export interface PortableTextChild {
+  _type?: string;
   text?: string;
   marks?: string[];
+}
+
+export interface PortableTextMarkDef {
+  _key?: string;
+  _type?: string;
+  href?: string;
 }
 
 export interface PortableTextBlock {
@@ -9,24 +16,39 @@ export interface PortableTextBlock {
   listItem?: string;
   level?: number;
   children?: PortableTextChild[];
+  markDefs?: PortableTextMarkDef[];
 }
 
 export type PortableInline =
   | { type: 'text'; text: string }
-  | { type: 'strong'; text: string };
+  | { type: 'strong'; children: PortableInline[] }
+  | { type: 'link'; href: string; children: PortableInline[] };
 
 export type PortableNode =
   | { type: 'paragraph' | 'h3' | 'h4' | 'blockquote'; children: PortableInline[] }
   | { type: 'bulletList'; items: PortableInline[][] };
 
-export function inlineChildren(children: PortableTextChild[] = []): PortableInline[] {
+export function inlineChildren(children: PortableTextChild[] = [], markDefs: PortableTextMarkDef[] = []): PortableInline[] {
   return children
     .map((child) => {
-      const text = child.text?.trim() ? child.text : child.text ?? '';
+      const text = child.text ?? '';
       if (!text) return null;
-      return child.marks?.includes('strong')
-        ? { type: 'strong', text }
-        : { type: 'text', text };
+
+      let node: PortableInline = { type: 'text', text };
+
+      for (const mark of child.marks ?? []) {
+        if (mark === 'strong') {
+          node = { type: 'strong', children: [node] };
+          continue;
+        }
+
+        const def = markDefs.find((item) => item._key === mark && item._type === 'link' && item.href);
+        if (def?.href) {
+          node = { type: 'link', href: def.href, children: [node] };
+        }
+      }
+
+      return node;
     })
     .filter(Boolean) as PortableInline[];
 }
@@ -50,7 +72,7 @@ export function portableNodes(blocks: PortableTextBlock[] = []): PortableNode[] 
     const text = blockText(block);
     if (!text) continue;
 
-    const children = inlineChildren(block.children ?? []);
+    const children = inlineChildren(block.children ?? [], block.markDefs ?? []);
     if (children.length === 0) continue;
 
     if (block.listItem === 'bullet') {
