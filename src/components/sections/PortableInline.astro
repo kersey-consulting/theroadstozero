@@ -6,21 +6,31 @@ interface Props {
 }
 
 const { children = [] } = Astro.props;
+
+const escapeHtml = (value = '') => value
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#39;');
+
+const escapeAttr = (value = '') => escapeHtml(value);
+
+const renderInline = (nodes: PortableInline[] = []): string => {
+  return nodes.map((node) => {
+    if (node.type === 'strong') {
+      return `<strong>${renderInline(node.children)}</strong>`;
+    }
+
+    if (node.type === 'link') {
+      return `<a href="${escapeAttr(node.href)}">${renderInline(node.children)}</a>`;
+    }
+
+    return escapeHtml(node.text).replaceAll('\n', '<br />');
+  }).join('');
+};
+
+const html = renderInline(children);
 ---
 
-{children.map((child) => {
-  if (child.type === 'strong') {
-    return <strong><PortableInline children={child.children} /></strong>;
-  }
-
-  if (child.type === 'link') {
-    return <a href={child.href}><PortableInline children={child.children} /></a>;
-  }
-
-  return child.text.split('\n').map((part, index) => (
-    <>
-      {index > 0 && <br />}
-      {part}
-    </>
-  ));
-})}
+<Fragment set:html={html} />
