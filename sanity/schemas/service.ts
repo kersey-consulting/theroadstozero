@@ -136,6 +136,10 @@ export default defineType({
             defineField({ name: 'backgroundImage', title: 'Background Image', type: 'image', options: { hotspot: true } }),
             defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
           ],
+          preview: {
+            select: { title: 'title', eyebrow: 'eyebrow' },
+            prepare: ({ title, eyebrow }) => ({ title: 'Hero Section', subtitle: withUntitled(title || eyebrow) }),
+          },
         }),
         defineArrayMember({
           name: 'richTextSection',
