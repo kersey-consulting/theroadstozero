@@ -63,6 +63,14 @@ const reviewItem = {
 const withUntitled = (value?: string) => value || 'Untitled section';
 const withCount = (label: string, count?: number) => `${count ?? 0} ${label}${count === 1 ? '' : 's'}`;
 
+const faqItem = {
+  type: 'object',
+  fields: [
+    defineField({ name: 'question', title: 'Question', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'answer', title: 'Answer', type: 'array', of: [{ type: 'block' }], validation: (r) => r.required() }),
+  ],
+};
+
 export default defineType({
   name: 'page',
   title: 'Page',
@@ -331,6 +339,20 @@ export default defineType({
           preview: {
             select: { title: 'title', reviews: 'reviews' },
             prepare: ({ title, reviews }) => ({ title: 'Reviews Section', subtitle: title || withCount('review', reviews?.length) }),
+          },
+        }),
+        defineArrayMember({
+          name: 'faqSection',
+          title: 'FAQ Section',
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Title', type: 'string' }),
+            defineField({ name: 'description', title: 'Description', type: 'text', rows: 3 }),
+            defineField({ name: 'items', title: 'Questions & Answers', type: 'array', of: [faqItem], validation: (r) => r.min(1) }),
+          ],
+          preview: {
+            select: { title: 'title', items: 'items' },
+            prepare: ({ title, items }) => ({ title: 'FAQ Section', subtitle: title || withCount('question', items?.length) }),
           },
         }),
         defineArrayMember({

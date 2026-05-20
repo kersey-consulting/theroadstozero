@@ -1,0 +1,114 @@
+---
+import PortableInline from './PortableInline.astro';
+import { portableNodes } from '@/lib/portableText';
+
+interface Block {
+  style?: string;
+  listItem?: string;
+  children?: { text?: string }[];
+}
+
+interface FaqItem {
+  question?: string;
+  answer?: Block[];
+}
+
+interface Props {
+  section: {
+    title?: string;
+    description?: string;
+    items?: FaqItem[];
+  };
+  variant?: 'default' | 'alt';
+}
+
+const { section, variant = 'default' } = Astro.props;
+const items = section?.items ?? [];
+---
+
+<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+  <div class="narrow">
+    {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
+    {section?.description && <p class="centeredText">{section.description}</p>}
+
+    <div class="faqList">
+      {items.map((item, index) => {
+        const nodes = portableNodes(item.answer ?? []);
+        const panelId = `faq-panel-${index}`;
+        return (
+          <details class="faqItem">
+            <summary class="faqQuestion" aria-controls={panelId}>
+              <span>{item.question}</span>
+              <span class="faqIcon" aria-hidden="true">+</span>
+            </summary>
+            <div id={panelId} class="faqAnswer">
+              {nodes.map((node) => {
+                if (node.type === 'bulletList') return <ul>{node.items.map((answerItem) => <li><PortableInline children={answerItem} /></li>)}</ul>;
+                if (node.type === 'h3') return <h3><PortableInline children={node.children} /></h3>;
+                if (node.type === 'h4') return <h4><PortableInline children={node.children} /></h4>;
+                if (node.type === 'blockquote') return <blockquote><PortableInline children={node.children} /></blockquote>;
+                return <p><PortableInline children={node.children} /></p>;
+              })}
+            </div>
+          </details>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section, .sectionAlt { padding: 5rem 1.5rem; }
+  .sectionAlt { background: rgba(210, 185, 150, 0.12); }
+  .narrow { width: min(100%, 1000px); margin: 0 auto; }
+  .sectionTitleCentered { margin: 0 0 1.5rem; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.15; text-align: center; }
+  .centeredText { text-align: center; max-width: 760px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.85; }
+  .faqList { display: grid; gap: 1rem; }
+  .faqItem {
+    background: white;
+    border: 1px solid rgba(210, 185, 150, 0.24);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+  .faqQuestion {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+  .faqQuestion::-webkit-details-marker { display: none; }
+  .faqIcon {
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-secondary);
+    transition: transform 0.2s ease;
+  }
+  .faqItem[open] .faqIcon {
+    transform: rotate(45deg);
+  }
+  .faqAnswer {
+    padding: 0 1.5rem 1.5rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .faqAnswer p, .faqAnswer blockquote { margin: 0; font-size: 1rem; line-height: 1.8; }
+  .faqAnswer h3, .faqAnswer h4 { margin: 0.5rem 0 0; line-height: 1.2; }
+  .faqAnswer h3 { font-size: 1.25rem; }
+  .faqAnswer h4 { font-size: 1.1rem; }
+  .faqAnswer blockquote { padding-left: 1rem; border-left: 3px solid rgba(185, 149, 94, 0.5); font-style: italic; }
+  .faqAnswer ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.5rem; font-size: 1rem; line-height: 1.8; }
+  .faqAnswer li { font-size: inherit; line-height: inherit; }
+  @media (max-width: 900px) {
+    .section, .sectionAlt { padding: 4rem 1.25rem; }
+    .faqQuestion { padding: 1.1rem 1.25rem; }
+    .faqAnswer { padding: 0 1.25rem 1.25rem; }
+  }
+</style>
