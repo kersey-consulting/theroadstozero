@@ -19,6 +19,6 @@ const { slug } = Astro.params;
 const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug }).catch(() => null);
 ---
 
-<BaseLayout title={category?.seo?.title ?? `${category?.title ?? 'Service Category'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''}>
+<BaseLayout title={category?.seo?.title ?? `${category?.title ?? 'Service Category'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''} sections={category?.sections ?? []}>
   <PageSections sections={category?.sections ?? []} />
 </BaseLayout>

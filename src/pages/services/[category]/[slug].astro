@@ -69,6 +69,6 @@ const staffMembers = await sanityClient.fetch(`*[_type == "staffMember"] | order
 }`).catch(() => []);
 ---
 
-<BaseLayout title={service?.seo?.title ?? service?.name ?? 'Service'} description={service?.seo?.description ?? ''}>
+<BaseLayout title={service?.seo?.title ?? service?.name ?? 'Service'} description={service?.seo?.description ?? ''} sections={service?.sections ?? []}>
   <PageSections sections={service?.sections ?? []} staffMembers={staffMembers} />
 </BaseLayout>

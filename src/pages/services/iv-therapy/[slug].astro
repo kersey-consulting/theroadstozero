@@ -24,6 +24,6 @@ const service = await sanityClient.fetch(queries.serviceBySlug, { slug }).catch(
 const staffMembers = await sanityClient.fetch(queries.staffMembers).catch(() => []);
 ---
 
-<BaseLayout title={service?.seo?.title ?? service?.name ?? 'Service'} description={service?.seo?.description ?? service?.shortDescription ?? service?.heroText ?? ''}>
+<BaseLayout title={service?.seo?.title ?? service?.name ?? 'Service'} description={service?.seo?.description ?? service?.shortDescription ?? service?.heroText ?? ''} sections={service?.sections ?? []}>
   <PageSections sections={service?.sections ?? []} staffMembers={staffMembers} />
 </BaseLayout>
