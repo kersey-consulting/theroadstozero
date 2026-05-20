@@ -7,6 +7,6 @@ const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug: 'iv-therapy' }).catch(() => null);
 ---
 
-<BaseLayout title={category?.seo?.title ?? `${category?.title ?? 'IV Therapy & Vitamin Injections'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''}>
+<BaseLayout title={category?.seo?.title ?? `${category?.title ?? 'IV Therapy & Vitamin Injections'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''} sections={category?.sections ?? []}>
   <PageSections sections={category?.sections ?? []} />
 </BaseLayout>

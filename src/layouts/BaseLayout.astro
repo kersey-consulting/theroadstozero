@@ -1,16 +1,24 @@
 ---
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import { buildJsonLd } from '@/lib/schema';
 import '@/styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  sections?: any[];
 }
 
-const { title, description = '', ogImage = '' } = Astro.props;
+const { title, description = '', ogImage = '', sections = [] } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const jsonLd = buildJsonLd({
+  title,
+  description,
+  url: canonicalUrl.toString(),
+  sections,
+});
 ---
 
 <!doctype html>
@@ -29,6 +37,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" href="/icons/icon.ico" />
     <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
     <link rel="apple-touch-icon" href="/icons/icon.png" />
+    {jsonLd.map((entry) => (
+      <script type="application/ld+json" set:html={JSON.stringify(entry)} />
+    ))}
   </head>
   <body>
     <Header />
