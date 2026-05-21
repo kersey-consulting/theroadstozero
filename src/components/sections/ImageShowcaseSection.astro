@@ -100,7 +100,12 @@ const twoUp = items.length === 2;
   .grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
   .gridTwo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .card { background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08); }
-  .image { display: block; width: 100%; }
+  .image {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+  }
   .copy { display: grid; gap: 0.85rem; padding: 1.5rem; }
   .copy h3, .copy h4, .copy h5 { margin: 0; line-height: 1.2; }
   .copy h3 { font-size: 1.3rem; }
