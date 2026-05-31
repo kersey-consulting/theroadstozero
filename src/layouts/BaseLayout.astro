@@ -43,9 +43,21 @@ const jsonLd = buildJsonLd({
   </head>
   <body>
     <Header />
-    <main id="main">
+    <main id="main" class="siteMain">
       <slot />
     </main>
     <Footer />
   </body>
 </html>
+
+<style>
+  .siteMain {
+    padding-top: var(--site-header-offset, 11rem);
+  }
+
+  @media (max-width: 1110px) {
+    .siteMain {
+      padding-top: var(--site-header-offset-mobile, 9.5rem);
+    }
+  }
+</style>
