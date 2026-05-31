@@ -1,7 +1,5 @@
 .header {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    position: relative;
     background: var(--color-background);
     box-shadow: 2px 2px 10px;
 }
