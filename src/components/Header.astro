@@ -41,8 +41,21 @@ const fallbackNavigation = {
 };
 ---
 
-<HeaderClient
-  client:load
-  settings={settings || fallbackSettings}
-  navigation={navigation || fallbackNavigation}
-/>
+<div class="headerStickyShell">
+  <HeaderClient
+    client:load
+    settings={settings || fallbackSettings}
+    navigation={navigation || fallbackNavigation}
+  />
+</div>
+
+<style>
+  .headerStickyShell {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--color-background);
+  }
+</style>
