@@ -1,0 +1,149 @@
+---
+const success = Astro.url.searchParams.get('contact') === 'success';
+const error = Astro.url.searchParams.get('contact') === 'error';
+---
+
+<section class="contactFormSection">
+  <div class="contactFormCard">
+    <div class="contactFormIntro">
+      <h2>Send Us a Message</h2>
+      <p>Have a question or comment? Fill out the form below and we’ll reach out as soon as we can.</p>
+    </div>
+
+    {success && <p class="formNotice success">Thanks, your message has been sent.</p>}
+    {error && <p class="formNotice error">Sorry, something went wrong sending your message. Please try again.</p>}
+
+    <form method="POST" action="/api/contact" class="contactForm">
+      <input type="text" name="company" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <div class="fieldRow twoUp">
+        <label>
+          <span>First Name</span>
+          <input type="text" name="firstName" required autocomplete="given-name" />
+        </label>
+
+        <label>
+          <span>Last Name</span>
+          <input type="text" name="lastName" required autocomplete="family-name" />
+        </label>
+      </div>
+
+      <div class="fieldRow">
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" required autocomplete="email" />
+        </label>
+      </div>
+
+      <div class="fieldRow">
+        <label>
+          <span>Question / Comment</span>
+          <textarea name="message" rows={6} required></textarea>
+        </label>
+      </div>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+</section>
+
+<style>
+  .contactFormSection {
+    padding: 0 1.5rem 5rem;
+  }
+  .contactFormCard {
+    width: min(100%, 900px);
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  }
+  .contactFormIntro {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .contactFormIntro h2,
+  .contactFormIntro p,
+  .formNotice {
+    margin: 0;
+  }
+  .formNotice {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+  }
+  .formNotice.success {
+    background: rgba(70, 140, 90, 0.12);
+    color: #2f6b3e;
+  }
+  .formNotice.error {
+    background: rgba(194, 14, 14, 0.12);
+    color: #8f1111;
+  }
+  .contactForm {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .fieldRow {
+    display: grid;
+    gap: 1rem;
+  }
+  .twoUp {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  label {
+    display: grid;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+  input,
+  textarea {
+    width: 100%;
+    border: 1px solid rgba(112, 94, 35, 0.2);
+    border-radius: 14px;
+    background: #fff;
+    padding: 0.95rem 1rem;
+    color: var(--color-primary);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 180px;
+  }
+  button {
+    justify-self: start;
+    padding: 1rem 1.5rem;
+    border: 2px solid var(--color-primary);
+    border-radius: 15px;
+    color: var(--color-primary);
+    background: transparent;
+    font-weight: 700;
+  }
+  button:hover,
+  button:focus {
+    background: var(--color-surface);
+  }
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  @media (max-width: 768px) {
+    .contactFormSection {
+      padding: 0 1.25rem 4rem;
+    }
+    .contactFormCard {
+      padding: 1.5rem;
+    }
+    .twoUp {
+      grid-template-columns: 1fr;
+    }
+    button {
+      width: 100%;
+      justify-self: stretch;
+    }
+  }
+</style>
