@@ -291,7 +291,7 @@
         height: 28px;
     }
 }
-.socialLink span {
+.socialLabel {
     @media (max-width: 1110px) {
         display: none;
     }
