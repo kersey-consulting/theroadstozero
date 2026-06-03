@@ -122,6 +122,14 @@
     background: var(--color-surface);
     padding: 0.5rem;
     justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 1110px) {
+    .socialLinks {
+        gap: 0.5rem;
+        padding: 0.5rem 3.5rem 0.5rem 0.75rem;
+    }
 }
 .socialLink svg {
     transform-origin: center;
@@ -264,12 +272,25 @@
     align-items: center;
     gap: 0.5rem;
 }
+
+@media (max-width: 1110px) {
+    .socialLink {
+        min-height: 32px;
+    }
+}
 .socialLink svg {
     fill: var(--color-primary);
     width: 32px;
     height: 32px;
 }
-.socialLink span {
+
+@media (max-width: 1110px) {
+    .socialLink svg {
+        width: 28px;
+        height: 28px;
+    }
+}
+.socialLabel {
     @media (max-width: 1110px) {
         display: none;
     }
