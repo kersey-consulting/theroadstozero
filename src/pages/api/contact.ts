@@ -1,5 +1,4 @@
 import type { APIRoute } from 'astro';
-import nodemailer from 'nodemailer';
 
 const getEnv = (localsEnv: Record<string, any> | undefined, key: string) => {
   if (localsEnv && typeof localsEnv[key] !== 'undefined') return String(localsEnv[key]);
@@ -24,46 +23,54 @@ export const POST: APIRoute = async ({ request, locals, redirect }) => {
     }
 
     const runtimeEnv = (locals as any)?.runtime?.env;
-    const host = getEnv(runtimeEnv, 'ZOHO_SMTP_HOST') || 'smtp.zoho.com';
-    const port = Number(getEnv(runtimeEnv, 'ZOHO_SMTP_PORT') || '465');
-    const user = getEnv(runtimeEnv, 'ZOHO_SMTP_USER');
-    const pass = getEnv(runtimeEnv, 'ZOHO_SMTP_PASS');
-    const from = getEnv(runtimeEnv, 'CONTACT_FROM_EMAIL') || user;
+    const apiUrl = getEnv(runtimeEnv, 'CONTACT_MAIL_API_URL');
+    const apiKey = getEnv(runtimeEnv, 'CONTACT_MAIL_API_KEY');
+    const from = getEnv(runtimeEnv, 'CONTACT_FROM_EMAIL');
     const to = getEnv(runtimeEnv, 'CONTACT_TO_EMAIL') || 'info@theroadstozero.com';
 
-    if (!user || !pass || !from || !to) {
-      console.error('Missing contact form email configuration');
+    if (!apiUrl || !apiKey || !from || !to) {
+      console.error('Missing contact form mail API configuration');
       return redirect('/contact?contact=error', 303);
     }
 
-    const transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465,
-      auth: { user, pass },
+    const subject = `New website contact from ${firstName} ${lastName}`;
+    const text = [
+      `First Name: ${firstName}`,
+      `Last Name: ${lastName}`,
+      `Email: ${email}`,
+      '',
+      'Message:',
+      message,
+    ].join('\n');
+    const html = `
+      <p><strong>First Name:</strong> ${firstName}</p>
+      <p><strong>Last Name:</strong> ${lastName}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Message:</strong></p>
+      <p>${message.replace(/\n/g, '<br />')}</p>
+    `;
+
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        from,
+        to,
+        replyTo: email,
+        subject,
+        text,
+        html,
+      }),
     });
 
-    await transporter.sendMail({
-      from,
-      to,
-      replyTo: email,
-      subject: `New website contact from ${firstName} ${lastName}`,
-      text: [
-        `First Name: ${firstName}`,
-        `Last Name: ${lastName}`,
-        `Email: ${email}`,
-        '',
-        'Message:',
-        message,
-      ].join('\n'),
-      html: `
-        <p><strong>First Name:</strong> ${firstName}</p>
-        <p><strong>Last Name:</strong> ${lastName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br />')}</p>
-      `,
-    });
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => '');
+      console.error('Contact form mail API request failed', response.status, errorText);
+      return redirect('/contact?contact=error', 303);
+    }
 
     return redirect('/contact?contact=success', 303);
   } catch (error) {
