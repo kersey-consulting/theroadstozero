@@ -5,6 +5,14 @@ const getEnv = (localsEnv: Record<string, any> | undefined, key: string) => {
   return import.meta.env[key as keyof ImportMetaEnv] ? String(import.meta.env[key as keyof ImportMetaEnv]) : '';
 };
 
+const escapeHtml = (value: string) =>
+  value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+
 export const POST: APIRoute = async ({ request, locals, redirect }) => {
   try {
     const formData = await request.formData();
@@ -23,52 +31,65 @@ export const POST: APIRoute = async ({ request, locals, redirect }) => {
     }
 
     const runtimeEnv = (locals as any)?.runtime?.env;
-    const apiUrl = getEnv(runtimeEnv, 'CONTACT_MAIL_API_URL');
+    const apiUrl = getEnv(runtimeEnv, 'CONTACT_MAIL_API_URL') || 'https://api.zeptomail.com/v1.1/email';
     const apiKey = getEnv(runtimeEnv, 'CONTACT_MAIL_API_KEY');
     const from = getEnv(runtimeEnv, 'CONTACT_FROM_EMAIL');
+    const fromName = getEnv(runtimeEnv, 'CONTACT_FROM_NAME') || 'The Road to Zero';
     const to = getEnv(runtimeEnv, 'CONTACT_TO_EMAIL') || 'info@theroadstozero.com';
+    const toName = getEnv(runtimeEnv, 'CONTACT_TO_NAME') || 'The Road to Zero';
 
-    if (!apiUrl || !apiKey || !from || !to) {
-      console.error('Missing contact form mail API configuration');
+    if (!apiKey || !from || !to) {
+      console.error('Missing ZeptoMail configuration');
       return redirect('/contact?contact=error', 303);
     }
 
-    const subject = `New website contact from ${firstName} ${lastName}`;
-    const text = [
-      `First Name: ${firstName}`,
-      `Last Name: ${lastName}`,
-      `Email: ${email}`,
-      '',
-      'Message:',
-      message,
-    ].join('\n');
-    const html = `
-      <p><strong>First Name:</strong> ${firstName}</p>
-      <p><strong>Last Name:</strong> ${lastName}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Message:</strong></p>
-      <p>${message.replace(/\n/g, '<br />')}</p>
-    `;
+    const safeFirstName = escapeHtml(firstName);
+    const safeLastName = escapeHtml(lastName);
+    const safeEmail = escapeHtml(email);
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br />');
 
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
+        Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Zoho-enczapikey ${apiKey}`,
       },
       body: JSON.stringify({
-        from,
-        to,
-        replyTo: email,
-        subject,
-        text,
-        html,
+        from: {
+          address: from,
+          name: fromName,
+        },
+        to: [
+          {
+            email_address: {
+              address: to,
+              name: toName,
+            },
+          },
+        ],
+        reply_to: [
+          {
+            address: email,
+            name: `${firstName} ${lastName}`.trim(),
+          },
+        ],
+        subject: `New website contact from ${firstName} ${lastName}`,
+        htmlbody: `
+          <div>
+            <p><strong>First Name:</strong> ${safeFirstName}</p>
+            <p><strong>Last Name:</strong> ${safeLastName}</p>
+            <p><strong>Email:</strong> ${safeEmail}</p>
+            <p><strong>Message:</strong></p>
+            <p>${safeMessage}</p>
+          </div>
+        `,
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text().catch(() => '');
-      console.error('Contact form mail API request failed', response.status, errorText);
+      console.error('ZeptoMail request failed', response.status, errorText);
       return redirect('/contact?contact=error', 303);
     }
 
