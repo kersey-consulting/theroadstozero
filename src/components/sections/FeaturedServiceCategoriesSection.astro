@@ -20,7 +20,7 @@ interface Category {
 }
 
 interface Props {
-  section: {
+  section: { id?: string;
     title?: string;
     intro?: string;
     categories?: Category[];
@@ -43,7 +43,7 @@ const renderChildren = (children: PortableTextChild[] = []) =>
   }).join('');
 ---
 
-<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+<section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="wide">
     {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
     {section?.intro && <p class="centeredText">{section.intro}</p>}

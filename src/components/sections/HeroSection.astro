@@ -12,6 +12,7 @@ interface Action {
 
 interface Props {
   section: {
+    id?: string;
     eyebrow?: string;
     title: string;
     content?: { style?: string; listItem?: string; children?: { text?: string }[] }[];
@@ -47,7 +48,7 @@ const hasImage = Boolean(imageUrl);
 const reverse = section?.imagePosition === 'left';
 ---
 
-<Hero id="hero" backgroundImage={backgroundImageUrl} theme="tertiary" backgroundParallax={true} hasRightColumn={hasImage} reverse={reverse}>
+<Hero id={section?.id} backgroundImage={backgroundImageUrl} theme="tertiary" backgroundParallax={true} hasRightColumn={hasImage} reverse={reverse}>
   <div slot="left" class:list={['heroContent', !hasImage && 'fullWidth']}>
     {section?.eyebrow && <p class="eyebrow">{section.eyebrow}</p>}
     <h1 class="heroTitle">{section?.title}</h1>

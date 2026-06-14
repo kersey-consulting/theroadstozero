@@ -10,7 +10,7 @@ interface ReviewItem {
 }
 
 interface Props {
-  section: {
+  section: { id?: string;
     title?: string;
     intro?: string;
     maxReviewsPerRow?: number;
@@ -40,7 +40,7 @@ const formatDate = (value?: string) => {
 const renderStars = (rating = 5) => '★'.repeat(Math.max(1, Math.min(5, Math.round(rating))));
 ---
 
-<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+<section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="wide">
     {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
     {section?.intro && <p class="centeredText">{section.intro}</p>}

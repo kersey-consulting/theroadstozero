@@ -1,9 +1,9 @@
 ---
 import Button from '@/components/Button.astro';
-interface Props { section: { title?: string; text?: string; actions?: { label: string; href: string }[] } }
+interface Props { section: { id?: string; title?: string; text?: string; actions?: { label: string; href: string }[] } }
 const { section } = Astro.props;
 ---
-<section class="section">
+<section id={section?.id} class="section">
   <div class="ctaCard">
     {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
     {section?.text && <p class="centeredText">{section.text}</p>}

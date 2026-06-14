@@ -9,7 +9,7 @@ interface Block {
 }
 
 interface Props {
-  section: {
+  section: { id?: string;
     title?: string;
     content?: Block[];
   };
@@ -20,7 +20,7 @@ const { section, variant = 'default' } = Astro.props;
 const nodes = portableNodes(section?.content ?? []);
 ---
 
-<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+<section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="narrow">
     {section?.title && <h2 class="sectionTitle">{section.title}</h2>}
     <div class="copy">

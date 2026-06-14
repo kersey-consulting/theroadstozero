@@ -118,6 +118,7 @@ export default defineType({
           title: 'Hero Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
             defineField({ name: 'title', title: 'Title', type: 'string', validation: (r) => r.required() }),
             defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
@@ -155,6 +156,7 @@ export default defineType({
           title: 'Rich Text Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
           ],
@@ -168,6 +170,7 @@ export default defineType({
           title: 'Cards Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
             defineField({
@@ -198,6 +201,7 @@ export default defineType({
           title: 'Featured Service Categories Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
             defineField({
@@ -218,6 +222,7 @@ export default defineType({
           title: 'Service List Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
             defineField({
@@ -238,6 +243,7 @@ export default defineType({
           title: 'Staff Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
             defineField({
@@ -257,6 +263,7 @@ export default defineType({
           title: 'Tag List Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
             defineField({ name: 'tags', title: 'Tags', type: 'array', of: [{ type: 'string' }] }),
@@ -271,6 +278,7 @@ export default defineType({
           title: 'Split Content Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'eyebrow', title: 'Eyebrow', type: 'string' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
@@ -300,6 +308,7 @@ export default defineType({
           title: 'CTA Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
             defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
@@ -314,6 +323,7 @@ export default defineType({
           title: 'Reviews Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3 }),
             defineField({
@@ -346,6 +356,7 @@ export default defineType({
           title: 'FAQ Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'description', title: 'Description', type: 'text', rows: 3 }),
             defineField({ name: 'items', title: 'Questions & Answers', type: 'array', of: [faqItem], validation: (r) => r.min(1) }),
@@ -360,6 +371,7 @@ export default defineType({
           title: 'Image Showcase Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Section Title', type: 'string' }),
             defineField({ name: 'intro', title: 'Section Intro', type: 'array', of: [{ type: 'block' }] }),
             defineField({
@@ -380,6 +392,7 @@ export default defineType({
           title: 'Contact Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
             defineField({ name: 'phone', title: 'Phone', type: 'string' }),
@@ -397,6 +410,7 @@ export default defineType({
           title: 'Legal Section',
           type: 'object',
           fields: [
+            defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
             defineField({ name: 'content', title: 'Content', type: 'array', of: [{ type: 'block' }] }),
           ],
