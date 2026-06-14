@@ -63,6 +63,25 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
+/* Smooth-scroll for in-page jumplinks; scroll-padding-top keeps the target
+   below the fixed header (matches --site-header-offset in BaseLayout). */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--site-header-offset, 146px);
+}
+
+@media (max-width: 1110px) {
+    html {
+        scroll-padding-top: var(--site-header-offset-mobile, 111px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
 body:has(.disable-scroll) {
     overflow: hidden;
 }
