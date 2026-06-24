@@ -40,6 +40,15 @@ const jsonLd = buildJsonLd({
     {jsonLd.map((entry) => (
       <script type="application/ld+json" set:html={JSON.stringify(entry)} />
     ))}
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HWWBSHGEWT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-HWWBSHGEWT');
+    </script>
   </head>
   <body>
     <Header />
