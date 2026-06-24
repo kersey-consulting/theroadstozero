@@ -18,7 +18,7 @@ interface Item {
 }
 
 interface Props {
-  section: {
+  section: { id?: string;
     title?: string;
     intro?: Block[];
     items?: Item[];
@@ -48,7 +48,7 @@ const items = (section?.items ?? []).map((item) => ({
 const twoUp = items.length === 2;
 ---
 
-<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+<section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="narrow">
     {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
     {introNodes.length > 0 && (

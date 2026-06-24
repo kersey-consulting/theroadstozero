@@ -1,8 +1,8 @@
 ---
-interface Props { section: { title?: string; intro?: string; tags?: string[] }; variant?: 'default' | 'alt'; }
+interface Props { section: { id?: string; title?: string; intro?: string; tags?: string[] }; variant?: 'default' | 'alt'; }
 const { section, variant = 'default' } = Astro.props;
 ---
-<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+<section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="narrow">
     {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
     {section?.intro && <p class="centeredText">{section.intro}</p>}

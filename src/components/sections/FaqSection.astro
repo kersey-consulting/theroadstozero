@@ -14,7 +14,7 @@ interface FaqItem {
 }
 
 interface Props {
-  section: {
+  section: { id?: string;
     title?: string;
     description?: string;
     items?: FaqItem[];
@@ -26,7 +26,7 @@ const { section, variant = 'default' } = Astro.props;
 const items = section?.items ?? [];
 ---
 
-<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+<section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="narrow">
     {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
     {section?.description && <p class="centeredText">{section.description}</p>}

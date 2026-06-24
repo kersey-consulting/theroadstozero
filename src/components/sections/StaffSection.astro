@@ -9,7 +9,7 @@ interface Staff {
   photo?: string;
 }
 interface Props {
-  section: { title?: string; intro?: string; staffMembers?: StaffRef[] };
+  section: { id?: string; title?: string; intro?: string; staffMembers?: StaffRef[] };
   staffMembers?: Staff[];
   variant?: 'default' | 'alt';
 }
@@ -18,7 +18,7 @@ const refs = section?.staffMembers ?? [];
 const featured = refs.map((r) => staffMembers.find((s) => s._id === r._ref)).filter(Boolean);
 const blockText = (blocks = []) => blocks.map((b: any) => b.children?.map((c: any) => c.text).join('')).filter(Boolean);
 ---
-<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+<section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class="narrow">
     {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
     {section?.intro && <p class="centeredText">{section.intro}</p>}

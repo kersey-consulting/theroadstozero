@@ -16,7 +16,7 @@ interface Action {
 }
 
 interface Props {
-  section: {
+  section: { id?: string;
     eyebrow?: string;
     title?: string;
     content?: Block[];
@@ -46,7 +46,7 @@ const imageUrl = section?.imageUrl ?? resolveImageUrl(section?.image);
 const reverse = section?.imagePosition === 'left';
 ---
 
-<section class:list={['section', variant === 'alt' && 'sectionAlt']}>
+<section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
   <div class:list={['inner', reverse && 'reverse']}>
     <div class="copyColumn">
       {section?.eyebrow && <p class="eyebrow">{section.eyebrow}</p>}
