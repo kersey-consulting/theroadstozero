@@ -4,21 +4,17 @@ import { getSanityClient } from '@/lib/sanity';
 // Server-rendered so newly published Sanity content appears without a rebuild.
 export const prerender = false;
 
-// Static, hand-built routes (file-based pages in src/pages). Keep in sync when
-// adding/removing public top-level pages. Excludes /sandbox and /404.
+// Hand-built routes with their own file in src/pages. Most former top-level pages
+// are now self-serve `page` documents emitted by the dynamic loop below; only
+// pages with a custom route (/, /contact) or with no backing doc (service index
+// listings) are listed here. Excludes /sandbox and /404.
 // `pageSlug` links a route to its Sanity `page` document so we can pull a real
-// lastmod from `_updatedAt`. Routes without a backing doc (index listings) omit it.
+// lastmod from `_updatedAt`. Routes without a backing doc omit it.
 const STATIC_ROUTES: Array<{ path: string; pageSlug?: string }> = [
   { path: '/', pageSlug: 'home' },
-  { path: '/about', pageSlug: 'about' },
-  { path: '/why-us', pageSlug: 'why-us' },
-  { path: '/faq', pageSlug: 'faq' },
   { path: '/contact', pageSlug: 'contact' },
-  { path: '/locations', pageSlug: 'locations' },
-  { path: '/referral', pageSlug: 'referral' },
   { path: '/services' },
   { path: '/services/iv-therapy' },
-  { path: '/privacy-policy', pageSlug: 'privacy-policy' },
 ];
 
 type SitemapEntry = { loc: string; lastmod?: string };
@@ -66,6 +62,19 @@ export const GET: APIRoute = async ({ site, locals }) => {
     loc: `${origin}${route.path}`,
     lastmod: route.pageSlug ? pageUpdatedAt.get(route.pageSlug) : undefined,
   }));
+
+  // Slugs already emitted above via a hardcoded route, or that map to a different
+  // canonical URL (`home` → `/`) / have no public catch-all page. Everything else
+  // is a self-serve `page` document rendered by src/pages/[...slug].astro.
+  const coveredSlugs = new Set<string>(
+    STATIC_ROUTES.map((route) => route.pageSlug).filter((slug): slug is string => Boolean(slug)),
+  );
+  for (const slug of ['home', 'services', 'sandbox', '404']) coveredSlugs.add(slug);
+
+  for (const page of pages) {
+    if (coveredSlugs.has(page.slug)) continue;
+    entries.push({ loc: `${origin}/${page.slug}`, lastmod: page._updatedAt });
+  }
 
   for (const category of categories) {
     entries.push({ loc: `${origin}/services/${category.slug}`, lastmod: category._updatedAt });

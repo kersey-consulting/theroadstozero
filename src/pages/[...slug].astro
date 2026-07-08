@@ -1,0 +1,44 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageSections from '@/components/sections/PageSections.astro';
+import { getSanityClient, queries } from '@/lib/sanity';
+
+// Server-rendered so a page published in Sanity is live immediately, no rebuild.
+export const prerender = false;
+
+// Slugs served by their own hardcoded route (or that map to a different canonical
+// URL, e.g. `home` → `/`). We 404 these here so a Sanity `page` document sharing
+// one of these slugs never produces a duplicate URL through the catch-all.
+// Most former hardcoded pages (about, faq, why-us, …) are now served by this
+// route; only pages with custom rendering keep their own file and stay listed.
+const RESERVED_SLUGS = new Set([
+  'home', // → index.astro (queries.homePage), served at /
+  'contact', // → contact.astro, renders <ContactForm />
+  'services', // → services/ route tree
+  'sandbox', // → sandbox.astro (internal)
+  '404',
+]);
+
+const slug = Astro.params.slug ?? '';
+
+if (!slug || RESERVED_SLUGS.has(slug)) {
+  return Astro.rewrite('/404');
+}
+
+const sanityClient = getSanityClient(Astro.locals.runtime?.env);
+const page = await sanityClient.fetch(queries.pageBySlug, { slug }).catch(() => null);
+
+if (!page) {
+  return Astro.rewrite('/404');
+}
+
+const staffMembers = await sanityClient.fetch(queries.staffMembers).catch(() => []);
+---
+
+<BaseLayout
+  title={page?.seo?.title ?? page?.title ?? 'The Road to Zero'}
+  description={page?.seo?.description ?? ''}
+  sections={page?.sections ?? []}
+>
+  <PageSections sections={page?.sections ?? []} staffMembers={staffMembers} />
+</BaseLayout>
