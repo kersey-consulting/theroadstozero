@@ -8,15 +8,21 @@
     "deploy": "sanity deploy"
   },
   "dependencies": {
-    "@sanity/vision": "^5.22.0",
+    "@sanity/vision": "^6.4.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-is": "^19.2.4",
-    "sanity": "^5.22.0",
-    "sanity-plugin-media": "^4.2.0",
+    "sanity": "^6.4.0",
+    "sanity-plugin-media": "^5.0.11",
     "styled-components": "^6.4.1"
   },
   "devDependencies": {
     "typescript": "^5.9.0"
+  },
+  "overrides": {
+    "js-yaml": "5.2.1",
+    "smol-toml": "1.7.0",
+    "uuid": "11.1.1",
+    "@sanity/uuid": "3.0.3"
   }
 }
