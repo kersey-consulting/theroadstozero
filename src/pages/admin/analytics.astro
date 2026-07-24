@@ -106,7 +106,28 @@
     .path { overflow-wrap: anywhere; }
     .count { font-weight: 800; white-space: nowrap; }
 
+    .chart-card { position: relative; }
     canvas { width: 100%; height: 180px; }
+
+    .chart-tooltip {
+      position: absolute;
+      z-index: 2;
+      display: none;
+      min-width: 130px;
+      pointer-events: none;
+      transform: translate(-50%, calc(-100% - 12px));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(34, 32, 31, 0.94);
+      color: white;
+      box-shadow: 0 14px 36px rgba(34, 32, 31, 0.22);
+      padding: 0.65rem 0.75rem;
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    .chart-tooltip strong { display: block; font-size: 0.95rem; }
+    .chart-tooltip span { color: rgba(255, 255, 255, 0.78); }
 
     .notice {
       display: none;
@@ -256,9 +277,10 @@
         </section>
 
         <section class="panel-grid">
-          <div class="card">
+          <div class="card chart-card">
             <h2>Page views over time</h2>
             <canvas id="pageViewsChart" height="180"></canvas>
+            <div id="pageViewsTooltip" class="chart-tooltip" role="status" aria-live="polite"></div>
           </div>
 
           <div class="card">
@@ -296,7 +318,9 @@
 
     function renderPageViewsChart(data) {
       const canvas = document.getElementById('pageViewsChart');
+      const tooltip = document.getElementById('pageViewsTooltip');
       if (!canvas) return;
+
       const ctx = canvas.getContext('2d');
       const rect = canvas.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
@@ -307,12 +331,13 @@
       const width = rect.width;
       const height = rect.height;
       const padding = 34;
-      ctx.clearRect(0, 0, width, height);
 
       if (!data.length) {
+        ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = '#766d66';
         ctx.font = '14px system-ui';
         ctx.fillText('No page-view data available.', padding, height / 2);
+        if (tooltip) tooltip.style.display = 'none';
         return;
       }
 
@@ -324,41 +349,93 @@
         return {x, y, value, date: data[index].date};
       });
 
-      ctx.strokeStyle = '#e6ddd4';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(padding, padding);
-      ctx.lineTo(padding, height - padding);
-      ctx.lineTo(width - padding, height - padding);
-      ctx.stroke();
+      function draw(activePoint) {
+        ctx.clearRect(0, 0, width, height);
 
-      ctx.strokeStyle = '#8a6f56';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      points.forEach((point, index) => {
-        if (index === 0) ctx.moveTo(point.x, point.y);
-        else ctx.lineTo(point.x, point.y);
-      });
-      ctx.stroke();
-
-      ctx.fillStyle = '#8a6f56';
-      points.forEach((point) => {
+        ctx.strokeStyle = '#e6ddd4';
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-      });
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.lineTo(width - padding, height - padding);
+        ctx.stroke();
 
-      ctx.fillStyle = '#766d66';
-      ctx.font = '12px system-ui';
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(number(max), padding - 8, padding);
-      ctx.fillText('0', padding - 8, height - padding);
+        ctx.strokeStyle = '#8a6f56';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        points.forEach((point, index) => {
+          if (index === 0) ctx.moveTo(point.x, point.y);
+          else ctx.lineTo(point.x, point.y);
+        });
+        ctx.stroke();
 
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
-      ctx.fillText(data[0].date || '', padding, height - padding + 8);
-      ctx.fillText(data[data.length - 1].date || '', width - padding, height - padding + 8);
+        ctx.fillStyle = '#8a6f56';
+        points.forEach((point) => {
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, point === activePoint ? 5 : 3, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        if (activePoint) {
+          ctx.strokeStyle = 'rgba(138, 111, 86, 0.35)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(activePoint.x, padding);
+          ctx.lineTo(activePoint.x, height - padding);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = '#766d66';
+        ctx.font = '12px system-ui';
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(number(max), padding - 8, padding);
+        ctx.fillText('0', padding - 8, height - padding);
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(data[0].date || '', padding, height - padding + 8);
+        ctx.fillText(data[data.length - 1].date || '', width - padding, height - padding + 8);
+      }
+
+      function hideTooltip() {
+        if (tooltip) tooltip.style.display = 'none';
+        draw(null);
+      }
+
+      function showTooltip(point) {
+        if (!tooltip) return;
+        const containerRect = canvas.parentElement.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+        const left = canvasRect.left - containerRect.left + point.x;
+        const top = canvasRect.top - containerRect.top + point.y;
+
+        tooltip.innerHTML = `<strong>${escapeHtml(point.date || 'Unknown date')}</strong><span>${number(point.value)} page views</span>`;
+        tooltip.style.left = `${Math.min(Math.max(left, 72), containerRect.width - 72)}px`;
+        tooltip.style.top = `${top}px`;
+        tooltip.style.display = 'block';
+      }
+
+      canvas.onmousemove = (event) => {
+        const canvasRect = canvas.getBoundingClientRect();
+        const x = event.clientX - canvasRect.left;
+        const y = event.clientY - canvasRect.top;
+        const nearest = points.reduce((best, point) => {
+          const distance = Math.hypot(point.x - x, point.y - y);
+          return distance < best.distance ? {point, distance} : best;
+        }, {point: null, distance: Number.POSITIVE_INFINITY});
+
+        if (!nearest.point || nearest.distance > 18) {
+          hideTooltip();
+          return;
+        }
+
+        draw(nearest.point);
+        showTooltip(nearest.point);
+      };
+      canvas.onmouseleave = hideTooltip;
+
+      draw(null);
     }
 
     setupWindowButtons();
