@@ -1,7 +1,19 @@
 import { defineMiddleware } from 'astro:middleware';
+import { env as cloudflareEnv } from 'cloudflare:workers';
 
 function getRuntimeEnv(context: any) {
-  return context?.locals?.runtime?.env ?? {};
+  let legacyRuntimeEnv = {};
+  try {
+    legacyRuntimeEnv = context?.locals?.runtime?.env ?? {};
+  } catch {
+    // Newer @astrojs/cloudflare versions expose runtime env through
+    // cloudflare:workers instead of locals.runtime.env.
+  }
+
+  return {
+    ...legacyRuntimeEnv,
+    ...(cloudflareEnv as Record<string, unknown>),
+  };
 }
 
 function shouldRequireAuth(env: Record<string, unknown>) {

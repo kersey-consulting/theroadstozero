@@ -208,7 +208,11 @@
       if (data.analyticsUnavailable) {
         const notice = document.getElementById('notice');
         notice.style.display = 'block';
-        notice.textContent = 'Google Analytics is not configured yet. Set GA_PROPERTY_ID, GA_CLIENT_EMAIL, and GA_PRIVATE_KEY in the Cloudflare runtime environment to populate this dashboard.';
+        const details = data.analyticsError ? ` Details: ${data.analyticsError}` : '';
+        const config = data.analyticsConfig
+          ? ` Detected config — property ID: ${data.analyticsConfig.hasPropertyId ? 'yes' : 'no'}, client email: ${data.analyticsConfig.hasClientEmail ? 'yes' : 'no'}, private key: ${data.analyticsConfig.hasPrivateKey ? 'yes' : 'no'}.`
+          : '';
+        notice.textContent = `Google Analytics is unavailable.${details}${config}`;
       }
 
       document.getElementById('metrics').classList.remove('muted');

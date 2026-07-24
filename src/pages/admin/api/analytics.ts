@@ -1,4 +1,5 @@
 import type {APIRoute} from 'astro';
+import {env as cloudflareEnv} from 'cloudflare:workers';
 import {getGaAccessToken} from '@/lib/server/gaAuth';
 import {requireAdminAuth, unauthorizedAdminResponse} from '@/lib/server/adminAuth';
 
@@ -28,7 +29,14 @@ const analyticsCache: Record<string, {data: string; expiresAt: number}> = {};
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
 function getRuntimeEnv(locals: App.Locals): RuntimeEnv {
-  const runtimeEnv = (locals as unknown as {runtime?: {env?: RuntimeEnv}}).runtime?.env ?? {};
+  let legacyRuntimeEnv: RuntimeEnv = {};
+  try {
+    legacyRuntimeEnv = (locals as unknown as {runtime?: {env?: RuntimeEnv}}).runtime?.env ?? {};
+  } catch {
+    // Newer @astrojs/cloudflare versions intentionally throw when reading
+    // locals.runtime.env. Runtime bindings are exposed through cloudflare:workers.
+  }
+
   return {
     ADMIN_USER: import.meta.env.ADMIN_USER,
     ADMIN_PASSWORD: import.meta.env.ADMIN_PASSWORD,
@@ -38,8 +46,15 @@ function getRuntimeEnv(locals: App.Locals): RuntimeEnv {
     GA_PRIVATE_KEY: import.meta.env.GA_PRIVATE_KEY,
     GA_PROPERTY_ID: import.meta.env.GA_PROPERTY_ID,
     GA_HOSTNAMES: import.meta.env.GA_HOSTNAMES,
-    ...runtimeEnv,
+    ...legacyRuntimeEnv,
+    ...(cloudflareEnv as RuntimeEnv),
   };
+}
+
+function getMissingGaConfig(env: RuntimeEnv) {
+  return ['GA_PROPERTY_ID', 'GA_CLIENT_EMAIL', 'GA_PRIVATE_KEY'].filter(
+    (key) => !env[key as keyof RuntimeEnv],
+  );
 }
 
 function getHostnames(env: RuntimeEnv) {
@@ -214,8 +229,9 @@ export const GET: APIRoute = async ({request, locals}) => {
   let responseBody: string;
 
   try {
-    if (!runtimeEnv.GA_PROPERTY_ID) {
-      throw new Error('GA_PROPERTY_ID is not configured');
+    const missingConfig = getMissingGaConfig(runtimeEnv);
+    if (missingConfig.length > 0) {
+      throw new Error(`Missing Google Analytics runtime env: ${missingConfig.join(', ')}`);
     }
 
     const token = await getGaAccessToken(runtimeEnv);
@@ -241,11 +257,18 @@ export const GET: APIRoute = async ({request, locals}) => {
     });
     analyticsCache[cacheKey] = {data: responseBody, expiresAt: now + CACHE_TTL_MS};
   } catch (err) {
-    console.error('Analytics unavailable', err);
+    const message = err instanceof Error ? err.message : 'Unknown analytics error';
+    console.error('Analytics unavailable', message);
     responseBody = JSON.stringify({
       timeWindow: label,
       hostnames: getHostnames(runtimeEnv),
       analyticsUnavailable: true,
+      analyticsError: message,
+      analyticsConfig: {
+        hasPropertyId: Boolean(runtimeEnv.GA_PROPERTY_ID),
+        hasClientEmail: Boolean(runtimeEnv.GA_CLIENT_EMAIL),
+        hasPrivateKey: Boolean(runtimeEnv.GA_PRIVATE_KEY),
+      },
       ...emptyAnalytics,
     });
   }
