@@ -147,9 +147,9 @@
         <p>Private reporting dashboard for The Road to Zero.</p>
       </div>
       <div class="actions" aria-label="Date range">
-        <button type="button" data-window="7d" onclick="setWindow('7d')">Last 7 days</button>
-        <button type="button" data-window="30d" onclick="setWindow('30d')">Last 30 days</button>
-        <button type="button" data-window="90d" onclick="setWindow('90d')">Last 90 days</button>
+        <button type="button" data-window="7d">Last 7 days</button>
+        <button type="button" data-window="30d">Last 30 days</button>
+        <button type="button" data-window="90d">Last 90 days</button>
       </div>
     </div>
 
@@ -167,7 +167,15 @@
     function setWindow(windowKey) {
       const url = new URL(window.location.href);
       url.searchParams.set('window', windowKey);
-      window.location.href = url.toString();
+      window.history.pushState({}, '', url.toString());
+      loadAnalytics();
+    }
+
+    function setupWindowButtons() {
+      document.querySelectorAll('[data-window]').forEach((button) => {
+        button.addEventListener('click', () => setWindow(button.dataset.window));
+      });
+      window.addEventListener('popstate', loadAnalytics);
     }
 
     function getAuthFromStorage() {
@@ -203,6 +211,10 @@
       document.querySelectorAll('[data-window]').forEach((button) => {
         button.classList.toggle('active', button.dataset.window === windowKey);
       });
+
+      document.getElementById('notice').style.display = 'none';
+      document.getElementById('metrics').classList.add('muted');
+      document.getElementById('metrics').textContent = 'Loading…';
 
       const apiUrl = new URL('/admin/api/analytics', window.location.origin);
       apiUrl.searchParams.set('window', windowKey);
@@ -349,6 +361,7 @@
       ctx.fillText(data[data.length - 1].date || '', width - padding, height - padding + 8);
     }
 
+    setupWindowButtons();
     loadAnalytics();
   </script>
 </body>
