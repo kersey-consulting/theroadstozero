@@ -188,13 +188,32 @@ async function fetchPageViewsByDay(token: string, propertyId: string, startDate:
 function getDateRange(window: string) {
   switch (window) {
     case '7d':
-      return {label: 'Last 7 days', startDate: '7daysAgo'};
+      return {label: 'Last 7 days', startDate: '6daysAgo', days: 7};
     case '90d':
-      return {label: 'Last 90 days', startDate: '90daysAgo'};
+      return {label: 'Last 90 days', startDate: '89daysAgo', days: 90};
     case '30d':
     default:
-      return {label: 'Last 30 days', startDate: '30daysAgo'};
+      return {label: 'Last 30 days', startDate: '29daysAgo', days: 30};
   }
+}
+
+function isoDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function fillPageViewDates(rows: {date: string; views: number}[], days: number) {
+  const byDate = new Map(rows.map((row) => [row.date, row.views]));
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const first = new Date(today);
+  first.setUTCDate(today.getUTCDate() - (days - 1));
+
+  return Array.from({length: days}, (_, index) => {
+    const date = new Date(first);
+    date.setUTCDate(first.getUTCDate() + index);
+    const key = isoDate(date);
+    return {date: key, views: byDate.get(key) ?? 0};
+  });
 }
 
 const emptyAnalytics = {
@@ -216,7 +235,7 @@ export const GET: APIRoute = async ({request, locals}) => {
   }
 
   const windowParam = new URL(request.url).searchParams.get('window') ?? '30d';
-  const {label, startDate} = getDateRange(windowParam);
+  const {label, startDate, days} = getDateRange(windowParam);
   const cacheKey = `${windowParam}:${getHostnames(runtimeEnv).join('|')}`;
   const now = Date.now();
 
@@ -234,14 +253,15 @@ export const GET: APIRoute = async ({request, locals}) => {
       throw new Error(`Missing Google Analytics runtime env: ${missingConfig.join(', ')}`);
     }
 
+    const propertyId = runtimeEnv.GA_PROPERTY_ID as string;
     const token = await getGaAccessToken(runtimeEnv);
     const [summary, topPages, sources, devices, cities, pageViewsByDay] = await Promise.all([
-      fetchSummaryMetrics(token, runtimeEnv.GA_PROPERTY_ID, startDate, runtimeEnv),
-      fetchTopPages(token, runtimeEnv.GA_PROPERTY_ID, startDate, runtimeEnv),
-      fetchTrafficSources(token, runtimeEnv.GA_PROPERTY_ID, startDate, runtimeEnv),
-      fetchDeviceBreakdown(token, runtimeEnv.GA_PROPERTY_ID, startDate, runtimeEnv),
-      fetchActiveUsersByCity(token, runtimeEnv.GA_PROPERTY_ID, startDate, runtimeEnv),
-      fetchPageViewsByDay(token, runtimeEnv.GA_PROPERTY_ID, startDate, runtimeEnv),
+      fetchSummaryMetrics(token, propertyId, startDate, runtimeEnv),
+      fetchTopPages(token, propertyId, startDate, runtimeEnv),
+      fetchTrafficSources(token, propertyId, startDate, runtimeEnv),
+      fetchDeviceBreakdown(token, propertyId, startDate, runtimeEnv),
+      fetchActiveUsersByCity(token, propertyId, startDate, runtimeEnv),
+      fetchPageViewsByDay(token, propertyId, startDate, runtimeEnv),
     ]);
 
     responseBody = JSON.stringify({
@@ -253,7 +273,7 @@ export const GET: APIRoute = async ({request, locals}) => {
       sources,
       devices,
       cities,
-      pageViewsByDay,
+      pageViewsByDay: fillPageViewDates(pageViewsByDay, days),
     });
     analyticsCache[cacheKey] = {data: responseBody, expiresAt: now + CACHE_TTL_MS};
   } catch (err) {
