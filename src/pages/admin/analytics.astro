@@ -110,12 +110,11 @@
     canvas { width: 100%; height: 180px; }
 
     .chart-tooltip {
-      position: absolute;
+      position: fixed;
       z-index: 2;
       display: none;
       min-width: 130px;
       pointer-events: none;
-      transform: translate(-50%, calc(-100% - 12px));
       border: 1px solid var(--border);
       border-radius: 12px;
       background: rgba(34, 32, 31, 0.94);
@@ -405,20 +404,31 @@
 
       function showTooltip(point, event) {
         if (!tooltip) return;
-        const containerRect = canvas.parentElement.getBoundingClientRect();
-        const left = event.clientX - containerRect.left;
-        const top = event.clientY - containerRect.top;
 
         tooltip.innerHTML = `<strong>${escapeHtml(point.date || 'Unknown date')}</strong><span>${number(point.value)} page views</span>`;
-        tooltip.style.left = `${Math.min(Math.max(left, 72), containerRect.width - 72)}px`;
-        tooltip.style.top = `${Math.max(top - 10, 46)}px`;
         tooltip.style.display = 'block';
+
+        const margin = 12;
+        const offset = 14;
+        const tooltipRect = tooltip.getBoundingClientRect();
+        let left = event.clientX + offset;
+        let top = event.clientY + offset;
+
+        if (left + tooltipRect.width + margin > window.innerWidth) {
+          left = event.clientX - tooltipRect.width - offset;
+        }
+        if (top + tooltipRect.height + margin > window.innerHeight) {
+          top = event.clientY - tooltipRect.height - offset;
+        }
+
+        tooltip.style.left = `${Math.max(margin, left)}px`;
+        tooltip.style.top = `${Math.max(margin, top)}px`;
       }
 
       canvas.onmousemove = (event) => {
         const canvasRect = canvas.getBoundingClientRect();
-        const x = event.clientX - canvasRect.left;
-        const y = event.clientY - canvasRect.top;
+        const x = event.offsetX;
+        const y = event.offsetY;
 
         if (x < padding || x > width - padding || y < padding / 2 || y > height - padding / 2) {
           hideTooltip();
