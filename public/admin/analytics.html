@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>The Road to Zero Analytics</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f7f3ef;
+      --card: #ffffff;
+      --border: #e6ddd4;
+      --text: #22201f;
+      --muted: #766d66;
+      --accent: #8a6f56;
+      --accent-dark: #6f5843;
+      --warn-bg: #fff7ed;
+      --warn-text: #9a3412;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    main { width: min(1080px, 100%); margin: 0 auto; }
+    a { color: var(--accent-dark); font-weight: 700; text-decoration: none; }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 { margin: 0 0 0.35rem; font-size: clamp(2rem, 5vw, 3rem); }
+    p { color: var(--muted); margin: 0; line-height: 1.55; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    button {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.65rem 0.9rem;
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button:hover,
+    button.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 18px 48px rgba(62, 48, 38, 0.08);
+      padding: 1.25rem;
+    }
+
+    .metric-label { color: var(--muted); font-size: 0.9rem; }
+    .metric-value { margin-top: 0.3rem; font-size: 2.2rem; font-weight: 800; }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+      gap: 1rem;
+    }
+
+    h2 { margin: 0 0 1rem; font-size: 1.2rem; }
+    h3 { margin: 1rem 0 0.35rem; color: var(--muted); font-size: 0.95rem; }
+
+    ul { list-style: none; padding: 0; margin: 0; }
+    li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      border-top: 1px solid var(--border);
+      padding: 0.7rem 0;
+    }
+
+    li:first-child { border-top: 0; padding-top: 0; }
+    .path { overflow-wrap: anywhere; }
+    .count { font-weight: 800; white-space: nowrap; }
+
+    canvas { width: 100%; height: 260px; }
+
+    .notice {
+      display: none;
+      margin: 1rem 0;
+      border: 1px solid #fed7aa;
+      border-radius: 14px;
+      background: var(--warn-bg);
+      color: var(--warn-text);
+      padding: 1rem;
+    }
+
+    .muted { color: var(--muted); }
+
+    @media (max-width: 760px) {
+      .grid,
+      .panel-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="topbar">
+      <div>
+        <a href="/admin.html">← Admin</a>
+        <h1 id="title">Analytics</h1>
+        <p>Private reporting dashboard for The Road to Zero.</p>
+      </div>
+      <div class="actions" aria-label="Date range">
+        <button type="button" data-window="7d" onclick="setWindow('7d')">Last 7 days</button>
+        <button type="button" data-window="30d" onclick="setWindow('30d')">Last 30 days</button>
+        <button type="button" data-window="90d" onclick="setWindow('90d')">Last 90 days</button>
+      </div>
+    </div>
+
+    <div id="notice" class="notice"></div>
+    <div id="metrics" class="muted">Loading…</div>
+  </main>
+
+  <script>
+    const AUTH_KEY = 'trtz_admin_auth';
+
+    function getWindowKey() {
+      return new URL(window.location.href).searchParams.get('window') || '30d';
+    }
+
+    function setWindow(windowKey) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('window', windowKey);
+      window.location.href = url.toString();
+    }
+
+    function getAuthFromStorage() {
+      let auth = sessionStorage.getItem(AUTH_KEY);
+      if (!auth) {
+        const username = prompt('Admin username');
+        const password = prompt('Admin password');
+        if (!username || !password) {
+          window.location.href = '/admin.html';
+          return '';
+        }
+        auth = btoa(username + ':' + password);
+        sessionStorage.setItem(AUTH_KEY, auth);
+      }
+      return auth;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function number(value) {
+      return new Intl.NumberFormat().format(Number(value || 0));
+    }
+
+    async function loadAnalytics() {
+      const windowKey = getWindowKey();
+      document.querySelectorAll('[data-window]').forEach((button) => {
+        button.classList.toggle('active', button.dataset.window === windowKey);
+      });
+
+      const apiUrl = new URL('/admin/api/analytics', window.location.origin);
+      apiUrl.searchParams.set('window', windowKey);
+
+      const res = await fetch(apiUrl.toString(), {
+        headers: {'Authorization': 'Basic ' + getAuthFromStorage()},
+      });
+
+      if (res.status === 401) {
+        sessionStorage.removeItem(AUTH_KEY);
+        window.location.href = '/admin.html';
+        return;
+      }
+
+      if (!res.ok) {
+        document.getElementById('metrics').textContent = 'Failed to load analytics.';
+        return;
+      }
+
+      const data = await res.json();
+      document.getElementById('title').textContent = `Analytics (${data.timeWindow})`;
+
+      if (data.analyticsUnavailable) {
+        const notice = document.getElementById('notice');
+        notice.style.display = 'block';
+        notice.textContent = 'Google Analytics is not configured yet. Set GA_PROPERTY_ID, GA_CLIENT_EMAIL, and GA_PRIVATE_KEY in the Cloudflare runtime environment to populate this dashboard.';
+      }
+
+      document.getElementById('metrics').classList.remove('muted');
+      document.getElementById('metrics').innerHTML = `
+        <section class="grid" aria-label="Traffic overview">
+          <div class="card"><div class="metric-label">Users</div><div class="metric-value">${number(data.users)}</div></div>
+          <div class="card"><div class="metric-label">Sessions</div><div class="metric-value">${number(data.sessions)}</div></div>
+          <div class="card"><div class="metric-label">Page Views</div><div class="metric-value">${number(data.pageViews)}</div></div>
+        </section>
+
+        <section class="panel-grid">
+          <div class="card">
+            <h2>Page views over time</h2>
+            <canvas id="pageViewsChart" height="260"></canvas>
+          </div>
+
+          <div class="card">
+            <h2>Audience</h2>
+            <h3>Devices</h3>
+            ${renderList(data.devices, 'device', 'sessions')}
+            <h3>Top Cities</h3>
+            ${renderList(data.cities, 'city', 'users')}
+          </div>
+        </section>
+
+        <section class="panel-grid" style="margin-top:1rem;">
+          <div class="card">
+            <h2>Top Pages</h2>
+            ${renderList(data.topPages, 'path', 'views', true)}
+          </div>
+          <div class="card">
+            <h2>Traffic Sources</h2>
+            ${renderList(data.sources, 'channel', 'sessions')}
+          </div>
+        </section>
+      `;
+
+      renderPageViewsChart(data.pageViewsByDay || []);
+    }
+
+    function renderList(rows, labelKey, valueKey, isPath) {
+      if (!rows || rows.length === 0) return '<p class="muted">No data available.</p>';
+      return `<ul>${rows.map((row) => `
+        <li>
+          <span class="${isPath ? 'path' : ''}">${escapeHtml(row[labelKey] || 'Unknown')}</span>
+          <span class="count">${number(row[valueKey])}</span>
+        </li>`).join('')}</ul>`;
+    }
+
+    function renderPageViewsChart(data) {
+      const canvas = document.getElementById('pageViewsChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(1, rect.width * dpr);
+      canvas.height = Math.max(1, rect.height * dpr);
+      ctx.scale(dpr, dpr);
+
+      const width = rect.width;
+      const height = rect.height;
+      const padding = 34;
+      ctx.clearRect(0, 0, width, height);
+
+      if (!data.length) {
+        ctx.fillStyle = '#766d66';
+        ctx.font = '14px system-ui';
+        ctx.fillText('No page-view data available.', padding, height / 2);
+        return;
+      }
+
+      const values = data.map((row) => Number(row.views || 0));
+      const max = Math.max(1, ...values);
+      const points = values.map((value, index) => {
+        const x = padding + (index * (width - padding * 2)) / Math.max(1, values.length - 1);
+        const y = height - padding - (value / max) * (height - padding * 2);
+        return {x, y, value, date: data[index].date};
+      });
+
+      ctx.strokeStyle = '#e6ddd4';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padding, padding);
+      ctx.lineTo(padding, height - padding);
+      ctx.lineTo(width - padding, height - padding);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#8a6f56';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      points.forEach((point, index) => {
+        if (index === 0) ctx.moveTo(point.x, point.y);
+        else ctx.lineTo(point.x, point.y);
+      });
+      ctx.stroke();
+
+      ctx.fillStyle = '#8a6f56';
+      points.forEach((point) => {
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.fillStyle = '#766d66';
+      ctx.font = '12px system-ui';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(number(max), padding - 8, padding);
+      ctx.fillText('0', padding - 8, height - padding);
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(data[0].date || '', padding, height - padding + 8);
+      ctx.fillText(data[data.length - 1].date || '', width - padding, height - padding + 8);
+    }
+
+    loadAnalytics();
+  </script>
+</body>
+</html>
