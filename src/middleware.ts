@@ -8,6 +8,11 @@ function shouldRequireAuth(env: Record<string, unknown>) {
   return Boolean(env.BASIC_AUTH_USER && env.BASIC_AUTH_PASS);
 }
 
+function isAdminApiRequest(request: Request) {
+  const { pathname } = new URL(request.url);
+  return pathname.startsWith('/admin/api/');
+}
+
 function unauthorized() {
   return new Response('Authentication required', {
     status: 401,
@@ -40,6 +45,15 @@ function decodeBasicAuth(header: string | null) {
 
 export const onRequest = defineMiddleware(async (_context, next) => {
   const env = getRuntimeEnv(_context);
+
+  // Admin API routes have their own credential set (ADMIN_USER / ADMIN_PASSWORD).
+  // On gated lower environments, the admin UI sends those credentials in the
+  // Authorization header. If preview Basic Auth runs first, it consumes the same
+  // header and rejects the request before adminAuth can validate it, causing a
+  // browser Basic Auth popup that neither credential set can clear cleanly.
+  if (isAdminApiRequest(_context.request)) {
+    return next();
+  }
 
   if (!shouldRequireAuth(env)) {
     return next();
