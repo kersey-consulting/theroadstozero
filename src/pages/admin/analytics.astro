@@ -403,16 +403,15 @@
         draw(null);
       }
 
-      function showTooltip(point) {
+      function showTooltip(point, event) {
         if (!tooltip) return;
         const containerRect = canvas.parentElement.getBoundingClientRect();
-        const canvasRect = canvas.getBoundingClientRect();
-        const left = canvasRect.left - containerRect.left + point.x;
-        const top = canvasRect.top - containerRect.top + point.y;
+        const left = event.clientX - containerRect.left;
+        const top = event.clientY - containerRect.top;
 
         tooltip.innerHTML = `<strong>${escapeHtml(point.date || 'Unknown date')}</strong><span>${number(point.value)} page views</span>`;
         tooltip.style.left = `${Math.min(Math.max(left, 72), containerRect.width - 72)}px`;
-        tooltip.style.top = `${top}px`;
+        tooltip.style.top = `${Math.max(top - 10, 46)}px`;
         tooltip.style.display = 'block';
       }
 
@@ -420,18 +419,24 @@
         const canvasRect = canvas.getBoundingClientRect();
         const x = event.clientX - canvasRect.left;
         const y = event.clientY - canvasRect.top;
+
+        if (x < padding || x > width - padding || y < padding / 2 || y > height - padding / 2) {
+          hideTooltip();
+          return;
+        }
+
         const nearest = points.reduce((best, point) => {
-          const distance = Math.hypot(point.x - x, point.y - y);
+          const distance = Math.abs(point.x - x);
           return distance < best.distance ? {point, distance} : best;
         }, {point: null, distance: Number.POSITIVE_INFINITY});
 
-        if (!nearest.point || nearest.distance > 18) {
+        if (!nearest.point) {
           hideTooltip();
           return;
         }
 
         draw(nearest.point);
-        showTooltip(nearest.point);
+        showTooltip(nearest.point, event);
       };
       canvas.onmouseleave = hideTooltip;
 
