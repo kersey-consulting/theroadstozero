@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>The Road to Zero Analytics</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- is:global is required: the dashboard body is built at runtime via innerHTML,
+       so those elements never receive Astro's scoping data-astro-cid attribute and
+       scoped rules would not match them. This page is a standalone document, so
+       there is no other markup for these styles to leak into. -->
+  <style is:global>
+    :root {
+      --bg: #f7f3ef;
+      --card: #ffffff;
+      --border: #e6ddd4;
+      --text: #22201f;
+      --muted: #766d66;
+      --accent: #8a6f56;
+      --accent-dark: #6f5843;
+      --warn-bg: #fff7ed;
+      --warn-text: #9a3412;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 2rem 1rem 4rem;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    main { width: min(1080px, 100%); margin: 0 auto; }
+    a { color: var(--accent-dark); font-weight: 700; text-decoration: none; }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 { margin: 0 0 0.35rem; font-size: clamp(2rem, 5vw, 3rem); }
+    p { color: var(--muted); margin: 0; line-height: 1.55; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    button {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.65rem 0.9rem;
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button:hover,
+    button.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .metric-card {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 18px 48px rgba(62, 48, 38, 0.08);
+      padding: 1.25rem;
+    }
+
+    .metric-label { color: var(--muted); font-size: 0.9rem; white-space: nowrap; }
+    .metric-value { font-size: 1.55rem; font-weight: 800; line-height: 1; }
+
+    .panel-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+      gap: 1rem;
+    }
+
+    h2 { margin: 0 0 1rem; font-size: 1.2rem; }
+    h3 { margin: 1rem 0 0.35rem; color: var(--muted); font-size: 0.95rem; }
+
+    ul { list-style: none; padding: 0; margin: 0; }
+    li {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      border-top: 1px solid var(--border);
+      padding: 0.7rem 0;
+    }
+
+    li:first-child { border-top: 0; padding-top: 0; }
+    .path { overflow-wrap: anywhere; }
+    .count { font-weight: 800; white-space: nowrap; }
+
+    .chart-card { position: relative; }
+    .chart { width: 100%; height: 180px; }
+    .chart svg { display: block; width: 100%; height: 180px; overflow: visible; }
+    .chart circle { cursor: pointer; }
+
+    .chart-tooltip {
+      position: fixed;
+      z-index: 2;
+      display: none;
+      min-width: 130px;
+      pointer-events: none;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(34, 32, 31, 0.94);
+      color: white;
+      box-shadow: 0 14px 36px rgba(34, 32, 31, 0.22);
+      padding: 0.65rem 0.75rem;
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    .chart-tooltip strong { display: block; font-size: 0.95rem; }
+    .chart-tooltip span { color: rgba(255, 255, 255, 0.78); }
+
+    .notice {
+      display: none;
+      margin: 1rem 0;
+      border: 1px solid #fed7aa;
+      border-radius: 14px;
+      background: var(--warn-bg);
+      color: var(--warn-text);
+      padding: 1rem;
+    }
+
+    .muted { color: var(--muted); }
+
+    @media (max-width: 760px) {
+      .panel-grid { grid-template-columns: 1fr; }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+      }
+
+      .metric-card {
+        display: block;
+        padding: 0.75rem;
+      }
+
+      .metric-label { font-size: 0.75rem; }
+      .metric-value { margin-top: 0.25rem; font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="topbar">
+      <div>
+        <a href="/admin">← Admin</a>
+        <h1 id="title">Analytics</h1>
+        <p>Private reporting dashboard for The Road to Zero.</p>
+      </div>
+      <div class="actions" aria-label="Date range">
+        <button type="button" data-window="7d">Last 7 days</button>
+        <button type="button" data-window="30d">Last 30 days</button>
+        <button type="button" data-window="90d">Last 90 days</button>
+      </div>
+    </div>
+
+    <div id="notice" class="notice"></div>
+    <div id="metrics" class="muted">Loading…</div>
+  </main>
+
+  <script>
+    const AUTH_KEY = 'trtz_admin_auth';
+
+    function getWindowKey() {
+      return new URL(window.location.href).searchParams.get('window') || '30d';
+    }
+
+    function setWindow(windowKey) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('window', windowKey);
+      window.history.pushState({}, '', url.toString());
+      loadAnalytics();
+    }
+
+    function setupWindowButtons() {
+      document.querySelectorAll('[data-window]').forEach((button) => {
+        button.addEventListener('click', () => setWindow(button.dataset.window));
+      });
+      window.addEventListener('popstate', loadAnalytics);
+    }
+
+    function getAuthFromStorage() {
+      let auth = sessionStorage.getItem(AUTH_KEY);
+      if (!auth) {
+        const username = prompt('Admin username');
+        const password = prompt('Admin password');
+        if (!username || !password) {
+          window.location.href = '/admin';
+          return '';
+        }
+        auth = btoa(username + ':' + password);
+        sessionStorage.setItem(AUTH_KEY, auth);
+      }
+      return auth;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function number(value) {
+      return new Intl.NumberFormat().format(Number(value || 0));
+    }
+
+    async function loadAnalytics() {
+      const windowKey = getWindowKey();
+      document.querySelectorAll('[data-window]').forEach((button) => {
+        button.classList.toggle('active', button.dataset.window === windowKey);
+      });
+
+      document.getElementById('notice').style.display = 'none';
+      document.getElementById('metrics').classList.add('muted');
+      document.getElementById('metrics').textContent = 'Loading…';
+
+      const apiUrl = new URL('/admin/api/analytics', window.location.origin);
+      apiUrl.searchParams.set('window', windowKey);
+
+      const res = await fetch(apiUrl.toString(), {
+        headers: {'Authorization': 'Basic ' + getAuthFromStorage()},
+      });
+
+      if (res.status === 401) {
+        sessionStorage.removeItem(AUTH_KEY);
+        window.location.href = '/admin';
+        return;
+      }
+
+      if (!res.ok) {
+        document.getElementById('metrics').textContent = 'Failed to load analytics.';
+        return;
+      }
+
+      const data = await res.json();
+      document.getElementById('title').textContent = `Analytics (${data.timeWindow})`;
+
+      if (data.analyticsUnavailable) {
+        const notice = document.getElementById('notice');
+        notice.style.display = 'block';
+        const details = data.analyticsError ? ` Details: ${data.analyticsError}` : '';
+        const config = data.analyticsConfig
+          ? ` Detected config — property ID: ${data.analyticsConfig.hasPropertyId ? 'yes' : 'no'}, client email: ${data.analyticsConfig.hasClientEmail ? 'yes' : 'no'}, private key: ${data.analyticsConfig.hasPrivateKey ? 'yes' : 'no'}.`
+          : '';
+        notice.textContent = `Google Analytics is unavailable.${details}${config}`;
+      }
+
+      document.getElementById('metrics').classList.remove('muted');
+      document.getElementById('metrics').innerHTML = `
+        <section class="grid" aria-label="Traffic overview">
+          <div class="card metric-card"><div class="metric-label">Users</div><div class="metric-value">${number(data.users)}</div></div>
+          <div class="card metric-card"><div class="metric-label">Sessions</div><div class="metric-value">${number(data.sessions)}</div></div>
+          <div class="card metric-card"><div class="metric-label">Page Views</div><div class="metric-value">${number(data.pageViews)}</div></div>
+        </section>
+
+        <section class="panel-grid">
+          <div class="card chart-card">
+            <h2>Page views over time</h2>
+            <div id="pageViewsChart" class="chart"></div>
+            <div id="pageViewsTooltip" class="chart-tooltip" role="status" aria-live="polite"></div>
+          </div>
+
+          <div class="card">
+            <h2>Audience</h2>
+            <h3>Devices</h3>
+            ${renderList(data.devices, 'device', 'sessions')}
+            <h3>Top Cities</h3>
+            ${renderList(data.cities, 'city', 'users')}
+          </div>
+        </section>
+
+        <section class="panel-grid" style="margin-top:1rem;">
+          <div class="card">
+            <h2>Top Pages</h2>
+            ${renderList(data.topPages, 'path', 'views', true)}
+          </div>
+          <div class="card">
+            <h2>Traffic Sources</h2>
+            ${renderList(data.sources, 'channel', 'sessions')}
+          </div>
+        </section>
+      `;
+
+      renderPageViewsChart(data.pageViewsByDay || []);
+    }
+
+    function renderList(rows, labelKey, valueKey, isPath) {
+      if (!rows || rows.length === 0) return '<p class="muted">No data available.</p>';
+      return `<ul>${rows.map((row) => `
+        <li>
+          <span class="${isPath ? 'path' : ''}">${escapeHtml(row[labelKey] || 'Unknown')}</span>
+          <span class="count">${number(row[valueKey])}</span>
+        </li>`).join('')}</ul>`;
+    }
+
+    let chartRows = [];
+
+    function renderPageViewsChart(data) {
+      chartRows = data || [];
+      drawPageViewsChart();
+    }
+
+    function drawPageViewsChart() {
+      const data = chartRows;
+      const chart = document.getElementById('pageViewsChart');
+      const tooltip = document.getElementById('pageViewsTooltip');
+      if (!chart) return;
+
+      // Draw in real pixels rather than scaling a fixed viewBox: stretching the
+      // viewBox turns the data points into ellipses and squashes the labels.
+      const width = Math.round(chart.clientWidth) || 640;
+      const height = 180;
+      const padding = 34;
+
+      if (!data.length) {
+        chart.innerHTML = '<p class="muted">No page-view data available.</p>';
+        if (tooltip) tooltip.style.display = 'none';
+        return;
+      }
+
+      const values = data.map((row) => Number(row.views || 0));
+      const max = Math.max(1, ...values);
+      const points = values.map((value, index) => {
+        const x = padding + (index * (width - padding * 2)) / Math.max(1, values.length - 1);
+        const y = height - padding - (value / max) * (height - padding * 2);
+        return {x, y, value, date: data[index].date};
+      });
+
+      const line = points.map((point) => `${point.x},${point.y}`).join(' ');
+      const circles = points.map((point, index) => `
+        <circle cx="${point.x}" cy="${point.y}" r="3.5" fill="#8a6f56" data-index="${index}" />
+      `).join('');
+
+      chart.innerHTML = `
+        <svg viewBox="0 0 ${width} ${height}" aria-label="Page views over time">
+          <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="#e6ddd4" />
+          <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="#e6ddd4" />
+          <polyline points="${line}" fill="none" stroke="#8a6f56" stroke-width="3" vector-effect="non-scaling-stroke" />
+          <g id="chartGuide" style="display:none;">
+            <line y1="${padding}" y2="${height - padding}" stroke="rgba(138, 111, 86, 0.35)" vector-effect="non-scaling-stroke" />
+          </g>
+          ${circles}
+          <text x="${padding - 8}" y="${padding}" text-anchor="end" dominant-baseline="middle" fill="#766d66" font-size="12">${number(max)}</text>
+          <text x="${padding - 8}" y="${height - padding}" text-anchor="end" dominant-baseline="middle" fill="#766d66" font-size="12">0</text>
+          <text x="${padding}" y="${height - padding + 18}" text-anchor="middle" fill="#766d66" font-size="12">${escapeHtml(data[0].date || '')}</text>
+          <text x="${width - padding}" y="${height - padding + 18}" text-anchor="middle" fill="#766d66" font-size="12">${escapeHtml(data[data.length - 1].date || '')}</text>
+        </svg>
+      `;
+
+      const svg = chart.querySelector('svg');
+      const guide = chart.querySelector('#chartGuide');
+
+      function hideTooltip() {
+        if (tooltip) tooltip.style.display = 'none';
+        if (guide) guide.style.display = 'none';
+        chart.querySelectorAll('circle').forEach((circle) => circle.setAttribute('r', '3.5'));
+      }
+
+      function showTooltip(point, event) {
+        if (!tooltip) return;
+
+        tooltip.innerHTML = `<strong>${escapeHtml(point.date || 'Unknown date')}</strong><span>${number(point.value)} page views</span>`;
+        tooltip.style.display = 'block';
+
+        const margin = 12;
+        const offset = 14;
+        const tooltipRect = tooltip.getBoundingClientRect();
+        let left = event.clientX + offset;
+        let top = event.clientY + offset;
+
+        if (left + tooltipRect.width + margin > window.innerWidth) {
+          left = event.clientX - tooltipRect.width - offset;
+        }
+        if (top + tooltipRect.height + margin > window.innerHeight) {
+          top = event.clientY - tooltipRect.height - offset;
+        }
+
+        tooltip.style.left = `${Math.max(margin, left)}px`;
+        tooltip.style.top = `${Math.max(margin, top)}px`;
+      }
+
+      function activate(point, event) {
+        if (guide) {
+          guide.style.display = 'block';
+          guide.querySelector('line').setAttribute('x1', point.x);
+          guide.querySelector('line').setAttribute('x2', point.x);
+        }
+        chart.querySelectorAll('circle').forEach((circle) => circle.setAttribute('r', '3.5'));
+        chart.querySelector(`circle[data-index="${points.indexOf(point)}"]`)?.setAttribute('r', '5.5');
+        showTooltip(point, event);
+      }
+
+      svg.addEventListener('mousemove', (event) => {
+        const svgRect = svg.getBoundingClientRect();
+        const x = ((event.clientX - svgRect.left) / svgRect.width) * width;
+        const y = ((event.clientY - svgRect.top) / svgRect.height) * height;
+
+        if (x < padding || x > width - padding || y < padding / 2 || y > height - padding / 2) {
+          hideTooltip();
+          return;
+        }
+
+        const nearest = points.reduce((best, point) => {
+          const distance = Math.abs(point.x - x);
+          return distance < best.distance ? {point, distance} : best;
+        }, {point: null, distance: Number.POSITIVE_INFINITY});
+
+        if (!nearest.point) {
+          hideTooltip();
+          return;
+        }
+
+        activate(nearest.point, event);
+      });
+      svg.addEventListener('mouseleave', hideTooltip);
+    }
+
+    function setupChartResize() {
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(drawPageViewsChart, 150);
+      });
+    }
+
+    setupWindowButtons();
+    setupChartResize();
+    loadAnalytics();
+  </script>
+</body>
+</html>
