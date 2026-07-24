@@ -120,7 +120,7 @@
       <a class="tool-link" href="/admin/analytics">Analytics Dashboard</a>
     </div>
 
-    <button class="secondary" type="button" onclick="logout()">Log out</button>
+    <button class="secondary" id="logout" type="button">Log out</button>
   </main>
 
   <script>
@@ -161,14 +161,16 @@
       }
     });
 
+    // Astro bundles this script as a module, so inline onclick="" handlers can
+    // never reach these functions — wire listeners up explicitly.
+    document.getElementById('logout').addEventListener('click', () => {
+      sessionStorage.removeItem(AUTH_KEY);
+      window.location.reload();
+    });
+
     function showTools() {
       loginCard.style.display = 'none';
       toolsCard.style.display = 'block';
-    }
-
-    function logout() {
-      sessionStorage.removeItem(AUTH_KEY);
-      window.location.reload();
     }
   </script>
 </body>

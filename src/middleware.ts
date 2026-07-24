@@ -1,20 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
-import { env as cloudflareEnv } from 'cloudflare:workers';
-
-function getRuntimeEnv(context: any) {
-  let legacyRuntimeEnv = {};
-  try {
-    legacyRuntimeEnv = context?.locals?.runtime?.env ?? {};
-  } catch {
-    // Newer @astrojs/cloudflare versions expose runtime env through
-    // cloudflare:workers instead of locals.runtime.env.
-  }
-
-  return {
-    ...legacyRuntimeEnv,
-    ...(cloudflareEnv as Record<string, unknown>),
-  };
-}
+import { getRuntimeEnv } from '@/lib/server/runtimeEnv';
 
 function shouldRequireAuth(env: Record<string, unknown>) {
   return Boolean(env.BASIC_AUTH_USER && env.BASIC_AUTH_PASS);
@@ -56,7 +41,7 @@ function decodeBasicAuth(header: string | null) {
 }
 
 export const onRequest = defineMiddleware(async (_context, next) => {
-  const env = getRuntimeEnv(_context);
+  const env = await getRuntimeEnv(_context.locals);
 
   // Admin API routes have their own credential set (ADMIN_USER / ADMIN_PASSWORD).
   // On gated lower environments, the admin UI sends those credentials in the

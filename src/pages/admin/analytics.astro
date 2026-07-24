@@ -5,7 +5,11 @@
   <title>The Road to Zero Analytics</title>
   <meta name="robots" content="noindex,nofollow" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
+  <!-- is:global is required: the dashboard body is built at runtime via innerHTML,
+       so those elements never receive Astro's scoping data-astro-cid attribute and
+       scoped rules would not match them. This page is a standalone document, so
+       there is no other markup for these styles to leak into. -->
+  <style is:global>
     :root {
       --bg: #f7f3ef;
       --card: #ffffff;
@@ -317,12 +321,22 @@
         </li>`).join('')}</ul>`;
     }
 
+    let chartRows = [];
+
     function renderPageViewsChart(data) {
+      chartRows = data || [];
+      drawPageViewsChart();
+    }
+
+    function drawPageViewsChart() {
+      const data = chartRows;
       const chart = document.getElementById('pageViewsChart');
       const tooltip = document.getElementById('pageViewsTooltip');
       if (!chart) return;
 
-      const width = 640;
+      // Draw in real pixels rather than scaling a fixed viewBox: stretching the
+      // viewBox turns the data points into ellipses and squashes the labels.
+      const width = Math.round(chart.clientWidth) || 640;
       const height = 180;
       const padding = 34;
 
@@ -346,7 +360,7 @@
       `).join('');
 
       chart.innerHTML = `
-        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Page views over time">
+        <svg viewBox="0 0 ${width} ${height}" aria-label="Page views over time">
           <line x1="${padding}" y1="${padding}" x2="${padding}" y2="${height - padding}" stroke="#e6ddd4" />
           <line x1="${padding}" y1="${height - padding}" x2="${width - padding}" y2="${height - padding}" stroke="#e6ddd4" />
           <polyline points="${line}" fill="none" stroke="#8a6f56" stroke-width="3" vector-effect="non-scaling-stroke" />
@@ -429,7 +443,16 @@
       svg.addEventListener('mouseleave', hideTooltip);
     }
 
+    function setupChartResize() {
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(drawPageViewsChart, 150);
+      });
+    }
+
     setupWindowButtons();
+    setupChartResize();
     loadAnalytics();
   </script>
 </body>

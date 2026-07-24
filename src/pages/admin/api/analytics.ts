@@ -1,5 +1,5 @@
 import type {APIRoute} from 'astro';
-import {env as cloudflareEnv} from 'cloudflare:workers';
+import {getRuntimeEnv} from '@/lib/server/runtimeEnv';
 import {getGaAccessToken} from '@/lib/server/gaAuth';
 import {requireAdminAuth, unauthorizedAdminResponse} from '@/lib/server/adminAuth';
 
@@ -23,21 +23,14 @@ interface GaRow {
 
 interface GaReportResponse {
   rows?: GaRow[];
+  metadata?: {timeZone?: string; currencyCode?: string};
 }
 
 const analyticsCache: Record<string, {data: string; expiresAt: number}> = {};
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
-function getRuntimeEnv(locals: App.Locals): RuntimeEnv {
-  let legacyRuntimeEnv: RuntimeEnv = {};
-  try {
-    legacyRuntimeEnv = (locals as unknown as {runtime?: {env?: RuntimeEnv}}).runtime?.env ?? {};
-  } catch {
-    // Newer @astrojs/cloudflare versions intentionally throw when reading
-    // locals.runtime.env. Runtime bindings are exposed through cloudflare:workers.
-  }
-
-  return {
+function getAnalyticsEnv(locals: App.Locals) {
+  return getRuntimeEnv<RuntimeEnv>(locals, {
     ADMIN_USER: import.meta.env.ADMIN_USER,
     ADMIN_PASSWORD: import.meta.env.ADMIN_PASSWORD,
     BASIC_AUTH_USER: import.meta.env.BASIC_AUTH_USER,
@@ -46,9 +39,7 @@ function getRuntimeEnv(locals: App.Locals): RuntimeEnv {
     GA_PRIVATE_KEY: import.meta.env.GA_PRIVATE_KEY,
     GA_PROPERTY_ID: import.meta.env.GA_PROPERTY_ID,
     GA_HOSTNAMES: import.meta.env.GA_HOSTNAMES,
-    ...legacyRuntimeEnv,
-    ...(cloudflareEnv as RuntimeEnv),
-  };
+  });
 }
 
 function getMissingGaConfig(env: RuntimeEnv) {
@@ -178,11 +169,12 @@ async function fetchPageViewsByDay(token: string, propertyId: string, startDate:
     dimensionFilter: hostFilter(env),
     orderBys: [{dimension: {dimensionName: 'date'}}],
   });
-  return (json.rows ?? []).map((row) => {
+  const rows = (json.rows ?? []).map((row) => {
     const raw = row.dimensionValues?.[0]?.value ?? '';
     const date = raw.length === 8 ? `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}` : raw;
     return {date, views: Number(row.metricValues?.[0]?.value ?? 0)};
   });
+  return {rows, timeZone: json.metadata?.timeZone};
 }
 
 function getDateRange(window: string) {
@@ -201,10 +193,29 @@ function isoDate(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
-function fillPageViewDates(rows: {date: string; views: number}[], days: number) {
+// GA resolves `today` in the property's reporting timezone. Filling the range
+// against UTC instead appends a day the property has not started counting yet,
+// which renders as a phantom drop to zero at the right edge of the chart.
+function todayInTimeZone(timeZone?: string) {
+  const fallback = isoDate(new Date());
+  if (!timeZone) return fallback;
+
+  try {
+    const formatted = new Intl.DateTimeFormat('en-CA', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date());
+    return /^\d{4}-\d{2}-\d{2}$/.test(formatted) ? formatted : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function fillPageViewDates(rows: {date: string; views: number}[], days: number, timeZone?: string) {
   const byDate = new Map(rows.map((row) => [row.date, row.views]));
-  const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
+  const today = new Date(`${todayInTimeZone(timeZone)}T00:00:00Z`);
   const first = new Date(today);
   first.setUTCDate(today.getUTCDate() - (days - 1));
 
@@ -228,7 +239,7 @@ const emptyAnalytics = {
 };
 
 export const GET: APIRoute = async ({request, locals}) => {
-  const runtimeEnv = getRuntimeEnv(locals);
+  const runtimeEnv = await getAnalyticsEnv(locals);
 
   if (!requireAdminAuth(request, runtimeEnv)) {
     return unauthorizedAdminResponse();
@@ -255,7 +266,7 @@ export const GET: APIRoute = async ({request, locals}) => {
 
     const propertyId = runtimeEnv.GA_PROPERTY_ID as string;
     const token = await getGaAccessToken(runtimeEnv);
-    const [summary, topPages, sources, devices, cities, pageViewsByDay] = await Promise.all([
+    const [summary, topPages, sources, devices, cities, pageViewSeries] = await Promise.all([
       fetchSummaryMetrics(token, propertyId, startDate, runtimeEnv),
       fetchTopPages(token, propertyId, startDate, runtimeEnv),
       fetchTrafficSources(token, propertyId, startDate, runtimeEnv),
@@ -273,7 +284,7 @@ export const GET: APIRoute = async ({request, locals}) => {
       sources,
       devices,
       cities,
-      pageViewsByDay: fillPageViewDates(pageViewsByDay, days),
+      pageViewsByDay: fillPageViewDates(pageViewSeries.rows, days, pageViewSeries.timeZone),
     });
     analyticsCache[cacheKey] = {data: responseBody, expiresAt: now + CACHE_TTL_MS};
   } catch (err) {
