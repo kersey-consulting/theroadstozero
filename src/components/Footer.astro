@@ -1,8 +1,12 @@
 ---
 import { getSanityClient, queries } from '@/lib/sanity';
+import { sanityImage } from '@/lib/image';
 
 const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+
+// .logo renders at 220px wide.
+const logo = sanityImage(settings?.goldLogo ?? '/icons/gold-ring-logo.png', 220);
 
 const EXTRA_LINKS = [
   { id: 'privacy', label: 'Privacy Policy', href: '/privacy-policy' },
@@ -50,7 +54,7 @@ const year = new Date().getFullYear();
       </section>
 
       <section class="columnCenter" aria-label="About The Road to Zero">
-        <img class="logo" src={settings?.goldLogo ?? '/icons/gold-ring-logo.png'} alt="The Road to Zero Logo" />
+        <img class="logo" src={logo.src} srcset={logo.srcset} width={logo.width} height={logo.height} loading="lazy" decoding="async" alt="The Road to Zero Logo" />
       </section>
 
       <section class="column" aria-label="Social media links">

@@ -2,6 +2,7 @@
 import PortableInline from './PortableInline.astro';
 import { portableNodes } from '@/lib/portableText';
 import { urlFor } from '@/lib/sanity';
+import { sanityImage } from '@/lib/image';
 
 interface Block {
   style?: string;
@@ -24,9 +25,11 @@ interface Props {
     items?: Item[];
   };
   variant?: 'default' | 'alt';
+  /** Set on the first section of a page so its image is treated as the LCP element. */
+  priority?: boolean;
 }
 
-const { section, variant = 'default' } = Astro.props;
+const { section, variant = 'default', priority = false } = Astro.props;
 
 const resolveImageUrl = (img: any) => {
   if (!img) return undefined;
@@ -40,12 +43,22 @@ const resolveImageUrl = (img: any) => {
 };
 
 const introNodes = portableNodes(section?.intro ?? []);
-const items = (section?.items ?? []).map((item) => ({
+const rawItems = (section?.items ?? []).map((item) => ({
   ...item,
   imageUrl: item?.imageUrl ?? resolveImageUrl(item?.image),
   nodes: portableNodes(item?.content ?? []),
 }));
-const twoUp = items.length === 2;
+const twoUp = rawItems.length === 2;
+
+// .image is intrinsically sized (width: auto) inside .narrow, which is
+// min(100%, 1100px). Requesting less than the column width would visibly shrink
+// the image, so match the widest column each layout can produce: 1100px when a
+// card spans the container, and (1100 - 24px gap) / 2 when two sit side by side.
+const columnWidth = twoUp ? 540 : 1100;
+const items = rawItems.map((item) => ({
+  ...item,
+  image: sanityImage(item.imageUrl, columnWidth),
+}));
 ---
 
 <section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
@@ -66,7 +79,19 @@ const twoUp = items.length === 2;
     <div class:list={['grid', twoUp && 'gridTwo']}>
       {items.map((item) => (
         <article class="card">
-          {item.imageUrl && <img class="image" src={item.imageUrl} alt={item.alt ?? item.title ?? section?.title ?? 'Showcase image'} />}
+          {item.imageUrl && (
+            <img
+              class="image"
+              src={item.image.src}
+              srcset={item.image.srcset}
+              width={item.image.width}
+              height={item.image.height}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchpriority={priority ? 'high' : undefined}
+              decoding={priority ? 'sync' : 'async'}
+              alt={item.alt ?? item.title ?? section?.title ?? 'Showcase image'}
+            />
+          )}
           {(item.title || item.nodes.length > 0) && (
             <div class="copy">
               {item.title && <h3>{item.title}</h3>}

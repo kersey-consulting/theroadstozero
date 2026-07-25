@@ -20,8 +20,16 @@ interface Props {
   variant?: 'default' | 'alt';
 }
 
+import { sanityImage } from '@/lib/image';
+
 const { section, variant = 'default' } = Astro.props;
-const services = section?.services ?? [];
+// .cardImage is display:none in every breakpoint, so this never paints. Keeping
+// it lazy stops the browser fetching an image it will never show; the tag itself
+// is left in place in case the design brings it back.
+const services = (section?.services ?? []).map((service) => ({
+  ...service,
+  cardImage: sanityImage(service.image, 400),
+}));
 const serviceHref = (service: Service) => {
   const categorySlug = service?.category?.slug?.current;
   const serviceSlug = service?.slug?.current;
@@ -39,7 +47,7 @@ const serviceHref = (service: Service) => {
     <div class="servicesGrid">
       {services.map((service) => (
         <article class="card">
-          {service.image && <img class="cardImage" src={service.image} alt={service.name ?? 'Service image'} />}
+          {service.image && <img class="cardImage" src={service.cardImage.src} srcset={service.cardImage.srcset} width={service.cardImage.width} height={service.cardImage.height} loading="lazy" decoding="async" alt={service.name ?? 'Service image'} />}
           <div class="cardContent">
             {(service.tagline ?? service.type) && <span class="cardTag">{service.tagline ?? service.type}</span>}
             <h3 class="cardTitle">{service.name}</h3>

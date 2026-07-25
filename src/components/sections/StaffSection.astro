@@ -12,10 +12,18 @@ interface Props {
   section: { id?: string; title?: string; intro?: string; staffMembers?: StaffRef[] };
   staffMembers?: Staff[];
   variant?: 'default' | 'alt';
+  /** Set when this is the first section on the page to render an image. */
+  priority?: boolean;
 }
-const { section, staffMembers = [], variant = 'default' } = Astro.props;
+import { sanityImage } from '@/lib/image';
+
+const { section, staffMembers = [], variant = 'default', priority = false } = Astro.props;
 const refs = section?.staffMembers ?? [];
-const featured = refs.map((r) => staffMembers.find((s) => s._id === r._ref)).filter(Boolean);
+// .featuredCard is a 280px grid column on desktop, full width below 900px.
+const featured = refs
+  .map((r) => staffMembers.find((s) => s._id === r._ref))
+  .filter(Boolean)
+  .map((person: any) => ({ ...person, image: sanityImage(person.photo, 280) }));
 const blockText = (blocks = []) => blocks.map((b: any) => b.children?.map((c: any) => c.text).join('')).filter(Boolean);
 ---
 <section id={section?.id} class:list={['section', variant === 'alt' && 'sectionAlt']}>
@@ -23,9 +31,21 @@ const blockText = (blocks = []) => blocks.map((b: any) => b.children?.map((c: an
     {section?.title && <h2 class="sectionTitleCentered">{section.title}</h2>}
     {section?.intro && <p class="centeredText">{section.intro}</p>}
     <div class="staffGrid">
-      {featured.map((person: any) => (
+      {featured.map((person: any, personIndex: number) => (
         <div class="featuredCard">
-          {person.photo && <img class="featuredImage" src={person.photo} alt={person.name} />}
+          {person.photo && (
+            <img
+              class="featuredImage"
+              src={person.image.src}
+              srcset={person.image.srcset}
+              width={person.image.width}
+              height={person.image.height}
+              loading={priority && personIndex === 0 ? 'eager' : 'lazy'}
+              fetchpriority={priority && personIndex === 0 ? 'high' : undefined}
+              decoding={priority && personIndex === 0 ? 'sync' : 'async'}
+              alt={person.name}
+            />
+          )}
           <div class="featuredBody">
             <h3>{person.name}</h3>
             {person.role && <p class="featuredRole">{person.role}</p>}
@@ -49,7 +69,8 @@ const blockText = (blocks = []) => blocks.map((b: any) => b.children?.map((c: an
   .centeredText { text-align: center; max-width: 760px; margin: 0 auto 2rem; font-size: 1.05rem; line-height: 1.85; }
   .staffGrid { display: grid; gap: 2rem; }
   .featuredCard { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start; background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08); }
-  .featuredImage { width: 100%; border-radius: 20px; object-fit: cover; }
+  /* height: auto pairs with the width/height attributes on the tag. */
+  .featuredImage { width: 100%; height: auto; border-radius: 20px; object-fit: cover; }
   .featuredBody h3 { margin: 0 0 0.5rem; }
   .featuredRole { margin: 0 0 0.75rem; opacity: 0.85; text-transform: uppercase; letter-spacing: .12em; font-size: .85rem; font-weight: 700;}
   .credentialsTags { display: flex; flex-wrap: wrap; gap: 0.65rem; margin: 0 0 1rem; }

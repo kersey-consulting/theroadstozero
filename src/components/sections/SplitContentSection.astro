@@ -3,6 +3,7 @@ import Button from '@/components/Button.astro';
 import PortableInline from './PortableInline.astro';
 import { portableNodes } from '@/lib/portableText';
 import { urlFor } from '@/lib/sanity';
+import { sanityImage } from '@/lib/image';
 
 interface Block {
   style?: string;
@@ -26,9 +27,11 @@ interface Props {
     actions?: Action[];
   };
   variant?: 'default' | 'alt';
+  /** Set on the first section of a page so its image is treated as the LCP element. */
+  priority?: boolean;
 }
 
-const { section, variant = 'default' } = Astro.props;
+const { section, variant = 'default', priority = false } = Astro.props;
 const nodes = portableNodes(section?.content ?? []);
 
 const resolveImageUrl = (img: any) => {
@@ -43,6 +46,10 @@ const resolveImageUrl = (img: any) => {
 };
 
 const imageUrl = section?.imageUrl ?? resolveImageUrl(section?.image);
+// `flex: 1` lets .sectionImage grow past its 420px width cap, so the real ceiling
+// is the column: .inner is max-width 1200px split into two columns with a 48px
+// gap, giving 576px.
+const image = sanityImage(imageUrl, 600);
 const reverse = section?.imagePosition === 'left';
 ---
 
@@ -66,7 +73,19 @@ const reverse = section?.imagePosition === 'left';
         </div>
       )}
     </div>
-    {imageUrl && <img class="sectionImage" src={imageUrl} alt={section?.title ?? 'Section image'} />}
+    {imageUrl && (
+      <img
+        class="sectionImage"
+        src={image.src}
+        srcset={image.srcset}
+        width={image.width}
+        height={image.height}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchpriority={priority ? 'high' : undefined}
+        decoding={priority ? 'sync' : 'async'}
+        alt={section?.title ?? 'Section image'}
+      />
+    )}
   </div>
 </section>
 
@@ -87,7 +106,9 @@ const reverse = section?.imagePosition === 'left';
   .copy ul { margin: 0; padding-left: 1.5rem; display: grid; gap: 0.65rem; font-size: 1.05rem; line-height: 1.85; }
   .copy li { font-size: inherit; line-height: inherit; }
   .actions { display: flex; flex-wrap: wrap; gap: 1rem; padding-top: 0.5rem; }
-  .sectionImage { flex: 1; width: min(100%, 420px); border-radius: 24px; object-fit: cover; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); margin: 0 auto; }
+  /* height: auto pairs with the width/height attributes on the tag — without it
+     the image distorts once CSS narrows it below the attribute width. */
+  .sectionImage { flex: 1; width: min(100%, 420px); height: auto; border-radius: 24px; object-fit: cover; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); margin: 0 auto; }
   @media (max-width: 900px) {
     .inner, .reverse { flex-direction: column; }
     .section, .sectionAlt { padding: 4rem 1.25rem; }

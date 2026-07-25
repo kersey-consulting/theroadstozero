@@ -26,10 +26,19 @@ interface Props {
     categories?: Category[];
   };
   variant?: 'default' | 'alt';
+  /** Set on the first section of a page so its image is treated as the LCP element. */
+  priority?: boolean;
 }
 
-const { section, variant = 'default' } = Astro.props;
-const categories = section?.categories ?? [];
+import { sanityImage } from '@/lib/image';
+
+const { section, variant = 'default', priority = false } = Astro.props;
+// Cards sit in repeat(auto-fit, minmax(290px, 1fr)); 460px covers the widest
+// column the grid produces. CSS controls the box (aspect-ratio: 4 / 3).
+const categories = (section?.categories ?? []).map((category) => ({
+  ...category,
+  cardImage: sanityImage(category.homeCardImage ?? category.image, 460),
+}));
 const escapeHtml = (value = '') => value
   .replaceAll('&', '&amp;')
   .replaceAll('<', '&lt;')
@@ -50,7 +59,19 @@ const renderChildren = (children: PortableTextChild[] = []) =>
     <div class="servicesGrid">
       {categories.map((category) => (
         <article class="card">
-          <img class="cardImage" src={category.homeCardImage ?? category.image} alt={category.homeCardTitle ?? category.title} />
+          {category.cardImage.src && (
+            <img
+              class="cardImage"
+              src={category.cardImage.src}
+              srcset={category.cardImage.srcset}
+              width={category.cardImage.width}
+              height={category.cardImage.height}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchpriority={priority ? 'high' : undefined}
+              decoding={priority ? 'sync' : 'async'}
+              alt={category.homeCardTitle ?? category.title}
+            />
+          )}
           <div class="cardContent">
             <h3 class="cardTitle">{category.homeCardTitle ?? category.title}</h3>
             <div class="cardSubtext">
