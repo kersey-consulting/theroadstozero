@@ -19,13 +19,41 @@ interface Props {
 }
 
 const { sections = [], staffMembers = [] } = Astro.props;
+
+// The LCP image is the first one that actually paints, which is not always in
+// section 0 — service pages often open with a text section. Find the first
+// section that renders an image so it can load eagerly instead of lazily.
+const sectionHasImage = (section: any) => {
+  switch (section?._type) {
+    case 'heroSection':
+    case 'splitContentSection':
+      return Boolean(section.imageUrl ?? section.image);
+    case 'imageShowcaseSection':
+      return (section.items ?? []).some((item: any) => item?.imageUrl ?? item?.image);
+    case 'featuredServiceCategoriesSection':
+      return (section.categories ?? []).some((c: any) => c?.homeCardImage ?? c?.image);
+    case 'staffSection':
+      // Staff photos are resolved from refs against the staffMembers prop.
+      return (section.staffMembers ?? []).some(
+        (ref: any) => staffMembers.find((s: any) => s._id === ref?._ref)?.photo,
+      );
+    default:
+      return false;
+  }
+};
+
+const firstImageIndex = sections.findIndex(sectionHasImage);
+// Only worth prioritising if it is near the top; further down it is below the
+// fold and lazy loading is the better trade.
+const priorityIndex = firstImageIndex >= 0 && firstImageIndex <= 2 ? firstImageIndex : -1;
 ---
 
 {sections.map((section, index) => {
   const variant = index % 2 === 1 ? 'alt' : 'default';
+  const priority = index === priorityIndex;
 
   if (section._type === 'heroSection') {
-    return <HeroSection section={section} />;
+    return <HeroSection section={section} priority={priority} />;
   }
   if (section._type === 'richTextSection') {
     return <RichTextSection section={section} variant={variant} />;
@@ -34,22 +62,22 @@ const { sections = [], staffMembers = [] } = Astro.props;
     return <CardsSection section={section} variant={variant} />;
   }
   if (section._type === 'featuredServiceCategoriesSection') {
-    return <FeaturedServiceCategoriesSection section={section} variant={variant} />;
+    return <FeaturedServiceCategoriesSection section={section} variant={variant} priority={priority} />;
   }
   if (section._type === 'serviceListSection') {
     return <ServiceListSection section={section} variant={variant} />;
   }
   if (section._type === 'staffSection') {
-    return <StaffSection section={section} staffMembers={staffMembers} variant={variant} />;
+    return <StaffSection section={section} staffMembers={staffMembers} variant={variant} priority={priority} />;
   }
   if (section._type === 'tagListSection') {
     return <TagListSection section={section} variant={variant} />;
   }
   if (section._type === 'splitContentSection') {
-    return <SplitContentSection section={section} variant={variant} />;
+    return <SplitContentSection section={section} variant={variant} priority={priority} />;
   }
   if (section._type === 'imageShowcaseSection') {
-    return <ImageShowcaseSection section={section} variant={variant} />;
+    return <ImageShowcaseSection section={section} variant={variant} priority={priority} />;
   }
   if (section._type === 'reviewsSection') {
     return <ReviewsSection section={section} variant={variant} />;
