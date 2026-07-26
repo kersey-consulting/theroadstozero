@@ -459,7 +459,12 @@ export default defineType({
       fields: [
         defineField({ name: 'title', title: 'SEO Title', type: 'string' }),
         defineField({ name: 'description', title: 'SEO Description', type: 'text', rows: 3 }),
-        defineField({ name: 'image', title: 'OG Image', type: 'image' }),
+        defineField({
+          name: 'image',
+          title: 'Social Share Image',
+          type: 'image',
+          description: 'Shown when this page is shared on Facebook, Instagram, iMessage or Slack. Ideally 1200x630. Leave empty to use this page’s main image, then the site-wide default.',
+        }),
       ],
     }),
   ],

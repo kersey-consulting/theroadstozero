@@ -83,6 +83,7 @@ const schemaDescription = service.seo?.description ?? service.shortDescription ?
 <BaseLayout
   title={service.seo?.title ?? service.name}
   description={service.seo?.description ?? ''}
+  ogImage={service.seo?.image}
   sections={service.sections ?? []}
   service={{
     name: service.name,

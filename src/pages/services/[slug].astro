@@ -28,6 +28,7 @@ if (!category) {
 <BaseLayout
   title={category.seo?.title ?? `${category.title} — The Road to Zero`}
   description={category.seo?.description ?? category.description ?? ''}
+  ogImage={category.seo?.image}
   sections={category.sections ?? []}
   breadcrumbs={serviceBreadcrumbs(category)}
 >

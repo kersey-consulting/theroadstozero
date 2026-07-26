@@ -11,6 +11,7 @@ const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug:
 <BaseLayout
   title={category?.seo?.title ?? `${category?.title ?? 'IV Therapy & Vitamin Injections'} — The Road to Zero`}
   description={category?.seo?.description ?? category?.description ?? ''}
+  ogImage={category?.seo?.image}
   sections={category?.sections ?? []}
   breadcrumbs={serviceBreadcrumbs(category)}
 >
