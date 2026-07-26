@@ -1,3 +1,24 @@
+---
+import { getRuntimeEnv } from '@/lib/server/runtimeEnv';
+import { hasValidAdminSession, type AdminAuthEnv } from '@/lib/server/adminAuth';
+
+export const prerender = false;
+
+// The session cookie is HttpOnly, so the page cannot ask JavaScript whether the
+// user is signed in — it has to be decided here and rendered accordingly.
+const env = await getRuntimeEnv<AdminAuthEnv & Record<string, unknown>>(Astro.locals, {
+  ADMIN_USER: import.meta.env.ADMIN_USER,
+  ADMIN_PASSWORD: import.meta.env.ADMIN_PASSWORD,
+  ADMIN_SESSION_SECRET: import.meta.env.ADMIN_SESSION_SECRET,
+  BASIC_AUTH_USER: import.meta.env.BASIC_AUTH_USER,
+  BASIC_AUTH_PASS: import.meta.env.BASIC_AUTH_PASS,
+});
+
+const signedIn = await hasValidAdminSession(Astro.request, env);
+
+Astro.response.headers.set('Cache-Control', 'no-store');
+---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,69 +114,69 @@
   </style>
 </head>
 <body>
-  <main class="card" id="login">
-    <h1>Admin</h1>
-    <p>Sign in to access The Road to Zero reporting tools.</p>
+  {!signedIn && (
+    <main class="card" id="login">
+      <h1>Admin</h1>
+      <p>Sign in to access The Road to Zero reporting tools.</p>
 
-    <form id="loginForm">
-      <label>
-        Username
-        <input id="username" type="text" autocomplete="username" required />
-      </label>
-      <label>
-        Password
-        <input id="password" type="password" autocomplete="current-password" required />
-      </label>
-      <button type="submit">Sign in</button>
-    </form>
+      <form id="loginForm">
+        <label>
+          Username
+          <input id="username" type="text" autocomplete="username" required />
+        </label>
+        <label>
+          Password
+          <input id="password" type="password" autocomplete="current-password" required />
+        </label>
+        <button type="submit">Sign in</button>
+      </form>
 
-    <div id="error" role="status" aria-live="polite"></div>
-  </main>
+      <div id="error" role="status" aria-live="polite"></div>
+    </main>
+  )}
 
-  <main class="card" id="tools" style="display:none;">
-    <h1>Admin Tools</h1>
-    <p>Select a private tool to continue.</p>
+  {signedIn && (
+    <main class="card" id="tools">
+      <h1>Admin Tools</h1>
+      <p>Select a private tool to continue.</p>
 
-    <div class="tool-list">
-      <a class="tool-link" href="/admin/analytics">Analytics Dashboard</a>
-    </div>
+      <div class="tool-list">
+        <a class="tool-link" href="/admin/analytics">Analytics Dashboard</a>
+      </div>
 
-    <button class="secondary" id="logout" type="button">Log out</button>
-  </main>
+      <button class="secondary" id="logout" type="button">Log out</button>
+    </main>
+  )}
 
   <script>
-    const AUTH_KEY = 'trtz_admin_auth';
-    const loginCard = document.getElementById('login');
-    const toolsCard = document.getElementById('tools');
+    // Sign-in posts to /admin/api/session, which sets an HttpOnly cookie. The
+    // password is never stored anywhere JavaScript can read it, and which card
+    // renders is decided on the server, so a full reload is the way back.
+    const loginForm = document.getElementById('loginForm');
     const errorDiv = document.getElementById('error');
 
-    if (sessionStorage.getItem(AUTH_KEY)) showTools();
-
-    document.getElementById('loginForm').addEventListener('submit', async (event) => {
+    loginForm?.addEventListener('submit', async (event) => {
       event.preventDefault();
       errorDiv.textContent = '';
 
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-      const encoded = btoa(`${username}:${password}`);
+      const username = (document.getElementById('username') as HTMLInputElement).value.trim();
+      const password = (document.getElementById('password') as HTMLInputElement).value;
 
       try {
-        const res = await fetch('/admin/api/analytics', {
-          headers: {'Authorization': 'Basic ' + encoded},
+        const res = await fetch('/admin/api/session', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({username, password}),
         });
 
-        if (res.status === 401) {
-          errorDiv.textContent = 'Invalid username or password.';
+        if (res.ok) {
+          window.location.reload();
           return;
         }
 
-        if (!res.ok) {
-          errorDiv.textContent = 'Unable to verify credentials.';
-          return;
-        }
-
-        sessionStorage.setItem(AUTH_KEY, encoded);
-        showTools();
+        errorDiv.textContent = res.status === 401
+          ? 'Invalid username or password.'
+          : 'Unable to sign in. Please try again.';
       } catch {
         errorDiv.textContent = 'Network error. Please try again.';
       }
@@ -163,15 +184,10 @@
 
     // Astro bundles this script as a module, so inline onclick="" handlers can
     // never reach these functions — wire listeners up explicitly.
-    document.getElementById('logout').addEventListener('click', () => {
-      sessionStorage.removeItem(AUTH_KEY);
-      window.location.reload();
+    document.getElementById('logout')?.addEventListener('click', async () => {
+      await fetch('/admin/api/session', {method: 'DELETE'}).catch(() => {});
+      window.location.href = '/admin';
     });
-
-    function showTools() {
-      loginCard.style.display = 'none';
-      toolsCard.style.display = 'block';
-    }
   </script>
 </body>
 </html>

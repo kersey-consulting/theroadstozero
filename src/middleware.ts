@@ -1,5 +1,6 @@
 import { defineMiddleware } from 'astro:middleware';
 import { getRuntimeEnv } from '@/lib/server/runtimeEnv';
+import { hasValidAdminSession, requireAdminAuth, type AdminAuthEnv } from '@/lib/server/adminAuth';
 
 function shouldRequireAuth(env: Record<string, unknown>) {
   return Boolean(env.BASIC_AUTH_USER && env.BASIC_AUTH_PASS);
@@ -8,6 +9,18 @@ function shouldRequireAuth(env: Record<string, unknown>) {
 function isAdminApiRequest(request: Request) {
   const { pathname } = new URL(request.url);
   return pathname.startsWith('/admin/api/');
+}
+
+/**
+ * Paths under /admin that must stay reachable without a session, or there
+ * would be no way to obtain one.
+ */
+function isAdminPublicPath(pathname: string) {
+  return pathname === '/admin' || pathname === '/admin/' || pathname === '/admin/api/session';
+}
+
+function isAdminPath(pathname: string) {
+  return pathname === '/admin' || pathname.startsWith('/admin/');
 }
 
 function unauthorized() {
@@ -42,30 +55,43 @@ function decodeBasicAuth(header: string | null) {
 
 export const onRequest = defineMiddleware(async (_context, next) => {
   const env = await getRuntimeEnv(_context.locals);
+  const { pathname } = new URL(_context.request.url);
 
-  // Admin API routes have their own credential set (ADMIN_USER / ADMIN_PASSWORD).
-  // On gated lower environments, the admin UI sends those credentials in the
-  // Authorization header. If preview Basic Auth runs first, it consumes the same
-  // header and rejects the request before adminAuth can validate it, causing a
-  // browser Basic Auth popup that neither credential set can clear cleanly.
-  if (isAdminApiRequest(_context.request)) {
-    return next();
+  // 1. Preview Basic Auth, which gates the whole site on lower environments.
+  //
+  // Admin API routes are exempt: they carry their own credential set, and if
+  // the preview gate ran first it would consume the same Authorization header
+  // and reject the request before adminAuth could validate it, producing a
+  // browser popup that neither credential set clears cleanly.
+  if (!isAdminApiRequest(_context.request) && shouldRequireAuth(env)) {
+    const credentials = decodeBasicAuth(_context.request.headers.get('authorization'));
+    if (
+      !credentials
+      || credentials.user !== String(env.BASIC_AUTH_USER)
+      || credentials.pass !== String(env.BASIC_AUTH_PASS)
+    ) {
+      return unauthorized();
+    }
   }
 
-  if (!shouldRequireAuth(env)) {
-    return next();
-  }
+  // 2. Admin session gate.
+  //
+  // The panel used to be gated only in client-side JavaScript, so /admin and
+  // /admin/analytics were served to anyone who asked. Enforcing it here means
+  // an unauthenticated request never reaches the page at all.
+  if (isAdminPath(pathname) && !isAdminPublicPath(pathname)) {
+    // Either a browser session cookie or HTTP Basic, so the API stays usable
+    // from curl and scripts without a login round-trip.
+    const authorised = await hasValidAdminSession(_context.request, env as AdminAuthEnv)
+      || requireAdminAuth(_context.request, env as AdminAuthEnv);
 
-  const expectedUser = String(env.BASIC_AUTH_USER);
-  const expectedPass = String(env.BASIC_AUTH_PASS);
-
-  const credentials = decodeBasicAuth(_context.request.headers.get('authorization'));
-  if (!credentials) {
-    return unauthorized();
-  }
-
-  if (credentials.user !== expectedUser || credentials.pass !== expectedPass) {
-    return unauthorized();
+    if (!authorised) {
+      // A page request should land back on the login screen; an API request
+      // gets a status its caller can act on rather than a redirect to HTML.
+      return isAdminApiRequest(_context.request)
+        ? new Response('Unauthorized', { status: 401, headers: { 'Cache-Control': 'no-store' } })
+        : new Response(null, { status: 302, headers: { Location: '/admin', 'Cache-Control': 'no-store' } });
+    }
   }
 
   return next();

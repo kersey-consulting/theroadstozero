@@ -1,13 +1,14 @@
 import type {APIRoute} from 'astro';
 import {getRuntimeEnv} from '@/lib/server/runtimeEnv';
 import {getGaAccessToken} from '@/lib/server/gaAuth';
-import {requireAdminAuth, unauthorizedAdminResponse} from '@/lib/server/adminAuth';
+import {hasValidAdminSession, requireAdminAuth, unauthorizedAdminResponse} from '@/lib/server/adminAuth';
 
 export const prerender = false;
 
 interface RuntimeEnv {
   ADMIN_USER?: string;
   ADMIN_PASSWORD?: string;
+  ADMIN_SESSION_SECRET?: string;
   BASIC_AUTH_USER?: string;
   BASIC_AUTH_PASS?: string;
   GA_CLIENT_EMAIL?: string;
@@ -33,6 +34,7 @@ function getAnalyticsEnv(locals: App.Locals) {
   return getRuntimeEnv<RuntimeEnv>(locals, {
     ADMIN_USER: import.meta.env.ADMIN_USER,
     ADMIN_PASSWORD: import.meta.env.ADMIN_PASSWORD,
+    ADMIN_SESSION_SECRET: import.meta.env.ADMIN_SESSION_SECRET,
     BASIC_AUTH_USER: import.meta.env.BASIC_AUTH_USER,
     BASIC_AUTH_PASS: import.meta.env.BASIC_AUTH_PASS,
     GA_CLIENT_EMAIL: import.meta.env.GA_CLIENT_EMAIL,
@@ -241,7 +243,13 @@ const emptyAnalytics = {
 export const GET: APIRoute = async ({request, locals}) => {
   const runtimeEnv = await getAnalyticsEnv(locals);
 
-  if (!requireAdminAuth(request, runtimeEnv)) {
+  // The middleware already rejects sessionless requests; this is defence in
+  // depth so the endpoint is never left open by a routing change. Basic Auth is
+  // still accepted so the endpoint stays usable from curl and scripts.
+  const authorised = (await hasValidAdminSession(request, runtimeEnv))
+    || requireAdminAuth(request, runtimeEnv);
+
+  if (!authorised) {
     return unauthorizedAdminResponse();
   }
 
