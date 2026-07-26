@@ -40,6 +40,13 @@ export default defineType({
       description: 'Hydreight booking widget URL',
     }),
     defineField({
+      name: 'ogImage',
+      title: 'Default Social Share Image',
+      type: 'image',
+      description:
+        'Used when a page is shared and has no share image of its own and no main image. Ideally 1200x630. Falls back to the logo on the brand background.',
+    }),
+    defineField({
       name: 'address',
       title: 'Street Address',
       description:

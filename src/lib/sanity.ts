@@ -64,6 +64,7 @@ export const queries = {
     bookingUrl,
     "logo": logo.asset->url,
     "goldLogo": goldLogo.asset->url,
+    "ogImage": ogImage.asset->url,
     address{ streetAddress, addressLocality, addressRegion, postalCode, addressCountry },
     geo{ latitude, longitude },
     mapUrl,
