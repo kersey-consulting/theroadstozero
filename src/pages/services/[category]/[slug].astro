@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageSections from '@/components/sections/PageSections.astro';
 import { getSanityClient } from '@/lib/sanity';
-import { fetchDocument, contentUnavailable } from '@/lib/routing';
+import { fetchDocument, contentUnavailable, serviceBreadcrumbs } from '@/lib/routing';
 
 export async function getStaticPaths() {
   const sanityClient = getSanityClient(Astro.locals.runtime?.env);
@@ -74,8 +74,24 @@ if (!service) {
 const staffMembers = await sanityClient.fetch(`*[_type == "staffMember"] | order(name asc){
   _id, name, role, credentials, bio, "photo": photo.asset->url
 }`).catch(() => []);
+
+// The meta description stays exactly as authored in Sanity; the schema node can
+// fall back further, since an empty `description` there is simply omitted.
+const schemaDescription = service.seo?.description ?? service.shortDescription ?? service.tagline ?? '';
 ---
 
-<BaseLayout title={service.seo?.title ?? service.name} description={service.seo?.description ?? ''} sections={service.sections ?? []}>
+<BaseLayout
+  title={service.seo?.title ?? service.name}
+  description={service.seo?.description ?? ''}
+  sections={service.sections ?? []}
+  service={{
+    name: service.name,
+    description: schemaDescription,
+    image: service.heroImage ?? service.image,
+    type: service.type,
+    category: service.category,
+  }}
+  breadcrumbs={serviceBreadcrumbs(service.category, service)}
+>
   <PageSections sections={service.sections ?? []} staffMembers={staffMembers} />
 </BaseLayout>

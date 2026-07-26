@@ -1,9 +1,12 @@
 ---
-import { getSanityClient, queries } from '@/lib/sanity';
 import { sanityImage } from '@/lib/image';
 
-const sanityClient = getSanityClient(Astro.locals.runtime?.env);
-const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+// Passed down from BaseLayout, which fetches siteSettings once per request.
+interface Props {
+  settings?: any;
+}
+
+const { settings } = Astro.props as Props;
 
 // .logo renders at 220px wide.
 const logo = sanityImage(settings?.goldLogo ?? '/icons/gold-ring-logo.png', 220);

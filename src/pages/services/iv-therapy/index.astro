@@ -2,11 +2,17 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageSections from '@/components/sections/PageSections.astro';
 import { getSanityClient, queries } from '@/lib/sanity';
+import { serviceBreadcrumbs } from '@/lib/routing';
 
 const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug: 'iv-therapy' }).catch(() => null);
 ---
 
-<BaseLayout title={category?.seo?.title ?? `${category?.title ?? 'IV Therapy & Vitamin Injections'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''} sections={category?.sections ?? []}>
+<BaseLayout
+  title={category?.seo?.title ?? `${category?.title ?? 'IV Therapy & Vitamin Injections'} — The Road to Zero`}
+  description={category?.seo?.description ?? category?.description ?? ''}
+  sections={category?.sections ?? []}
+  breadcrumbs={serviceBreadcrumbs(category)}
+>
   <PageSections sections={category?.sections ?? []} />
 </BaseLayout>
