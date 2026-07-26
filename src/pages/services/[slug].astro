@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageSections from '@/components/sections/PageSections.astro';
 import { getSanityClient, queries } from '@/lib/sanity';
-import { fetchDocument, contentUnavailable } from '@/lib/routing';
+import { fetchDocument, contentUnavailable, serviceBreadcrumbs } from '@/lib/routing';
 
 export async function getStaticPaths() {
   const sanityClient = getSanityClient(Astro.locals.runtime?.env);
@@ -25,6 +25,11 @@ if (!category) {
 }
 ---
 
-<BaseLayout title={category.seo?.title ?? `${category.title} — The Road to Zero`} description={category.seo?.description ?? category.description ?? ''} sections={category.sections ?? []}>
+<BaseLayout
+  title={category.seo?.title ?? `${category.title} — The Road to Zero`}
+  description={category.seo?.description ?? category.description ?? ''}
+  sections={category.sections ?? []}
+  breadcrumbs={serviceBreadcrumbs(category)}
+>
   <PageSections sections={category.sections ?? []} />
 </BaseLayout>

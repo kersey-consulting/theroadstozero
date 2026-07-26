@@ -19,7 +19,11 @@ const services = [
 ];
 ---
 
-<BaseLayout title="Our Services | IV Therapy, Aesthetics & Wellness in Utah" description="Explore concierge IV therapy, botulinum and fillers, medical weight management, body contouring and holistic wellness services across Utah.">
+<BaseLayout
+  title="Our Services | IV Therapy, Aesthetics & Wellness in Utah"
+  description="Explore concierge IV therapy, botulinum and fillers, medical weight management, body contouring and holistic wellness services across Utah."
+  breadcrumbs={[{ name: 'Home', url: '/' }, { name: 'Services', url: '/services' }]}
+>
   <div class="page">
     <Hero id="hero" backgroundImage="/assets/Sand.jpeg" backgroundParallax={true} theme="tertiary">
       <div slot="left" class="heroContent">

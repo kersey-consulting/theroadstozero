@@ -42,7 +42,7 @@ async function seedSiteSettings() {
     _id: 'siteSettings',
     _type: 'siteSettings',
     businessName: 'The Road to Zero',
-    phone: '801-682-7939',
+    // Phone deliberately omitted — the client has taken the number off the site.
     email: 'info@theroadstozero.com',
     bookingUrl: 'https://booking.hydreight.com/widget-business/fk58k',
     socialLinks: [

@@ -2,6 +2,9 @@
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import { buildJsonLd } from '@/lib/schema';
+import type { BreadcrumbItem, ServiceSchemaInput } from '@/lib/schema';
+import { resolveBusinessProfile } from '@/lib/businessInfo';
+import { getSanityClient, queries } from '@/lib/sanity';
 import '@/styles/global.css';
 
 interface Props {
@@ -9,15 +12,38 @@ interface Props {
   description?: string;
   ogImage?: string;
   sections?: any[];
+  /** Emits a `Service` node tied to the site-wide business. Service pages only. */
+  service?: ServiceSchemaInput | null;
+  /** Emits `BreadcrumbList`. Needs at least two entries to be worth anything. */
+  breadcrumbs?: BreadcrumbItem[];
 }
 
-const { title, description = '', ogImage = '', sections = [] } = Astro.props;
+const {
+  title,
+  description = '',
+  ogImage = '',
+  sections = [],
+  service = null,
+  breadcrumbs = [],
+} = Astro.props;
+
+// Fetched once here rather than separately in Header and Footer; all three
+// consumers (plus the JSON-LD below) need the same document.
+const sanityClient = getSanityClient(Astro.locals.runtime?.env);
+const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
+const business = resolveBusinessProfile(settings);
+
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const siteOrigin = new URL(Astro.site ?? 'https://theroadstozero.com').origin;
 const jsonLd = buildJsonLd({
   title,
   description,
   url: canonicalUrl.toString(),
   sections,
+  business,
+  service,
+  breadcrumbs,
+  siteOrigin,
 });
 ---
 
@@ -54,11 +80,11 @@ const jsonLd = buildJsonLd({
     </script>
   </head>
   <body>
-    <Header />
+    <Header settings={settings} />
     <main id="main" class="siteMain">
       <slot />
     </main>
-    <Footer />
+    <Footer settings={settings} />
   </body>
 </html>
 
