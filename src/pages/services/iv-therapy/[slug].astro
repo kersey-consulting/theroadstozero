@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageSections from '@/components/sections/PageSections.astro';
 import { getSanityClient, queries } from '@/lib/sanity';
+import { fetchDocument, contentUnavailable } from '@/lib/routing';
 
 export async function getStaticPaths() {
   const sanityClient = getSanityClient(Astro.locals.runtime?.env);
@@ -20,10 +21,16 @@ export async function getStaticPaths() {
 
 const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const { slug } = Astro.params;
-const service = await sanityClient.fetch(queries.serviceBySlug, { slug }).catch(() => null);
+const { doc: service, lookupFailed } = await fetchDocument<any>(sanityClient, queries.serviceBySlug, { slug });
+
+if (!service) {
+  // A failed lookup is not evidence the page is gone, so only a genuine miss 404s.
+  return lookupFailed ? contentUnavailable() : Astro.rewrite('/404');
+}
+
 const staffMembers = await sanityClient.fetch(queries.staffMembers).catch(() => []);
 ---
 
-<BaseLayout title={service?.seo?.title ?? service?.name ?? 'Service'} description={service?.seo?.description ?? service?.shortDescription ?? service?.heroText ?? ''} sections={service?.sections ?? []}>
-  <PageSections sections={service?.sections ?? []} staffMembers={staffMembers} />
+<BaseLayout title={service.seo?.title ?? service.name} description={service.seo?.description ?? service.shortDescription ?? service.heroText ?? ''} sections={service.sections ?? []}>
+  <PageSections sections={service.sections ?? []} staffMembers={staffMembers} />
 </BaseLayout>

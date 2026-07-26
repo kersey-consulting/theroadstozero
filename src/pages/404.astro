@@ -1,5 +1,10 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+
+// Astro sets this automatically for unmatched URLs, but not when a route reaches
+// this page via Astro.rewrite('/404'). Setting it here keeps the status correct
+// however the page is reached.
+Astro.response.status = 404;
 ---
 
 <BaseLayout

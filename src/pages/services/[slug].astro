@@ -2,6 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageSections from '@/components/sections/PageSections.astro';
 import { getSanityClient, queries } from '@/lib/sanity';
+import { fetchDocument, contentUnavailable } from '@/lib/routing';
 
 export async function getStaticPaths() {
   const sanityClient = getSanityClient(Astro.locals.runtime?.env);
@@ -16,9 +17,14 @@ export async function getStaticPaths() {
 
 const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const { slug } = Astro.params;
-const category = await sanityClient.fetch(queries.serviceCategoryBySlug, { slug }).catch(() => null);
+const { doc: category, lookupFailed } = await fetchDocument<any>(sanityClient, queries.serviceCategoryBySlug, { slug });
+
+if (!category) {
+  // A failed lookup is not evidence the page is gone, so only a genuine miss 404s.
+  return lookupFailed ? contentUnavailable() : Astro.rewrite('/404');
+}
 ---
 
-<BaseLayout title={category?.seo?.title ?? `${category?.title ?? 'Service Category'} — The Road to Zero`} description={category?.seo?.description ?? category?.description ?? ''} sections={category?.sections ?? []}>
-  <PageSections sections={category?.sections ?? []} />
+<BaseLayout title={category.seo?.title ?? `${category.title} — The Road to Zero`} description={category.seo?.description ?? category.description ?? ''} sections={category.sections ?? []}>
+  <PageSections sections={category.sections ?? []} />
 </BaseLayout>

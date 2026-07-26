@@ -17,5 +17,33 @@ export default defineConfig({
       status: 301,
       destination: '/services/holistic-services/cupping',
     },
+    '/services/aesthetic-treatments/chemical-peel-coming-soon': {
+      status: 301,
+      destination: '/services/aesthetic-treatments/chemical-peel',
+    },
+    '/services/aesthetic-treatments/dermaneedling-coming-soon': {
+      status: 301,
+      destination: '/services/aesthetic-treatments/dermaneedling',
+    },
+    '/services/aesthetic-treatments/dermaplaning-coming-soon': {
+      status: 301,
+      destination: '/services/aesthetic-treatments/dermaplaning',
+    },
+    '/services/aesthetic-treatments/microdermabrasion-coming-soon': {
+      status: 301,
+      destination: '/services/aesthetic-treatments/microdermabrasion',
+    },
+    '/services/aesthetic-treatments/facial-prp-treatment-coming-soon': {
+      status: 301,
+      destination: '/services/aesthetic-treatments/facial-prp-treatment',
+    },
+    '/services/aesthetic-treatments/facial-pdo-thread-lift-coming-soon': {
+      status: 301,
+      destination: '/services/aesthetic-treatments/facial-pdo-thread-lift',
+    },
+    '/services/aesthetic-treatments/prp-hair-restoration-coming-soon': {
+      status: 301,
+      destination: '/services/aesthetic-treatments/prp-hair-restoration',
+    },
   },
 });
