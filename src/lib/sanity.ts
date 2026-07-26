@@ -198,7 +198,10 @@ export const queries = {
     "image": image.asset->url
   }`,
 
-  serviceBySlug: `*[_type == "service" && slug.current == $slug][0]{
+  // Scoped to IV therapy: this backs /services/iv-therapy/[slug], and without the
+  // category filter every non-IV service resolved there too, duplicating pages
+  // like /services/holistic-services/reiki at /services/iv-therapy/reiki.
+  serviceBySlug: `*[_type == "service" && slug.current == $slug && category->slug.current == "iv-therapy"][0]{
     _id,
     name,
     slug,
