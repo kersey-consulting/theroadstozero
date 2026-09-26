@@ -20,6 +20,8 @@ interface Props {
   sections?: any[];
   /** Emits a `Service` node tied to the site-wide business. Service pages only. */
   service?: ServiceSchemaInput | null;
+  /** Service pages: the header's booking button passes this on to /appointments. */
+  serviceSlug?: string;
   /** Emits `BreadcrumbList`. Needs at least two entries to be worth anything. */
   breadcrumbs?: BreadcrumbItem[];
 }
@@ -30,6 +32,7 @@ const {
   ogImage = null,
   sections = [],
   service = null,
+  serviceSlug,
   breadcrumbs = [],
 } = Astro.props;
 
@@ -104,7 +107,7 @@ const jsonLd = buildJsonLd({
     </script>
   </head>
   <body>
-    <Header settings={settings} />
+    <Header settings={settings} serviceSlug={serviceSlug} />
     <main id="main" class="siteMain">
       <slot />
     </main>

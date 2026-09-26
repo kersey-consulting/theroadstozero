@@ -1,15 +1,18 @@
 ---
 import { getSanityClient, queries } from '@/lib/sanity';
 import HeaderClient from './HeaderClient';
+import { appointmentsHref } from '@/lib/booking';
 
 // siteSettings is fetched once in BaseLayout and passed down — Header, Footer
 // and the JSON-LD builder all need it, and it used to be fetched three times
 // per request.
 interface Props {
   settings?: any;
+  /** Set on service pages so the booking button can name the service. */
+  serviceSlug?: string;
 }
 
-const { settings } = Astro.props as Props;
+const { settings, serviceSlug } = Astro.props as Props;
 
 const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const navigation = await sanityClient.fetch(queries.navigation).catch(() => null);
@@ -54,6 +57,7 @@ const fallbackNavigation = {
     client:load
     settings={settings || fallbackSettings}
     navigation={navigation || fallbackNavigation}
+    bookingHref={appointmentsHref(serviceSlug)}
   />
 </div>
 
