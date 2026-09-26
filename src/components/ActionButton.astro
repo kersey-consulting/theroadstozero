@@ -1,19 +1,18 @@
 ---
 import Button from './Button.astro';
-import BookButton from './BookButton.astro';
-import { isBookingHref } from '@/lib/booking';
+import { appointmentsHref, isBookingHref } from '@/lib/booking';
 
-// A section button from Sanity. Booking links become a BookButton; everything
-// else renders as authored.
+// A section button from Sanity. Booking links go to /appointments, tagged with
+// the page's service so the text message can name it; everything else renders
+// as authored.
 interface Props {
   action: { label: string; href: string };
-  /** The service the page is about, for the booking text message. */
-  service?: string;
+  /** Slug of the service this page is about. */
+  serviceSlug?: string;
 }
 
-const { action, service } = Astro.props;
+const { action, serviceSlug } = Astro.props;
+const href = isBookingHref(action.href) ? appointmentsHref(serviceSlug) : action.href;
 ---
 
-{isBookingHref(action.href)
-  ? <BookButton service={service} />
-  : <Button label={action.label} href={action.href} theme="primary" />}
+<Button label={action.label} href={href} theme="primary" />

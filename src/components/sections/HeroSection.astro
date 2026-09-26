@@ -29,11 +29,11 @@ interface Props {
     backgroundImageUrl?: string;
     actions?: Action[];
   };
-  /** The service this page is about; named in the booking text message. */
-  service?: string;
+  /** Slug of the service this page is about, passed on to /appointments by booking buttons. */
+  serviceSlug?: string;
 }
 
-const { section, priority = false, service } = Astro.props;
+const { section, priority = false, serviceSlug } = Astro.props;
 const resolveImageUrl = (img: any) => {
   if (!img) return undefined;
   if (typeof img === 'string') return img;
@@ -77,7 +77,7 @@ const reverse = section?.imagePosition === 'left';
     )}
     {actions.length > 0 && (
       <div class="heroActions">
-        {actions.map((action) => <ActionButton action={action} service={service} />)}
+        {actions.map((action) => <ActionButton action={action} serviceSlug={serviceSlug} />)}
       </div>
     )}
   </div>

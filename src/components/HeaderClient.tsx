@@ -1,6 +1,6 @@
 import { useEffect, useId, useState } from 'react';
 import styles from './Header.module.css';
-import { smsHref, telHref } from '@/lib/booking';
+import { APPOINTMENTS_PATH } from '@/lib/booking';
 
 type NavChild = { _key: string; label: string; href: string };
 type NavItem = { _key: string; label: string; href: string; children?: NavChild[] };
@@ -80,9 +80,6 @@ export default function HeaderClient({ settings, navigation }: Props) {
 
   const navItems = navigation?.items ?? [];
   const socialLinks = settings?.socialLinks ?? [];
-  const phone = settings?.phone?.trim() || undefined;
-  const bookSms = smsHref(phone);
-  const bookTel = telHref(phone);
 
   return (
     <header className={styles.header}>
@@ -183,14 +180,7 @@ export default function HeaderClient({ settings, navigation }: Props) {
               </ul>
             </nav>
           </div>
-          {bookSms && bookTel ? (
-            <>
-              <a className={`${styles.cta} ${styles.ctaMobile}`} href={bookSms}>Text to Book</a>
-              <a className={`${styles.cta} ${styles.ctaDesktop}`} href={bookTel} aria-label={`Call ${phone} to book`}>{phone}</a>
-            </>
-          ) : (
-            <a className={styles.cta} href="/contact">Contact Us to Book</a>
-          )}
+          <a className={styles.cta} href={APPOINTMENTS_PATH}>Book Appointment</a>
         </div>
 
         <button

@@ -15,8 +15,8 @@ const sanityClient = getSanityClient(Astro.locals.runtime?.env);
 const navigation = await sanityClient.fetch(queries.navigation).catch(() => null);
 
 // Fallback if Sanity hasn't been populated yet
-// No `phone` here: the number is managed in Sanity Site Settings. Without it the
-// header's booking button falls back to linking to /contact.
+// No `phone` here: the number is managed in Sanity Site Settings, and this
+// fallback would otherwise put a stale one on the page when Sanity is unreachable.
 const fallbackSettings = {
   businessName: 'The Road to Zero',
   email: 'info@theroadstozero.com',

@@ -1,0 +1,36 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageSections from '@/components/sections/PageSections.astro';
+import AppointmentCard from '@/components/AppointmentCard.astro';
+import { getSanityClient, queries } from '@/lib/sanity';
+
+// Rendered per request: the card depends on the `?service=` query string.
+export const prerender = false;
+
+const sanityClient = getSanityClient(Astro.locals.runtime?.env);
+
+// Booking buttons on service pages link here with `?service=<slug>`. The slug is
+// looked up rather than trusted, so only a real service name reaches the page
+// or the text message; anything else falls back to the generic message.
+const serviceSlug = Astro.url.searchParams.get('service')?.trim() ?? '';
+const [page, service] = await Promise.all([
+  sanityClient.fetch(queries.pageBySlug, { slug: 'appointments' }).catch(() => null),
+  /^[a-z0-9-]{1,96}$/.test(serviceSlug)
+    ? sanityClient.fetch(`*[_type == "service" && slug.current == $slug][0].name`, { slug: serviceSlug }).catch(() => null)
+    : null,
+]);
+
+const sections = page?.sections ?? [];
+const staffMembers = sections.length > 0
+  ? await sanityClient.fetch(queries.staffMembers).catch(() => [])
+  : [];
+---
+
+<BaseLayout
+  title={page?.seo?.title ?? page?.title ?? 'Book an Appointment'}
+  description={page?.seo?.description ?? 'Book by call or text with The Road to Zero.'}
+  sections={sections}
+>
+  <PageSections sections={sections} staffMembers={staffMembers} />
+  <AppointmentCard service={typeof service === 'string' ? service.trim() || undefined : undefined} headingLevel={sections.length > 0 ? 2 : 1} />
+</BaseLayout>

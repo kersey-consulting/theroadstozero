@@ -1,14 +1,15 @@
 /**
- * Point every section button that links to the old online scheduler at `#book`,
- * and drop the retired siteSettings.bookingUrl field.
+ * Point every section button that links to the old online scheduler at
+ * /appointments, and drop the retired siteSettings.bookingUrl field.
  *
- * Background: booking moved from the Profile Aesthetic scheduler to call/text.
- * `#book` renders as BookButton — "Text to Book" on phones, the phone number on
- * desktop (src/lib/booking.ts). The site already treats scheduler URLs as
- * booking buttons, so this is cleanup rather than a prerequisite for the
- * deploy; it just stops the dead URL living on in content.
+ * Background: booking moved from the Profile Aesthetic scheduler to call/text,
+ * via the /appointments page. The site already treats scheduler URLs as
+ * booking buttons (src/lib/booking.ts), so this is cleanup rather than a
+ * prerequisite for the deploy; it just stops the dead URL living on in content.
  *
- * Labels are left alone: BookButton ignores them. Safe to run repeatedly.
+ * Only the href changes; labels are kept. On service pages the site adds
+ * `?service=<slug>` itself, so plain /appointments is right here. Safe to run
+ * repeatedly.
  *
  * Usage:
  *   SANITY_TOKEN=<editor-token> node sanity/migrations/replace-scheduler-links.mjs [--dry-run]
@@ -53,7 +54,7 @@ async function main() {
       const actions = section.actions.map((action) => {
         if (!isSchedulerUrl(action?.href)) return action;
         changed += 1;
-        return { ...action, href: '#book' };
+        return { ...action, href: '/appointments' };
       });
       return { ...section, actions };
     });

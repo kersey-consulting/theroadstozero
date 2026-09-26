@@ -2,7 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
-import BookButton from '@/components/BookButton.astro';
+import { APPOINTMENTS_PATH } from '@/lib/booking';
 
 export interface Benefit {
   title: string;
@@ -46,7 +46,7 @@ const { data } = Astro.props;
         <p class="heroTagline">{data.tagline}</p>
         <p class="heroText">{data.heroText}</p>
         <div class="heroActions">
-          <BookButton service={data.name} />
+          <Button label="Book This Treatment" href={APPOINTMENTS_PATH} theme="primary" />
           <Button label="View All IV Services" href="/services/iv-therapy" theme="primary" />
         </div>
       </div>
@@ -118,7 +118,7 @@ const { data } = Astro.props;
         <h2>Ready to Begin?</h2>
         <p>Book your {data.name} session today. We come to you — home, office, or wellness studio.</p>
         <div class="ctaActions">
-          <BookButton service={data.name} />
+          <Button label="Book This Treatment" href={APPOINTMENTS_PATH} theme="primary" />
           <Button label="View All IV Services" href="/services/iv-therapy" theme="primary" />
         </div>
       </div>

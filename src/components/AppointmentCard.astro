@@ -1,0 +1,124 @@
+---
+import Button from './Button.astro';
+import { getSiteSettings } from '@/lib/siteSettings';
+import { smsHref, telHref } from '@/lib/booking';
+
+interface Props {
+  /** Service name, from the `?service=` slug. Named on the card and in the text message. */
+  service?: string;
+  /** h1 when the page has no Sanity hero above the card; h2 otherwise. */
+  headingLevel?: 1 | 2;
+}
+
+const { service, headingLevel = 2 } = Astro.props;
+const Heading = `h${headingLevel}`;
+
+const settings = await getSiteSettings(Astro.locals);
+const phone: string | undefined = settings?.phone?.trim() || undefined;
+const sms = smsHref(phone, service);
+const tel = telHref(phone);
+---
+
+<section class="appointmentSection">
+  <div class="appointmentCard">
+    <Heading class="title">Book Your Appointment</Heading>
+    {service && (
+      <p class="service">
+        <span class="serviceLabel">Booking</span>
+        <span class="serviceName">{service}</span>
+      </p>
+    )}
+
+    {sms && tel ? (
+      <>
+        {/* Phones get a pre-filled text; everything else gets the number to
+            call or text from their phone. Switched on input type, not width,
+            so a narrow desktop window still shows the number. */}
+        <div class="touch">
+          <p class="lead">We book by call or text. Tap below and your message is started for you — just add a few days and times that work.</p>
+          <Button label="Text to Book" href={sms} theme="secondary" size="large" />
+          <p class="alt">Or call <a href={tel}>{phone}</a></p>
+        </div>
+
+        <div class="desktop">
+          <p class="lead">We book by call or text. Reach us at</p>
+          <a class="number" href={tel}>{phone}</a>
+          <p class="hint">
+            {service
+              ? `Let us know you're interested in ${service}, along with a few days and times that work for you.`
+              : "Let us know which treatment you're interested in, along with a few days and times that work for you."}
+          </p>
+        </div>
+      </>
+    ) : (
+      // No phone number in Site Settings: the contact form still works.
+      <div>
+        <p class="lead">Send us a message and we'll get back to you to find a time.</p>
+        <Button label="Contact Us" href="/contact" theme="secondary" size="large" />
+      </div>
+    )}
+
+    <p class="footnote">Prefer email? <a href="/contact">Use our contact form</a>.</p>
+  </div>
+</section>
+
+<style>
+  .appointmentSection { padding: 4rem 1.5rem 5rem; }
+  .appointmentCard {
+    width: min(100%, 640px);
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  }
+  .title { margin: 0 0 1rem; font-size: clamp(2rem, 4vw, 2.75rem); line-height: 1.15; }
+  .service {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0 0 1.5rem;
+    padding: 0.9rem 1.25rem;
+    border-radius: 16px;
+    background: rgba(210, 185, 150, 0.14);
+  }
+  .serviceLabel {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .serviceName { font-size: 1.15rem; font-weight: 700; color: var(--color-primary); }
+  .lead { margin: 0 0 1.25rem; font-size: 1.05rem; line-height: 1.75; }
+  .alt, .hint { margin: 1rem 0 0; line-height: 1.7; }
+  .hint { font-size: 0.97rem; opacity: 0.8; }
+  .number {
+    display: inline-block;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  .number:hover, .number:focus { text-decoration: underline; }
+  .footnote {
+    margin: 2rem 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 0.93rem;
+    opacity: 0.8;
+  }
+
+  .touch { display: none; }
+  @media (hover: none) and (pointer: coarse) {
+    .touch { display: block; }
+    .desktop { display: none; }
+  }
+
+  @media (max-width: 768px) {
+    .appointmentSection { padding: 3.5rem 1.25rem; }
+    .appointmentCard { padding: 2rem 1.25rem; }
+  }
+</style>

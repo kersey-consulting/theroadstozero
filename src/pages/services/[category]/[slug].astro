@@ -94,5 +94,5 @@ const schemaDescription = service.seo?.description ?? service.shortDescription ?
   }}
   breadcrumbs={serviceBreadcrumbs(service.category, service)}
 >
-  <PageSections sections={service.sections ?? []} staffMembers={staffMembers} service={service.name} />
+  <PageSections sections={service.sections ?? []} staffMembers={staffMembers} serviceSlug={service.slug?.current} />
 </BaseLayout>

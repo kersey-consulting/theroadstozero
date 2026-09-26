@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
-import BookButton from '@/components/BookButton.astro';
+import Button from '@/components/Button.astro';
+import { APPOINTMENTS_PATH } from '@/lib/booking';
 
 const services = [
   { title: 'Aesthetic Treatments', href: '/services/aesthetic-treatments', description: 'Subtle, natural-looking enhancements designed to restore balance and refresh your appearance.' },
@@ -25,7 +26,7 @@ const services = [
         <h1 class="heroTitle">Our Aesthetic & Wellness Services in Utah</h1>
         <p class="heroText">From IV therapy and aesthetic treatments to hormone support and holistic healing — every service is designed to help you restore balance, reclaim vitality, and feel your absolute best.</p>
         <div class="heroActions">
-          <BookButton />
+          <Button label="Book a Consultation" href={APPOINTMENTS_PATH} theme="primary" />
         </div>
       </div>
     </Hero>

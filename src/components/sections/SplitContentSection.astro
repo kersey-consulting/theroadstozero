@@ -30,11 +30,11 @@ interface Props {
   variant?: 'default' | 'alt';
   /** Set on the first section of a page so its image is treated as the LCP element. */
   priority?: boolean;
-  /** The service this page is about; named in the booking text message. */
-  service?: string;
+  /** Slug of the service this page is about, passed on to /appointments by booking buttons. */
+  serviceSlug?: string;
 }
 
-const { section, variant = 'default', priority = false, service } = Astro.props;
+const { section, variant = 'default', priority = false, serviceSlug } = Astro.props;
 const nodes = portableNodes(section?.content ?? []);
 
 const resolveImageUrl = (img: any) => {
@@ -72,7 +72,7 @@ const reverse = section?.imagePosition === 'left';
       </div>
       {(section?.actions ?? []).length > 0 && (
         <div class="actions">
-          {section.actions?.map((action) => <ActionButton action={action} service={service} />)}
+          {section.actions?.map((action) => <ActionButton action={action} serviceSlug={serviceSlug} />)}
         </div>
       )}
     </div>
