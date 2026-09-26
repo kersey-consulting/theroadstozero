@@ -107,7 +107,6 @@ export default function HeaderClient({ settings, navigation }: Props) {
             <li>
               <a href={`mailto:${settings.email}`} className={styles.socialLink} aria-label="Email">
                 <span dangerouslySetInnerHTML={{ __html: socialIcons.mail }} />
-                <span className={styles.socialLabel}>{settings.email}</span>
               </a>
             </li>
           )}
@@ -115,7 +114,6 @@ export default function HeaderClient({ settings, navigation }: Props) {
             <li>
               <a href={`tel:${settings.phone}`} className={styles.socialLink} aria-label="Phone">
                 <span dangerouslySetInnerHTML={{ __html: socialIcons.phone }} />
-                <span className={styles.socialLabel}>{settings.phone}</span>
               </a>
             </li>
           )}

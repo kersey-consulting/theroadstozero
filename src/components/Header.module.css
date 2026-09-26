@@ -290,12 +290,6 @@
         height: 28px;
     }
 }
-.socialLabel {
-    @media (max-width: 1110px) {
-        display: none;
-    }
-}
-
 .socialLink:hover rect,
 .socialLink:focus rect {
     fill: var(--color-surface);
