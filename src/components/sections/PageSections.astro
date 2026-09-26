@@ -16,11 +16,11 @@ import LegalSection from './LegalSection.astro';
 interface Props {
   sections?: any[];
   staffMembers?: any[];
-  /** Service pages pass their service name so booking buttons can pre-fill the text message. */
-  service?: string;
+  /** Service pages pass their slug so booking buttons can tell /appointments which service it is. */
+  serviceSlug?: string;
 }
 
-const { sections = [], staffMembers = [], service } = Astro.props;
+const { sections = [], staffMembers = [], serviceSlug } = Astro.props;
 
 // The LCP image is the first one that actually paints, which is not always in
 // section 0 — service pages often open with a text section. Find the first
@@ -55,7 +55,7 @@ const priorityIndex = firstImageIndex >= 0 && firstImageIndex <= 2 ? firstImageI
   const priority = index === priorityIndex;
 
   if (section._type === 'heroSection') {
-    return <HeroSection section={section} priority={priority} service={service} />;
+    return <HeroSection section={section} priority={priority} serviceSlug={serviceSlug} />;
   }
   if (section._type === 'richTextSection') {
     return <RichTextSection section={section} variant={variant} />;
@@ -76,7 +76,7 @@ const priorityIndex = firstImageIndex >= 0 && firstImageIndex <= 2 ? firstImageI
     return <TagListSection section={section} variant={variant} />;
   }
   if (section._type === 'splitContentSection') {
-    return <SplitContentSection section={section} variant={variant} priority={priority} service={service} />;
+    return <SplitContentSection section={section} variant={variant} priority={priority} serviceSlug={serviceSlug} />;
   }
   if (section._type === 'imageShowcaseSection') {
     return <ImageShowcaseSection section={section} variant={variant} priority={priority} />;
@@ -88,7 +88,7 @@ const priorityIndex = firstImageIndex >= 0 && firstImageIndex <= 2 ? firstImageI
     return <FaqSection section={section} variant={variant} />;
   }
   if (section._type === 'ctaSection') {
-    return <CtaSection section={section} service={service} />;
+    return <CtaSection section={section} serviceSlug={serviceSlug} />;
   }
   if (section._type === 'legalSection') {
     return <LegalSection section={section} variant={variant} />;

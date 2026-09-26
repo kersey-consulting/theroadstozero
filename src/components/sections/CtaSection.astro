@@ -14,11 +14,11 @@ interface Props {
     text?: string;
     actions?: { label: string; href: string }[];
   };
-  /** The service this page is about; named in the booking text message. */
-  service?: string;
+  /** Slug of the service this page is about, passed on to /appointments by booking buttons. */
+  serviceSlug?: string;
 }
 
-const { section, service } = Astro.props;
+const { section, serviceSlug } = Astro.props;
 
 // `text` became `content` when this section moved to rich text. Reading both
 // means the deploy and the Sanity migration can happen in either order without
@@ -49,7 +49,7 @@ const nodes = portableNodes(blocks);
         })}
       </div>
     )}
-    <div class="ctaActions">{(section?.actions ?? []).map((action) => <ActionButton action={action} service={service} />)}</div>
+    <div class="ctaActions">{(section?.actions ?? []).map((action) => <ActionButton action={action} serviceSlug={serviceSlug} />)}</div>
   </div>
 </section>
 <style>

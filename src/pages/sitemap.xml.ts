@@ -6,13 +6,14 @@ export const prerender = false;
 
 // Hand-built routes with their own file in src/pages. Most former top-level pages
 // are now self-serve `page` documents emitted by the dynamic loop below; only
-// pages with a custom route (/, /contact) or with no backing doc (service index
+// pages with a custom route (/, /contact, /appointments) or with no backing doc (service index
 // listings) are listed here. Excludes /sandbox and /404.
 // `pageSlug` links a route to its Sanity `page` document so we can pull a real
 // lastmod from `_updatedAt`. Routes without a backing doc omit it.
 const STATIC_ROUTES: Array<{ path: string; pageSlug?: string }> = [
   { path: '/', pageSlug: 'home' },
   { path: '/contact', pageSlug: 'contact' },
+  { path: '/appointments', pageSlug: 'appointments' },
   { path: '/services' },
   { path: '/services/iv-therapy' },
 ];

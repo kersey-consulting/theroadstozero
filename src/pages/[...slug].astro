@@ -14,6 +14,7 @@ export const prerender = false;
 const RESERVED_SLUGS = new Set([
   'home', // → index.astro (queries.homePage), served at /
   'contact', // → contact.astro, renders <ContactForm />
+  'appointments', // → appointments.astro, renders <AppointmentCard />
   'services', // → services/ route tree
   'sandbox', // → sandbox.astro (internal)
   '404',

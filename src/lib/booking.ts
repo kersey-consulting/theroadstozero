@@ -1,27 +1,36 @@
 // Appointments are booked by phone call or text message — there is no online
-// scheduler. These helpers build the links for BookButton and the header.
+// scheduler. Booking buttons link to /appointments, which shows the number and,
+// on phones, a "Text to Book" link with the message pre-filled.
 
-/**
- * The href an editor puts on a section button in Sanity to make it a booking
- * button. It renders as "Text to Book" on phones and the phone number on
- * desktop, whatever label is set.
- */
-export const BOOK_HREF = '#book';
+export const APPOINTMENTS_PATH = '/appointments';
 
 // Section buttons in Sanity used to link straight to the old scheduler. Treating
 // those links as booking buttons keeps them working until the content is
-// migrated to BOOK_HREF (sanity/migrations/replace-scheduler-links.mjs).
+// migrated (sanity/migrations/replace-scheduler-links.mjs).
 const LEGACY_SCHEDULER_HOSTS = ['profileaestheticmanagement.com', 'hydreight.com'];
 
+/** True for a link to /appointments, or to the retired online scheduler. */
 export function isBookingHref(href?: string): boolean {
   if (!href) return false;
-  if (href.trim() === BOOK_HREF) return true;
+  const trimmed = href.trim();
+  if (trimmed === APPOINTMENTS_PATH || trimmed.startsWith(`${APPOINTMENTS_PATH}?`)) return true;
   try {
-    const { hostname } = new URL(href);
+    const { hostname } = new URL(trimmed);
     return LEGACY_SCHEDULER_HOSTS.some((host) => hostname === host || hostname.endsWith(`.${host}`));
   } catch {
     return false;
   }
+}
+
+/**
+ * /appointments, carrying the service slug so the page can name the service in
+ * the text message. The page looks the slug up in Sanity, so only real service
+ * names ever reach the message.
+ */
+export function appointmentsHref(serviceSlug?: string): string {
+  return serviceSlug
+    ? `${APPOINTMENTS_PATH}?service=${encodeURIComponent(serviceSlug)}`
+    : APPOINTMENTS_PATH;
 }
 
 /** `(801) 555-1234` → `+18015551234`. Undefined when it isn't a usable number. */
