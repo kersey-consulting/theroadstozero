@@ -45,5 +45,9 @@ export default defineConfig({
       status: 301,
       destination: '/services/aesthetic-treatments/prp-hair-restoration',
     },
+    '/services/iv-therapy/l-cartnitine-iv-infusion-and-im-injection': {
+      status: 301,
+      destination: '/services/iv-therapy/l-carnitine-iv-infusion-and-im-injection',
+    },
   },
 });

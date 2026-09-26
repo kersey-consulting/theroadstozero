@@ -16,14 +16,34 @@ const escapeHtml = (value = '') => value
 
 const escapeAttr = (value = '') => escapeHtml(value);
 
+// Editors can type anything into a link field, so only allow schemes that are
+// safe to put in an href. Anything else (javascript:, data:, …) falls back to
+// rendering the link text without the anchor.
+const safeHref = (href = '') => {
+  const value = href.trim();
+  if (/^(https?:|mailto:|tel:)/i.test(value)) return value;
+  if (/^[/#?]/.test(value)) return value; // root-relative, anchor or query
+  return null;
+};
+
 const renderInline = (nodes: PortableInline[] = []): string => {
   return nodes.map((node) => {
     if (node.type === 'strong') {
       return `<strong>${renderInline(node.children)}</strong>`;
     }
 
+    if (node.type === 'em') {
+      return `<em>${renderInline(node.children)}</em>`;
+    }
+
     if (node.type === 'link') {
-      return `<a href="${escapeAttr(node.href)}">${renderInline(node.children)}</a>`;
+      const href = safeHref(node.href);
+      const inner = renderInline(node.children);
+      if (!href) return inner;
+      // Off-site links open in a new tab; same-site ones stay put.
+      const external = /^https?:/i.test(href);
+      const attrs = external ? ' target="_blank" rel="noopener noreferrer"' : '';
+      return `<a href="${escapeAttr(href)}"${attrs}>${inner}</a>`;
     }
 
     return escapeHtml(node.text).replaceAll('\n', '<br />');

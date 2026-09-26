@@ -2,16 +2,24 @@
 import { getSanityClient, queries } from '@/lib/sanity';
 import HeaderClient from './HeaderClient';
 
+// siteSettings is fetched once in BaseLayout and passed down — Header, Footer
+// and the JSON-LD builder all need it, and it used to be fetched three times
+// per request.
+interface Props {
+  settings?: any;
+}
+
+const { settings } = Astro.props as Props;
+
 const sanityClient = getSanityClient(Astro.locals.runtime?.env);
-const settings = await sanityClient.fetch(queries.siteSettings);
-const navigation = await sanityClient.fetch(queries.navigation);
+const navigation = await sanityClient.fetch(queries.navigation).catch(() => null);
 
 // Fallback if Sanity hasn't been populated yet
+// No `phone` here: the number is managed in Sanity Site Settings. Without it the
+// header's booking button falls back to linking to /contact.
 const fallbackSettings = {
   businessName: 'The Road to Zero',
-  phone: '801-682-7939',
   email: 'info@theroadstozero.com',
-  bookingUrl: 'https://app.profileaestheticmanagement.com/appointment-scheduler/22d112f1-8ed0-4d6c-b903-8e907383633e',
   socialLinks: [
     { platform: 'facebook', url: 'https://www.facebook.com/theroadtozero0/' },
     { platform: 'instagram', url: 'https://www.instagram.com/theroadtozero0/' },

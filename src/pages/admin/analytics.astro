@@ -184,7 +184,10 @@
   </main>
 
   <script>
-    const AUTH_KEY = 'trtz_admin_auth';
+    // Authentication is an HttpOnly session cookie set by /admin/api/session and
+    // enforced by the middleware, so this page is only ever served to a
+    // signed-in user and the fetch below needs no credential handling — the
+    // cookie rides along with the same-origin request automatically.
 
     function getWindowKey() {
       return new URL(window.location.href).searchParams.get('window') || '30d';
@@ -202,21 +205,6 @@
         button.addEventListener('click', () => setWindow(button.dataset.window));
       });
       window.addEventListener('popstate', loadAnalytics);
-    }
-
-    function getAuthFromStorage() {
-      let auth = sessionStorage.getItem(AUTH_KEY);
-      if (!auth) {
-        const username = prompt('Admin username');
-        const password = prompt('Admin password');
-        if (!username || !password) {
-          window.location.href = '/admin';
-          return '';
-        }
-        auth = btoa(username + ':' + password);
-        sessionStorage.setItem(AUTH_KEY, auth);
-      }
-      return auth;
     }
 
     function escapeHtml(value) {
@@ -245,12 +233,10 @@
       const apiUrl = new URL('/admin/api/analytics', window.location.origin);
       apiUrl.searchParams.set('window', windowKey);
 
-      const res = await fetch(apiUrl.toString(), {
-        headers: {'Authorization': 'Basic ' + getAuthFromStorage()},
-      });
+      const res = await fetch(apiUrl.toString(), {credentials: 'same-origin'});
 
+      // The session expired mid-visit; send them back to sign in again.
       if (res.status === 401) {
-        sessionStorage.removeItem(AUTH_KEY);
         window.location.href = '/admin';
         return;
       }

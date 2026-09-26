@@ -4,15 +4,19 @@ interface Props {
   href?: string;
   theme?: 'primary' | 'secondary';
   size?: 'medium' | 'large';
+  ariaLabel?: string;
+  /** Show only on touch-first devices (phones, tablets) or only on everything else. */
+  device?: 'touch' | 'desktop';
 }
 
-const { label, href, theme = 'primary', size = 'medium' } = Astro.props;
+const { label, href, theme = 'primary', size = 'medium', ariaLabel, device } = Astro.props;
+const deviceClass = device && `${device}Only`;
 ---
 
 {href ? (
-  <a class:list={['button', theme, size]} href={href}>{label}</a>
+  <a class:list={['button', theme, size, deviceClass]} href={href} aria-label={ariaLabel}>{label}</a>
 ) : (
-  <button class:list={['button', theme, size]}>{label}</button>
+  <button class:list={['button', theme, size, deviceClass]} aria-label={ariaLabel}>{label}</button>
 )}
 
 <style>
@@ -54,5 +58,16 @@ const { label, href, theme = 'primary', size = 'medium' } = Astro.props;
     background: var(--color-primary-hover);
     color: var(--color-surface);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  .touchOnly {
+    display: none;
+  }
+  @media (hover: none) and (pointer: coarse) {
+    .touchOnly {
+      display: inline-block;
+    }
+    .desktopOnly {
+      display: none;
+    }
   }
 </style>

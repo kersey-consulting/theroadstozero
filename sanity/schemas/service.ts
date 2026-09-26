@@ -1,5 +1,36 @@
 import { defineType, defineField, defineArrayMember } from 'sanity';
 
+// Rich text for the CTA blurb. Deliberately narrow: CtaSection renders a
+// centred paragraph inside a card, so headings would compete with the section
+// title, and these are the only marks PortableInline.astro has a renderer for.
+const ctaContent = {
+  type: 'block',
+  styles: [{ title: 'Normal', value: 'normal' }],
+  lists: [{ title: 'Bullet', value: 'bullet' }],
+  marks: {
+    decorators: [
+      { title: 'Bold', value: 'strong' },
+      { title: 'Italic', value: 'em' },
+    ],
+    annotations: [
+      {
+        name: 'link',
+        type: 'object',
+        title: 'Link',
+        fields: [
+          defineField({
+            name: 'href',
+            title: 'URL',
+            type: 'url',
+            description: 'A full URL, a path on this site such as /contact, or a mailto: / tel: address.',
+            validation: (r) => r.required().uri({ allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel'] }),
+          }),
+        ],
+      },
+    ],
+  },
+};
+
 const sectionAction = {
   type: 'object',
   fields: [
@@ -217,7 +248,7 @@ export default defineType({
           fields: [
             defineField({ name: 'id', title: 'Anchor ID', type: 'string', description: 'Optional. Sets the HTML id attribute on the outermost wrapper of this section for in-page anchor links (e.g. id "pricing" links via #pricing).' }),
             defineField({ name: 'title', title: 'Title', type: 'string' }),
-            defineField({ name: 'text', title: 'Text', type: 'text', rows: 4 }),
+            defineField({ name: 'content', title: 'Text', type: 'array', of: [ctaContent] }),
             defineField({ name: 'actions', title: 'Actions', type: 'array', of: [sectionAction] }),
           ],
           preview: {
@@ -316,6 +347,12 @@ export default defineType({
       fields: [
         defineField({ name: 'title', title: 'SEO Title', type: 'string' }),
         defineField({ name: 'description', title: 'SEO Description', type: 'text', rows: 3 }),
+        defineField({
+          name: 'image',
+          title: 'Social Share Image',
+          type: 'image',
+          description: 'Shown when this page is shared on Facebook, Instagram, iMessage or Slack. Ideally 1200x630. Leave empty to use this page\u2019s main image, then the site-wide default.',
+        }),
       ],
     }),
     defineField({
