@@ -1,5 +1,6 @@
 ---
 import Button from '@/components/Button.astro';
+import ActionButton from '@/components/ActionButton.astro';
 import PortableInline from './PortableInline.astro';
 import { portableNodes } from '@/lib/portableText';
 import { urlFor } from '@/lib/sanity';
@@ -29,9 +30,11 @@ interface Props {
   variant?: 'default' | 'alt';
   /** Set on the first section of a page so its image is treated as the LCP element. */
   priority?: boolean;
+  /** Slug of the service this page is about, passed on to /appointments by booking buttons. */
+  serviceSlug?: string;
 }
 
-const { section, variant = 'default', priority = false } = Astro.props;
+const { section, variant = 'default', priority = false, serviceSlug } = Astro.props;
 const nodes = portableNodes(section?.content ?? []);
 
 const resolveImageUrl = (img: any) => {
@@ -69,7 +72,7 @@ const reverse = section?.imagePosition === 'left';
       </div>
       {(section?.actions ?? []).length > 0 && (
         <div class="actions">
-          {section.actions?.map((action) => <Button label={action.label} href={action.href} theme="primary" />)}
+          {section.actions?.map((action) => <ActionButton action={action} serviceSlug={serviceSlug} />)}
         </div>
       )}
     </div>

@@ -1,0 +1,18 @@
+---
+import Button from './Button.astro';
+import { appointmentsHref, isBookingHref } from '@/lib/booking';
+
+// A section button from Sanity. Booking links go to /appointments, tagged with
+// the page's service so the text message can name it; everything else renders
+// as authored.
+interface Props {
+  action: { label: string; href: string };
+  /** Slug of the service this page is about. */
+  serviceSlug?: string;
+}
+
+const { action, serviceSlug } = Astro.props;
+const href = isBookingHref(action.href) ? appointmentsHref(serviceSlug) : action.href;
+---
+
+<Button label={action.label} href={href} theme="primary" />

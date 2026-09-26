@@ -4,15 +4,16 @@ interface Props {
   href?: string;
   theme?: 'primary' | 'secondary';
   size?: 'medium' | 'large';
+  ariaLabel?: string;
 }
 
-const { label, href, theme = 'primary', size = 'medium' } = Astro.props;
+const { label, href, theme = 'primary', size = 'medium', ariaLabel } = Astro.props;
 ---
 
 {href ? (
-  <a class:list={['button', theme, size]} href={href}>{label}</a>
+  <a class:list={['button', theme, size]} href={href} aria-label={ariaLabel}>{label}</a>
 ) : (
-  <button class:list={['button', theme, size]}>{label}</button>
+  <button class:list={['button', theme, size]} aria-label={ariaLabel}>{label}</button>
 )}
 
 <style>

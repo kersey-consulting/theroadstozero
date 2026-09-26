@@ -21,7 +21,6 @@ export interface SiteSettings {
   businessName?: string;
   phone?: string;
   email?: string;
-  bookingUrl?: string;
   logo?: string;
   goldLogo?: string;
   address?: BusinessAddress;
@@ -37,7 +36,6 @@ export interface BusinessProfile {
   name: string;
   phone?: string;
   email?: string;
-  bookingUrl?: string;
   logo?: string;
   address?: BusinessAddress;
   geo?: { latitude: number; longitude: number };
@@ -113,7 +111,6 @@ export function resolveBusinessProfile(settings?: SiteSettings | null): Business
     // `telephone` property entirely rather than emitting an empty one.
     phone: trimmed(settings?.phone),
     email: trimmed(settings?.email) ?? DEFAULTS.email,
-    bookingUrl: trimmed(settings?.bookingUrl),
     // The gold ring logo is the square mark; it reads better as a Google
     // Business/Knowledge Panel thumbnail than the wide wordmark.
     logo: trimmed(settings?.goldLogo) ?? trimmed(settings?.logo),

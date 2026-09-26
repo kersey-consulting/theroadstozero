@@ -1,5 +1,6 @@
 import { useEffect, useId, useState } from 'react';
 import styles from './Header.module.css';
+import { APPOINTMENTS_PATH } from '@/lib/booking';
 
 type NavChild = { _key: string; label: string; href: string };
 type NavItem = { _key: string; label: string; href: string; children?: NavChild[] };
@@ -10,7 +11,6 @@ type SiteSettings = {
   businessName: string;
   phone?: string;
   email?: string;
-  bookingUrl?: string;
   socialLinks?: SocialLink[];
 };
 
@@ -80,7 +80,6 @@ export default function HeaderClient({ settings, navigation }: Props) {
 
   const navItems = navigation?.items ?? [];
   const socialLinks = settings?.socialLinks ?? [];
-  const bookingUrl = settings?.bookingUrl ?? '#';
 
   return (
     <header className={styles.header}>
@@ -105,7 +104,6 @@ export default function HeaderClient({ settings, navigation }: Props) {
             <li>
               <a href={`mailto:${settings.email}`} className={styles.socialLink} aria-label="Email">
                 <span dangerouslySetInnerHTML={{ __html: socialIcons.mail }} />
-                <span className={styles.socialLabel}>{settings.email}</span>
               </a>
             </li>
           )}
@@ -113,7 +111,6 @@ export default function HeaderClient({ settings, navigation }: Props) {
             <li>
               <a href={`tel:${settings.phone}`} className={styles.socialLink} aria-label="Phone">
                 <span dangerouslySetInnerHTML={{ __html: socialIcons.phone }} />
-                <span className={styles.socialLabel}>{settings.phone}</span>
               </a>
             </li>
           )}
@@ -183,7 +180,7 @@ export default function HeaderClient({ settings, navigation }: Props) {
               </ul>
             </nav>
           </div>
-          <a className={styles.cta} href={bookingUrl}>Book Appointment</a>
+          <a className={styles.cta} href={APPOINTMENTS_PATH}>Book Appointment</a>
         </div>
 
         <button

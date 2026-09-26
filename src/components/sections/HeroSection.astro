@@ -1,6 +1,7 @@
 ---
 import Hero from '@/components/Hero.astro';
 import Button from '@/components/Button.astro';
+import ActionButton from '@/components/ActionButton.astro';
 import PortableInline from './PortableInline.astro';
 import { portableNodes } from '@/lib/portableText';
 import { urlFor } from '@/lib/sanity';
@@ -28,9 +29,11 @@ interface Props {
     backgroundImageUrl?: string;
     actions?: Action[];
   };
+  /** Slug of the service this page is about, passed on to /appointments by booking buttons. */
+  serviceSlug?: string;
 }
 
-const { section, priority = false } = Astro.props;
+const { section, priority = false, serviceSlug } = Astro.props;
 const resolveImageUrl = (img: any) => {
   if (!img) return undefined;
   if (typeof img === 'string') return img;
@@ -74,7 +77,7 @@ const reverse = section?.imagePosition === 'left';
     )}
     {actions.length > 0 && (
       <div class="heroActions">
-        {actions.map((action) => <Button label={action.label} href={action.href} theme="primary" />)}
+        {actions.map((action) => <ActionButton action={action} serviceSlug={serviceSlug} />)}
       </div>
     )}
   </div>

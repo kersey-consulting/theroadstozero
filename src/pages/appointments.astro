@@ -1,0 +1,46 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageSections from '@/components/sections/PageSections.astro';
+import AppointmentCard from '@/components/AppointmentCard.astro';
+import { getSanityClient, queries } from '@/lib/sanity';
+
+// Rendered per request: the card depends on the `?service=` query string.
+export const prerender = false;
+
+const sanityClient = getSanityClient(Astro.locals.runtime?.env);
+
+// Booking buttons on service pages link here with `?service=<slug>`. The slug is
+// looked up rather than trusted, so only a real service name reaches the page
+// or the text message; anything else falls back to the generic message.
+const serviceSlug = Astro.url.searchParams.get('service')?.trim() ?? '';
+const [page, service] = await Promise.all([
+  sanityClient.fetch(queries.pageBySlug, { slug: 'appointments' }).catch(() => null),
+  /^[a-z0-9-]{1,96}$/.test(serviceSlug)
+    ? sanityClient.fetch(`*[_type == "service" && slug.current == $slug][0].name`, { slug: serviceSlug }).catch(() => null)
+    : null,
+]);
+
+// The page's hero copy (eyebrow, title, intro) is shown at the top of the
+// booking card instead of as a full-height hero, which left a large empty band
+// above the card. Any further sections render below the card.
+const allSections: any[] = page?.sections ?? [];
+const hero = allSections[0]?._type === 'heroSection' ? allSections[0] : null;
+const sections = hero ? allSections.slice(1) : allSections;
+const staffMembers = sections.length > 0
+  ? await sanityClient.fetch(queries.staffMembers).catch(() => [])
+  : [];
+---
+
+<BaseLayout
+  title={page?.seo?.title ?? page?.title ?? 'Book an Appointment'}
+  description={page?.seo?.description ?? 'Book by call or text with The Road to Zero.'}
+  sections={allSections}
+>
+  <AppointmentCard
+    service={typeof service === 'string' ? service.trim() || undefined : undefined}
+    eyebrow={hero?.eyebrow}
+    title={hero?.title}
+    intro={hero?.content}
+  />
+  <PageSections sections={sections} staffMembers={staffMembers} />
+</BaseLayout>

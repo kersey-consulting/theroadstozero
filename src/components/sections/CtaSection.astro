@@ -1,5 +1,6 @@
 ---
 import Button from '@/components/Button.astro';
+import ActionButton from '@/components/ActionButton.astro';
 import PortableInline from './PortableInline.astro';
 import { portableNodes } from '@/lib/portableText';
 import type { PortableTextBlock } from '@/lib/portableText';
@@ -13,9 +14,11 @@ interface Props {
     text?: string;
     actions?: { label: string; href: string }[];
   };
+  /** Slug of the service this page is about, passed on to /appointments by booking buttons. */
+  serviceSlug?: string;
 }
 
-const { section } = Astro.props;
+const { section, serviceSlug } = Astro.props;
 
 // `text` became `content` when this section moved to rich text. Reading both
 // means the deploy and the Sanity migration can happen in either order without
@@ -46,7 +49,7 @@ const nodes = portableNodes(blocks);
         })}
       </div>
     )}
-    <div class="ctaActions">{(section?.actions ?? []).map((action) => <Button label={action.label} href={action.href} theme="primary" />)}</div>
+    <div class="ctaActions">{(section?.actions ?? []).map((action) => <ActionButton action={action} serviceSlug={serviceSlug} />)}</div>
   </div>
 </section>
 <style>

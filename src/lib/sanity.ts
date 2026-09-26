@@ -61,7 +61,6 @@ export const queries = {
     businessName,
     phone,
     email,
-    bookingUrl,
     "logo": logo.asset->url,
     "goldLogo": goldLogo.asset->url,
     "ogImage": ogImage.asset->url,

@@ -47,5 +47,5 @@ const description = service.seo?.description ?? service.shortDescription ?? serv
   }}
   breadcrumbs={serviceBreadcrumbs(service.category, service)}
 >
-  <PageSections sections={service.sections ?? []} staffMembers={staffMembers} />
+  <PageSections sections={service.sections ?? []} staffMembers={staffMembers} serviceSlug={service.slug?.current} />
 </BaseLayout>
