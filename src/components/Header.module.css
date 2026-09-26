@@ -313,6 +313,22 @@
     text-decoration: none;
 }
 
+/* Touch-first devices get "Text to Book" (sms:); everything else sees the
+   phone number. Same rule as BookButton.astro. */
+.ctaMobile {
+    display: none;
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .ctaMobile {
+        display: inline-block;
+    }
+
+    .ctaDesktop {
+        display: none;
+    }
+}
+
 .hamburger {
     display: none;
     width: 32px;

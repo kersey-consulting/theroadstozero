@@ -1,13 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Hero from '@/components/Hero.astro';
-import Button from '@/components/Button.astro';
-import { getSanityClient, queries } from '@/lib/sanity';
-
-const sanityClient = getSanityClient(Astro.locals.runtime?.env);
-const settings = await sanityClient.fetch(queries.siteSettings).catch(() => null);
-
-const bookingUrl = settings?.bookingUrl ?? 'https://app.profileaestheticmanagement.com/appointment-scheduler/22d112f1-8ed0-4d6c-b903-8e907383633e';
+import BookButton from '@/components/BookButton.astro';
 
 const services = [
   { title: 'Aesthetic Treatments', href: '/services/aesthetic-treatments', description: 'Subtle, natural-looking enhancements designed to restore balance and refresh your appearance.' },
@@ -31,7 +25,7 @@ const services = [
         <h1 class="heroTitle">Our Aesthetic & Wellness Services in Utah</h1>
         <p class="heroText">From IV therapy and aesthetic treatments to hormone support and holistic healing — every service is designed to help you restore balance, reclaim vitality, and feel your absolute best.</p>
         <div class="heroActions">
-          <Button label="Book a Consultation" href={bookingUrl} theme="primary" />
+          <BookButton />
         </div>
       </div>
     </Hero>

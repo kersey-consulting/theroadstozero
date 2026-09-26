@@ -102,23 +102,8 @@ export function buildBusinessJsonLd(business: BusinessProfile, siteOrigin: strin
   // `openingHours` takes a machine-readable range ("Mo-Fr 09:00-17:00"); there
   // is no valid way to express "By Appointment Only" in it, and emitting the
   // phrase there would be invalid markup. The appointment-only nature is
-  // conveyed by the ReserveAction below and in the human-readable description.
-  const potentialAction = business.bookingUrl
-    ? {
-        '@type': 'ReserveAction',
-        target: {
-          '@type': 'EntryPoint',
-          urlTemplate: business.bookingUrl,
-          inLanguage: 'en-US',
-          actionPlatform: [
-            'http://schema.org/DesktopWebPlatform',
-            'http://schema.org/MobileWebPlatform',
-          ],
-        },
-        result: { '@type': 'Reservation', name: 'Book an appointment' },
-      }
-    : undefined;
-
+  // conveyed in the human-readable description; booking is by call or text, so
+  // `telephone` is the booking channel.
   return compact({
     '@context': 'https://schema.org',
     '@type': ['MedicalBusiness', 'HealthAndBeautyBusiness'],
@@ -138,7 +123,6 @@ export function buildBusinessJsonLd(business: BusinessProfile, siteOrigin: strin
     hasMap: business.mapUrl,
     areaServed: business.areaServed,
     sameAs: business.sameAs,
-    potentialAction,
   });
 }
 

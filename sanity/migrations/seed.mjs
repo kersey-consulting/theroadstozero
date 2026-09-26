@@ -44,7 +44,6 @@ async function seedSiteSettings() {
     businessName: 'The Road to Zero',
     // Phone deliberately omitted — the client has taken the number off the site.
     email: 'info@theroadstozero.com',
-    bookingUrl: 'https://booking.hydreight.com/widget-business/fk58k',
     socialLinks: [
       { _key: 'facebook', platform: 'facebook', url: 'https://www.facebook.com/theroadtozero0/' },
       { _key: 'instagram', platform: 'instagram', url: 'https://www.instagram.com/theroadtozero0/' },

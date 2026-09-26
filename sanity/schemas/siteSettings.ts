@@ -27,17 +27,13 @@ export default defineType({
       name: 'phone',
       title: 'Phone Number',
       type: 'string',
+      description:
+        'Appointments are booked by call or text to this number. Must be able to receive text messages. Without it, booking buttons link to the contact page.',
     }),
     defineField({
       name: 'email',
       title: 'Email',
       type: 'string',
-    }),
-    defineField({
-      name: 'bookingUrl',
-      title: 'Booking URL',
-      type: 'url',
-      description: 'Hydreight booking widget URL',
     }),
     defineField({
       name: 'ogImage',
