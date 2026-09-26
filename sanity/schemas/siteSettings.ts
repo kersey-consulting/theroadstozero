@@ -28,7 +28,7 @@ export default defineType({
       title: 'Phone Number',
       type: 'string',
       description:
-        'Appointments are booked by call or text to this number. Must be able to receive text messages. Without it, booking buttons link to the contact page.',
+        'Appointments are booked by call or text to this number. Must be able to receive text messages. Without it, the Appointments page points visitors to the contact form instead.',
     }),
     defineField({
       name: 'email',
