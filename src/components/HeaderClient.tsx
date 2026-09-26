@@ -28,9 +28,11 @@ const socialIcons: Record<string, string> = {
 interface Props {
   settings: SiteSettings;
   navigation: Navigation;
+  /** /appointments, with `?service=` on service pages. */
+  bookingHref?: string;
 }
 
-export default function HeaderClient({ settings, navigation }: Props) {
+export default function HeaderClient({ settings, navigation, bookingHref = APPOINTMENTS_PATH }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSubmenuId, setOpenSubmenuId] = useState<string | null>(null);
   const submenuIdPrefix = useId();
@@ -180,7 +182,7 @@ export default function HeaderClient({ settings, navigation }: Props) {
               </ul>
             </nav>
           </div>
-          <a className={styles.cta} href={APPOINTMENTS_PATH}>Book Appointment</a>
+          <a className={styles.cta} href={bookingHref}>Book Appointment</a>
         </div>
 
         <button
