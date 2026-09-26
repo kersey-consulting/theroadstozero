@@ -12,6 +12,8 @@ interface Props {
 
 const { service, headingLevel = 2 } = Astro.props;
 const Heading = `h${headingLevel}`;
+// Under a Sanity hero the page already has its "Book…" h1, so don't repeat it.
+const title = headingLevel === 1 ? 'Book Your Appointment' : 'Call or Text to Book';
 
 const settings = await getSiteSettings(Astro.locals);
 const phone: string | undefined = settings?.phone?.trim() || undefined;
@@ -21,7 +23,7 @@ const tel = telHref(phone);
 
 <section class="appointmentSection">
   <div class="appointmentCard">
-    <Heading class="title">Book Your Appointment</Heading>
+    <Heading class="title">{title}</Heading>
     {service && (
       <p class="service">
         <span class="serviceLabel">Booking</span>
