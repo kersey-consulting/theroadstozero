@@ -20,7 +20,12 @@ const [page, service] = await Promise.all([
     : null,
 ]);
 
-const sections = page?.sections ?? [];
+// The page's hero copy (eyebrow, title, intro) is shown at the top of the
+// booking card instead of as a full-height hero, which left a large empty band
+// above the card. Any further sections render below the card.
+const allSections: any[] = page?.sections ?? [];
+const hero = allSections[0]?._type === 'heroSection' ? allSections[0] : null;
+const sections = hero ? allSections.slice(1) : allSections;
 const staffMembers = sections.length > 0
   ? await sanityClient.fetch(queries.staffMembers).catch(() => [])
   : [];
@@ -29,8 +34,13 @@ const staffMembers = sections.length > 0
 <BaseLayout
   title={page?.seo?.title ?? page?.title ?? 'Book an Appointment'}
   description={page?.seo?.description ?? 'Book by call or text with The Road to Zero.'}
-  sections={sections}
+  sections={allSections}
 >
+  <AppointmentCard
+    service={typeof service === 'string' ? service.trim() || undefined : undefined}
+    eyebrow={hero?.eyebrow}
+    title={hero?.title}
+    intro={hero?.content}
+  />
   <PageSections sections={sections} staffMembers={staffMembers} />
-  <AppointmentCard service={typeof service === 'string' ? service.trim() || undefined : undefined} headingLevel={sections.length > 0 ? 2 : 1} />
 </BaseLayout>
